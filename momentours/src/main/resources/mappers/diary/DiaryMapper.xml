@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.diary.query.repository.DiaryMapper">
+
+    <resultMap id="diaryResultMap" type="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
+        <id property="diaryNo" column="diaryNo"/>
+        <result property="diaryContent" column="diaryContent"/>
+        <result property="diaryCreateDate" column="diaryCreateDate"/>
+        <result property="diaryUpdateDate" column="diaryUpdateDate"/>
+        <result property="diaryUserNo" column="diaryUserNo"/>
+        <result property="coupleNo" column="coupleNo"/>
+        <result property="coupleDeleted" column="coupleDeleted"/>
+    </resultMap>
+
+    <select id="selectDiary" resultMap="diaryResultMap" parameterType="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
+        SELECT diaryNo
+             , diaryContent
+             , DATE_FORMAT(diaryCreateDate, '%Y-%m-%d') AS formatCreateDate
+             , DATE_FORMAT(diaryUpdateDate, '%Y-%m-%d') AS formatUpdateDate
+             , diaryUserNo
+             , coupleNo
+             , coupleIsDeleted
+          FROM diary
+         WHERE coupleNo = #{ coupleNo }
+           AND DATE(diaryCreateDate) = #{diaryCreateDate}
+    </select>
+
+</mapper>
