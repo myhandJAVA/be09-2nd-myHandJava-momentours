@@ -1,30 +1,28 @@
 package com.myhandjava.momentours.schedule.command.domain.aggregate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Entity
+import java.time.LocalDateTime;
+
+@Entity(name = "tb_schedule")
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class Schedule {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int scheduleNo;
 
     @Column
-    private java.util.Date scheduleStartDate;
+    private LocalDateTime scheduleStartDate;
 
     @Column
-    private java.util.Date scheduleEndDate;
+    private LocalDateTime scheduleEndDate;
 
     @Column
     private String scheduleTitle;
