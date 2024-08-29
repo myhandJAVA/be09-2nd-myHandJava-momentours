@@ -34,5 +34,5 @@ public class Diary {
     private int coupleNo;
 
     @Column
-    private int coupleIsDeleted;
+    private int diaryIsDeleted;
 }

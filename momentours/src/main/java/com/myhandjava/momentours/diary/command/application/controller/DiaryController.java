@@ -8,10 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -45,5 +42,16 @@ public class DiaryController {
                 .build()
                 .status(HttpStatus.CREATED)
                 .body(responseMessage);
+    }
+
+    @PutMapping("/{diaryNo}")
+    public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestParam int userNo) {
+
+        diaryService.removeDiary(diaryNo, userNo);
+
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
