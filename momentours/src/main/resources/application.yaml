@@ -25,3 +25,6 @@ logging:
     com:
       myhandjava:
         momentours: debug
+
+mybatis:
+  mapper-locations: classpath:/mappers/**/*.xml
