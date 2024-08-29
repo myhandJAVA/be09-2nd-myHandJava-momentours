@@ -1,21 +1,19 @@
 package com.myhandjava.momentours.schedule.query.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class ScheduleDTO {
-    private int scheduleNo;
-    private java.util.Date scheduleStartDate;
-    private java.util.Date scheduleEndDate;
+    private int coupleNo;
+    private LocalDateTime scheduleStartDate;
+    private LocalDateTime scheduleEndDate;
     private String scheduleTitle;
     private String scheduleMemo;
-    private int coupleNo;
-
-//    public ScheduleDTO(){}
+    private int scheduleNo;
 }
