@@ -16,13 +16,14 @@
     </resultMap>
 
     <select id="findAllScheduleByCoupleNo" resultMap="scheduleResultMap" parameterType="_int">
-        SELECT scheduleNo
-             , scheduleStartDate
-             , scheduleEndDate
-             , scheduleTitle
-             , scheduleMemo
-             , coupleNo
-          FROM Schedule
-         WHERE coupleNo = #{ coupleNo }
+        SELECT SCHEDULE_NO
+             , SCHEDULE_START_DATE
+             , SCHEDULE_END_DATE
+             , SCHEDULE_TITLE
+             , SCHEDULE_MEMO
+             , COUPLE_NO
+          FROM TB_SCHEDULE
+         WHERE COUPLE_NO = #{ coupleNo }
+           AND SCHEDULE_IS_DELETED = 1
     </select>
 </mapper>
