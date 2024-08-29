@@ -34,7 +34,33 @@ class ScheduleServiceImplTests {
         scheduleService.registSchedule(scheduleDTO);
 
         Assertions.assertNotNull(scheduleRepository.findById(-1));
+    }
 
+    @Test
+    @Transactional
+    void 일정_수정_테스트(){
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        scheduleDTO.setScheduleNo(1);
+        scheduleDTO.setCoupleNo(1);
+        scheduleDTO.setScheduleStartDate(LocalDateTime.now());
+        scheduleDTO.setScheduleEndDate(LocalDateTime.now());
+        scheduleDTO.setScheduleTitle("테스트 제목");
+        scheduleDTO.setScheduleMemo("테스트 메모");
+
+        Schedule oldSchedule = scheduleRepository.findById(1).orElseThrow();
+
+        String oldTitle = oldSchedule.getScheduleTitle();
+        String oldMemo = oldSchedule.getScheduleMemo();
+
+        scheduleService.updateSchedule(scheduleDTO);
+        scheduleRepository.flush();
+
+        Schedule newSchedule = scheduleRepository.findById(1).orElseThrow();
+        String newTitle = newSchedule.getScheduleTitle();
+        String newMemo = newSchedule.getScheduleMemo();
+
+        Assertions.assertNotEquals(oldTitle,newTitle);
+        Assertions.assertNotEquals(oldMemo,newMemo);
 
     }
 

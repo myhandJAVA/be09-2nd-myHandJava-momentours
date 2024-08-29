@@ -30,4 +30,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         scheduleRepository.save(schedule);
     }
+
+    @Transactional
+    public void updateSchedule(ScheduleDTO scheduleDTO){
+        Schedule schedule = new Schedule();
+
+        schedule.setScheduleNo(scheduleDTO.getScheduleNo());
+        schedule.setScheduleStartDate(scheduleDTO.getScheduleStartDate());
+        schedule.setScheduleEndDate(scheduleDTO.getScheduleEndDate());
+        schedule.setScheduleMemo(scheduleDTO.getScheduleMemo());
+        schedule.setScheduleTitle(scheduleDTO.getScheduleTitle());
+        schedule.setCoupleNo(scheduleDTO.getCoupleNo());
+
+        scheduleRepository.save(schedule);
+    }
 }
