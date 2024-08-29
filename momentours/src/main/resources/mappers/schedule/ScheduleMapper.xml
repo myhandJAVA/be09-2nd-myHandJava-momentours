@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myhandjava.momentours.schedule.query.repository.ScheduleMapper">
+
+    <resultMap id="scheduleResultMap" type="com.myhandjava.momentours.schedule.command.domain.aggregate.Schedule">
+        <id property="scheduleNo" column="scheduleNo"/>
+        <result property="scheduleStartDate" column="scheduleStartDate"/>
+        <result property="scheduleEndDate" column="scheduleEndDate"/>
+        <result property="scheduleTitle" column="scheduleTitle"/>
+        <result property="scheduleMemo" column="scheduleMemo"/>
+        <result property="coupleNo" column="coupleNo"/>
+
+    </resultMap>
+
+    <select id="findAllScheduleByCoupleNo" resultMap="scheduleResultMap" parameterType="_int">
+        SELECT scheduleNo
+             , scheduleStartDate
+             , scheduleEndDate
+             , scheduleTitle
+             , scheduleMemo
+             , coupleNo
+          FROM Schedule
+         WHERE coupleNo = #{ coupleNo }
+    </select>
+</mapper>
