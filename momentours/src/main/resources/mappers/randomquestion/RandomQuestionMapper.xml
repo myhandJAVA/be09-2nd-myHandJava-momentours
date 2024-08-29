@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.randomquestion.query.repository.RandomQuestionMapper">
+
+    <resultMap id="RandomQuestionResultMap" type="com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomQuestion">
+        <id property="randquesno" column="rand_ques_no"/>
+        <result property="randquescreatedate" column="rand_ques_createDate"/>
+        <result property="randquescontent" column="rand_ques_content"/>
+        <result property="randquesreply" column="rand_ques_reply"/>
+        <result property="randquesisdeleted" column="rand_ques_is_deleted"/>
+        <result property="randquescoupleno" column="rand_ques_couple_no"/>
+    </resultMap>
+    <select id="findCurrentRandomQuestionByMemberNo" resultMap="RandomQuestionResultMap">
+        SELECT rq.rand_ques_no, rq.rand_ques_content, rq.rand_ques_createDate,
+               rq.rand_ques_reply, rq.rand_ques_couple_no, rq.rand_ques_is_deleted
+        FROM tb_randomquestion rq
+                 JOIN tb_couple cl
+                      ON (rq.rand_ques_couple_no = cl.couple_no)
+                          AND (cl.couple_user_no1 = #{userNo} OR cl.couple_user_no2 = #{userNo})
+                 JOIN tb_user u
+                      ON u.user_no = #{userNo}
+        ORDER BY rq.rand_ques_createDate DESC
+            LIMIT 1
+    </select>
+
+    <select id="findAllRandomQuestionByMemberNo" resultMap="RandomQuestionResultMap">
+        SELECT
+               rq.rand_ques_no
+             , rq.rand_ques_content
+             , rq.rand_ques_createDate
+             , rq.rand_ques_reply
+             , rq.rand_ques_couple_no
+             , rq.rand_ques_is_deleted
+          FROM tb_randomquestion rq
+          JOIN tb_couple cl ON (rq.rand_ques_couple_no = cl.couple_no)
+           AND (cl.couple_user_no1 = #{userNo} OR cl.couple_user_no2 = #{userNo})
+          JOIN tb_user u ON u.user_no = #{userNo}
+         ORDER BY rq.rand_ques_createDate DESC
+    </select>
+
+    <select id="findRandomQuestionByDate" resultMap="RandomQuestionResultMap" parameterType="map">
+        SELECT rq.rand_ques_no, rq.rand_ques_content, rq.rand_ques_createDate,
+               rq.rand_ques_reply, rq.rand_ques_couple_no, rq.rand_ques_is_deleted
+        FROM tb_randomquestion rq
+                 JOIN tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
+            AND (cl.couple_user_no1 = #{userNo} OR cl.couple_user_no2 = #{userNo})
+                 JOIN tb_user u ON u.user_no = #{userNo}
+        WHERE DATE(rq.rand_ques_createDate) = #{selectedDate}
+    </select>
+
+    <select id="findRandomQuestionByKeyword" resultMap="RandomQuestionResultMap" parameterType="map">
+        SELECT rq.rand_ques_no, rq.rand_ques_content, rq.rand_ques_createDate,
+               rq.rand_ques_reply, rq.rand_ques_couple_no, rq.rand_ques_is_deleted
+        FROM tb_randomquestion rq
+                 JOIN tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
+            AND (cl.couple_user_no1 = #{userNo} OR cl.couple_user_no2 = #{userNo})
+        WHERE rq.rand_ques_content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY rq.rand_ques_createDate DESC;
+    </select>
+</mapper>
