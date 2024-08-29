@@ -34,4 +34,14 @@ class DiaryServiceImplTests {
         );
     }
 
+    @DisplayName("일기 삭제 확인 테스트")
+    @Test
+    @Transactional
+    void removeDiary() {
+
+        Assertions.assertDoesNotThrow(
+                () -> diaryService.removeDiary(7, 2)
+        );
+    }
+
 }

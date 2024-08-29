@@ -12,5 +12,5 @@ public class DiaryDTO {
     private LocalDateTime diaryCreateDate;
     private int diaryUserNo;
     private int coupleNo;
-    private int coupleIsDeleted;
+    private int diaryIsDeleted;
 }
