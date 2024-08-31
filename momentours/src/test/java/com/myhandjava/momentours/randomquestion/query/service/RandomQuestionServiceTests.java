@@ -2,6 +2,7 @@ package com.myhandjava.momentours.randomquestion.query.service;
 
 import com.myhandjava.momentours.config.MybatisConfiguration;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionDTO;
+import com.myhandjava.momentours.randomquestion.query.dto.RandomReplyDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,11 @@ class RandomQuestionServiceTests {
         assertNotNull(randomQuestionDTOs);
     }
 
-    @DisplayName("날짜와 회원 번호로 랜덤질문 검색")
+    @DisplayName("날짜와 커플 번호로 랜덤질문 검색")
     @Test
     public void getRandomQuestionByMemberNoAndDate() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userNo", 1);
+        map.put("coupleNo", 1);
         map.put("selectedDate", "2024-08-29");
         RandomQuestionDTO randomQuestionDTO =
                 randomQuestionService.findRandomQuestionByDate(map);
@@ -51,15 +52,31 @@ class RandomQuestionServiceTests {
         assertNotNull(randomQuestionDTO);
     }
 
-    @DisplayName("회원 번호와 키워드로 랜덤질문 검색")
+    @DisplayName("커플 번호와 키워드로 랜덤질문 검색")
     @Test
     public void getRandomQuestionByMemberNoAndKeyword() {
         Map<String, Object> map = new HashMap<>();
-        map.put("userNo", 1);
+        map.put("coupleNo", 1);
         map.put("keyword", "요?");
+
         List<RandomQuestionDTO> randomQuestionDTOs =
                 randomQuestionService.findRandomQuestionByKeyword(map);
 
         assertNotNull(randomQuestionDTOs);
+    }
+
+    @DisplayName("회원번호와 질문번호로 랜덤질문 답변 조회")
+    @Test
+    public void getRandomReply() {
+        int userNo = 1;
+        int randomQuestionNo = 1;
+        Map<String, Object> map = new HashMap<>();
+        map.put("userNo", userNo);
+        map.put("randomQuestionNo", randomQuestionNo);
+
+        RandomReplyDTO randomReplyDTO =
+                randomQuestionService.findRandomReplyByQuestionNoAndUserNo(map);
+
+        assertNotNull(randomReplyDTO);
     }
 }
