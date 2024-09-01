@@ -9,4 +9,6 @@ public interface ScheduleService {
     void registSchedule(ScheduleDTO scheduleDTO);
 
     void updateSchedule(ScheduleDTO scheduleDTO);
+
+    void deleteSchedule(ScheduleDTO scheduleDTO);
 }

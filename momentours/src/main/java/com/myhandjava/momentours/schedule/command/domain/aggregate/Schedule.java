@@ -33,4 +33,7 @@ public class Schedule {
     @Column
     private int coupleNo;
 
+    @Column
+    private int scheduleIsDeleted;
+
 }
