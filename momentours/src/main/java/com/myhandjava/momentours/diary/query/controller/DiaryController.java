@@ -28,15 +28,7 @@ public class DiaryController {
 
         DiaryDTO diaryDTO = new DiaryDTO();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = dateFormat.parse(diaryCreateDate);
-            diaryDTO.setDiaryCreateDate(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            // 날짜 파싱 실패 시 적절한 에러 처리
-            return "Invalid date format";
-        }
+        diaryDTO.setDiaryCreateDate(diaryCreateDate);
 
         diaryDTO.setCoupleNo(coupleNo);
         List<DiaryDTO> list = diaryService.selectDiary(diaryDTO);

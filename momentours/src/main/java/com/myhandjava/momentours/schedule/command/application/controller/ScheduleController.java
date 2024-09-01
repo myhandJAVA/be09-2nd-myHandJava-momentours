@@ -26,4 +26,11 @@ public class ScheduleController {
         scheduleService.updateSchedule(scheduleDTO);
         return "redirect:/calendar/"+coupleNo;
     }
+
+    @DeleteMapping("/calendar/{coupleNo}")
+    public String deleteSchedule(@PathVariable int coupleNo, @RequestBody ScheduleDTO scheduleDTO){
+        scheduleDTO.setCoupleNo(coupleNo);
+        scheduleService.deleteSchedule(scheduleDTO);
+        return "redirect:/calendar/" + coupleNo;
+    }
 }
