@@ -8,5 +8,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-    List<FileEntity> saveFile(List<MultipartFile> files, Diary diary) throws IOException;
+    List<FileEntity> saveFileDiary(List<MultipartFile> files, Diary diary) throws IOException;
 }

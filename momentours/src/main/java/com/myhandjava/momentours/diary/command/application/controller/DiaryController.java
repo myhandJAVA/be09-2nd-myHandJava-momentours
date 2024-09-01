@@ -36,7 +36,11 @@ public class DiaryController {
 
     // 일기 등록
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registDiary(@RequestBody RequestRegistDiaryVO newDiary) {
+    public ResponseEntity<ResponseMessage> registDiary(@ModelAttribute RequestRegistDiaryVO newDiary,
+                                                       @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+
+        System.out.println("newDiary = " + newDiary);
+        newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryService.registDiary(diaryDTO);
 
@@ -46,8 +50,6 @@ public class DiaryController {
         ResponseMessage responseMessage = new ResponseMessage(201, "등록성공!", responseMap);
 
         return ResponseEntity
-                .created(URI.create("/diary"))
-                .build()
                 .status(HttpStatus.CREATED)
                 .body(responseMessage);
     }
