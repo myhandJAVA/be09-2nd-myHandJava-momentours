@@ -1,6 +1,11 @@
 package com.myhandjava.momentours.diary.command.application.service;
 
 import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
+import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
+import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
+import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
+import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
+import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +25,12 @@ class DiaryServiceImplTests {
 
     @Autowired
     private DiaryService diaryService;
+
+    @Autowired
+    private DiaryRepository diaryRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @DisplayName("일기 등록 확인 테스트")
     @Test
@@ -42,6 +56,48 @@ class DiaryServiceImplTests {
         Assertions.assertDoesNotThrow(
                 () -> diaryService.removeDiary(7, 2)
         );
+    }
+
+    @Test
+    @DisplayName("일기 수정 확인 테스트")
+    @Transactional
+    void modifyDiary() throws IOException {
+        // 테스트용 일기 추가
+        Diary diary = new Diary();
+        diary.setDiaryContent("수정이 이렇게 오래 걸릴줄은 몰랐다.. 다 파일 때문이야");
+        diary.setDiaryCreateDate(LocalDateTime.now());
+        diary.setDiaryUpdateDate(LocalDateTime.now());
+        diary.setDiaryUserNo(7);
+        diary.setCoupleNo(2);
+        diaryRepository.save(diary);
+
+        // 테스트용 파일 추가
+        FileEntity initialFile = new FileEntity();
+        initialFile.setFileOriginalName("initialFile.jpg");
+        initialFile.setFileSaveName("initialFile.jpg");
+        initialFile.setFileSize(BigDecimal.valueOf(1024));
+        initialFile.setFileExtension(".jpg");
+        initialFile.setFileDirectory("/uploads/");
+        initialFile.setFileIsDeleted(false);
+        initialFile.setFileBoardSort(FileBoardSort.DIARY);
+        initialFile.setDiary(diary);
+        fileRepository.save(initialFile);
+
+        //일기 수정 호출
+        DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDTO.setDiaryContent("그래도 드디어 끝냈다!!!");
+        diaryDTO.setDiaryUpdateDate(LocalDateTime.now());
+
+        // 수정 호출
+        Assertions.assertDoesNotThrow(() -> diaryService.modifyDiary(diaryDTO, 7, diary.getDiaryNo()));
+
+        // 수정된 일기 확인
+        Diary modifiedDiary = diaryRepository.findById(diary.getDiaryNo()).orElseThrow();
+        Assertions.assertEquals("그래도 드디어 끝냈다!!!", modifiedDiary.getDiaryContent());
+
+        // 파일 삭제 및 재검증
+        Optional<FileEntity> deletedFile = fileRepository.findById(initialFile.getFileNo());
+        Assertions.assertTrue(deletedFile.isEmpty(), "파일이 삭제되었는지 확인");
     }
 
 }
