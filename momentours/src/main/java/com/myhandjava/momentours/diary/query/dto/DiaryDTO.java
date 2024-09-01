@@ -1,10 +1,9 @@
 package com.myhandjava.momentours.diary.query.dto;
 
+import com.myhandjava.momentours.file.query.dto.FileDTO;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,11 +13,13 @@ import java.util.Date;
 public class DiaryDTO {
     private int diaryNo;
     private String diaryContent;
-    private Date diaryCreateDate;
-    private Date diaryUpdateDate;
+    private String diaryCreateDate;
+    private String diaryUpdateDate;
     private int diaryUserNo;
     private int coupleNo;
-    private int coupleDeleted;
+    private int diaryIsDeleted;
+
+    private List<FileDTO> files;
 
 }
 
