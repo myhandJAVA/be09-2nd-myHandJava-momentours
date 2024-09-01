@@ -9,6 +9,7 @@ import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,9 @@ class DiaryServiceImplTests {
     @Autowired
     private FileRepository fileRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @DisplayName("일기 등록 확인 테스트")
     @Test
     @Transactional
@@ -39,13 +43,29 @@ class DiaryServiceImplTests {
 
         DiaryDTO diaryDTO = new DiaryDTO();
         diaryDTO.setDiaryContent("오늘은 열심히 프로젝트를 했다. 일기 등록을 끝내고 싶다.");
-        diaryDTO.setDiaryCreateDate(LocalDateTime.now());
         diaryDTO.setDiaryUserNo(1);
         diaryDTO.setCoupleNo(1);
+
+        Diary diary = modelMapper.map(diaryDTO, Diary.class);
+
+        // 테스트용 파일 추가
+        FileEntity initialFile = new FileEntity();
+        initialFile.setFileOriginalName("initialFile.jpg");
+        initialFile.setFileSaveName("initialFile.jpg");
+        initialFile.setFileSize(BigDecimal.valueOf(1024));
+        initialFile.setFileExtension(".jpg");
+        initialFile.setFileDirectory("/uploads/");
+        initialFile.setFileIsDeleted(false);
+        initialFile.setFileBoardSort(FileBoardSort.DIARY);
+        initialFile.setDiary(diary);
+        fileRepository.save(initialFile);
 
         Assertions.assertDoesNotThrow(
                 () -> diaryService.registDiary(diaryDTO)
         );
+
+        Diary registedDiary = diaryRepository.findById(diary.getDiaryNo()).orElseThrow();
+        Assertions.assertEquals("오늘은 열심히 프로젝트를 했다. 일기 등록을 끝내고 싶다.", registedDiary.getDiaryContent());
     }
 
     @DisplayName("일기 삭제 확인 테스트")

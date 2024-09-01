@@ -5,8 +5,6 @@ import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +28,7 @@ public class FileServiceImpl implements FileService {
         this.resourceLoader = resourceLoader;
     }
 
-    public List<FileEntity> saveFile(List<MultipartFile> files, Diary diary) throws IOException {
+    public List<FileEntity> saveFileDiary(List<MultipartFile> files, Diary diary) throws IOException {
         if(files.isEmpty()) {
             throw new IOException("업로드된 파일이 없습니다.");
         }
@@ -46,9 +44,6 @@ public class FileServiceImpl implements FileService {
             String originalFilename = files.get(i).getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String saveName = UUID.randomUUID().toString().replace("-", "") + extension;
-
-            System.out.println("filePath = " + filePath);
-            System.out.println("diary = " + diary);
 
             FileEntity diaryFile = new FileEntity();
             diaryFile.setFileOriginalName(originalFilename);

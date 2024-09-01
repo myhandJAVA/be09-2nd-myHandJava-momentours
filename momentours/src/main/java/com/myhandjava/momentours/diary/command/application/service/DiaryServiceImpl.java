@@ -4,7 +4,6 @@ import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
 import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
 import com.myhandjava.momentours.file.command.application.service.FileService;
-import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +12,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service("diaryCommandServiceImpl")
 @Slf4j
@@ -42,11 +38,16 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void registDiary(DiaryDTO newDiary) {
+    public void registDiary(DiaryDTO newDiary) throws IOException {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        newDiary.setDiaryCreateDate(LocalDateTime.now());
         Diary diary = modelMapper.map(newDiary, Diary.class);
 
         diaryRepository.save(diary);
+
+        if(newDiary.getFiles() != null && !newDiary.getFiles().isEmpty()) {
+            fileService.saveFileDiary(newDiary.getFiles(), diary);
+        }
     }
 
     @Override
@@ -81,7 +82,7 @@ public class DiaryServiceImpl implements DiaryService {
         fileRepository.deleteByDiary(diary);
 
         if(diaryDTO.getFiles() != null && !diaryDTO.getFiles().isEmpty()) {
-            fileService.saveFile(diaryDTO.getFiles(), diary);
+            fileService.saveFileDiary(diaryDTO.getFiles(), diary);
         }
     }
 }

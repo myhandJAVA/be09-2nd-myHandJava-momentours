@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface DiaryService {
 
-    void registDiary(DiaryDTO newDiary);
+    void registDiary(DiaryDTO newDiary) throws IOException;
 
     void removeDiary(int diaryNo, int userNo);
 
