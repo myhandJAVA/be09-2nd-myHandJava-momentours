@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@Getter
 @ToString
 public class Diary {
 
@@ -34,5 +35,5 @@ public class Diary {
     private int coupleNo;
 
     @Column
-    private int diaryIsDeleted;
+    private boolean diaryIsDeleted;
 }

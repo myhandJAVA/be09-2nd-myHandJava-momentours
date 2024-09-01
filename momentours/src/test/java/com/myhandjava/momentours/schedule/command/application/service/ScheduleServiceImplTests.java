@@ -64,4 +64,22 @@ class ScheduleServiceImplTests {
 
     }
 
+    @Transactional
+    @Test
+    void 일정_삭제_테스트(){
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        scheduleDTO.setScheduleNo(1);
+
+        Schedule notDeletedSchedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
+        int oldScheduleIsDeleted = notDeletedSchedule.getScheduleIsDeleted();
+
+        scheduleService.deleteSchedule(scheduleDTO);
+
+        Schedule deletedSchedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
+        int newScheduleIsDeleted = deletedSchedule.getScheduleIsDeleted();
+
+        Assertions.assertNotEquals(oldScheduleIsDeleted,newScheduleIsDeleted);
+        Assertions.assertEquals(1,newScheduleIsDeleted);
+    }
+
 }
