@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.momentcourse.query.repository.MomentCourseMapper">
+
+    <resultMap id="momentCourseResultMap" type="com.myhandjava.momentours.momentcourse.query.dto.MomentCourseDTO">
+        <id property="momCourseNo" column="mom_course_no"/>
+        <result property="momCourseTitle" column="mom_course_title"/>
+        <result property="momCourseSort" column="mom_course_sort"/>
+        <result property="momCourseLike" column="mom_course_like"/>
+        <result property="momCourseCreateTime" column="mom_course_create_date"/>
+        <result property="momCourseUpdateTime" column="mom_course_update_date"/>
+        <result property="momCourseMemo" column="mom_course_memo"/>
+        <result property="momCoursePublic" column="mom_course_public"/>
+        <result property="momCourseIsDeleted" column="mom_course_is_deleted"/>
+        <result property="momCourseCoupleNo" column="mom_course_couple_no"/>
+        <result property="momCourseFavorite" column="mom_course_favorite"/>
+
+    </resultMap>
+
+    <!-- 추억 코스 전체 조회 -->
+    <select id="findAllMomentCourse" resultMap="momentCourseResultMap" parameterType="_int">
+        SELECT mom_course_no
+             , mom_course_title
+             , mom_course_sort
+             , mom_course_like
+             , mom_course_create_date
+             , mom_course_update_date
+             , mom_course_memo
+             , mom_course_public
+             , mom_course_is_deleted
+             , mom_course_couple_no
+             , mom_course_favorite
+          FROM tb_momentcourse
+         WHERE mom_course_public = false
+               AND mom_course_couple_no = ${ mom_course_couple_no }
+               OR mom_course_public = true
+    </select>
+
+    <!-- 추억 코스 상세 조회 -->
+    <select id="findMomentCourseByMomCourseNo" resultMap="momentCourseResultMap" parameterType="_int">
+        SELECT mom_course_no
+        , mom_course_title
+        , mom_course_sort
+        , mom_course_like
+        , mom_course_create_date
+        , mom_course_update_date
+        , mom_course_memo
+        , mom_course_public
+        , mom_course_is_deleted
+        , mom_course_couple_no
+        , mom_course_favorite
+        FROM tb_momentcourse
+        WHERE (mom_course_public = false
+              AND mom_course_couple_no = ${ momCourseCoupleNo }
+              OR mom_course_public = true)
+              AND mom_course_no = ${ momCourseNo }
+    </select>
+    
+</mapper>
