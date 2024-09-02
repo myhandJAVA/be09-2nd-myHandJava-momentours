@@ -37,8 +37,8 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
 //        int coupleNo = coupleService.getCoupleByUserNo(userNo);
         RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByMemberNo(userNo);  // coupleNo가 들어가야 맞지만 오류가 생기지 않도록 userNo 넣어놓음
         RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(
-                randomQuestion.getRandquesno(), randomQuestion.getRandquescreatedate(), randomQuestion.getRandquescontent(),
-                randomQuestion.getRandquesreply(), randomQuestion.getRandquesisdeleted(), randomQuestion.getRandquescoupleno()
+                randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(), randomQuestion.getRandQuesContent(),
+                randomQuestion.getRandQuesReply(), randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
         );
         log.info("반환된 값: {}", randomQuestionDTO);
         return randomQuestionDTO;
@@ -50,9 +50,9 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
         List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByMemberNo(userNo);  // userNo -> coupleNo로 바뀔 예정
 
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
-                new RandomQuestionDTO(randomQuestion.getRandquesno(), randomQuestion.getRandquescreatedate(),
-                        randomQuestion.getRandquescontent(), randomQuestion.getRandquesreply(),
-                        randomQuestion.getRandquesisdeleted(), randomQuestion.getRandquescoupleno()
+                new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
+                        randomQuestion.getRandQuesContent(), randomQuestion.getRandQuesReply(),
+                        randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
                         )).collect(Collectors.toList());
 
         log.info("반환된 값: {}", randomQuestionDTOList);
@@ -63,8 +63,8 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
     public RandomQuestionDTO findRandomQuestionByDate(Map<String, Object> map) {
         RandomQuestion randomQuestion = randomQuestionMapper.findRandomQuestionByDate(map);
         RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(
-                randomQuestion.getRandquesno(), randomQuestion.getRandquescreatedate(), randomQuestion.getRandquescontent(),
-                randomQuestion.getRandquesreply(), randomQuestion.getRandquesisdeleted(), randomQuestion.getRandquescoupleno()
+                randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(), randomQuestion.getRandQuesContent(),
+                randomQuestion.getRandQuesReply(), randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
         );
 
         log.info("반환된 값: {}", randomQuestionDTO);
@@ -76,9 +76,9 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
         List<RandomQuestion> randomQuestions = randomQuestionMapper.findRandomQuestionByKeyword(map);
 
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
-                new RandomQuestionDTO(randomQuestion.getRandquesno(), randomQuestion.getRandquescreatedate(),
-                        randomQuestion.getRandquescontent(), randomQuestion.getRandquesreply(),
-                        randomQuestion.getRandquesisdeleted(), randomQuestion.getRandquescoupleno()
+                new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
+                        randomQuestion.getRandQuesContent(), randomQuestion.getRandQuesReply(),
+                        randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
                 )).collect(Collectors.toList());
 
         log.info("반환된 값: {}", randomQuestionDTOList);
@@ -94,18 +94,18 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
 //        int partnerNo = (couple.getUserNo1() == userNo) ? couple.getUserNo2() : couple.getUserNo1();
 
         RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByMemberNo(userNo);
-        RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(randomQuestion.getRandquesno(), randomQuestion.getRandquescreatedate(),
-                                                    randomQuestion.getRandquescontent(), randomQuestion.getRandquesreply(),
-                                                    randomQuestion.getRandquesisdeleted(), randomQuestion.getRandquescoupleno()
+        RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
+                                                    randomQuestion.getRandQuesContent(), randomQuestion.getRandQuesReply(),
+                                                    randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
         );
 
         Map<String, Object> usermap = new HashMap<>();
         usermap.put("userNo", userNo);
-        usermap.put("randomQuestionNo", randomQuestion.getRandquesno());
+        usermap.put("randomQuestionNo", randomQuestion.getRandQuesNo());
 
         Map<String, Object> partnermap = new HashMap<>();
         partnermap.put("userNo", userNo);  // userNo -> partnerNo로 바뀔 예정
-        partnermap.put("randomQuestionNo", randomQuestion.getRandquesno());
+        partnermap.put("randomQuestionNo", randomQuestion.getRandQuesNo());
 
         RandomReplyDTO userReplyDTO = findRandomReplyByQuestionNoAndUserNo(usermap);
         RandomReplyDTO partnerReplyDTO = findRandomReplyByQuestionNoAndUserNo(partnermap);
@@ -130,8 +130,8 @@ public class RandomQuestionServiceImpl implements RandomQuestionService {
             randomReply = randomReplyMapper.findRandomReplyByQuestionNoAndUserNo(map);
             if(randomReply != null) {
                 randomReplyDTO = new RandomReplyDTO(
-                        randomReply.getRandomreplyno(), randomReply.getRandomreplycontent(), randomReply.getRandomreplyuserno(),
-                        randomReply.getRandomreplyquestionno(), randomReply.getRandomreplyisdeleted(), randomReply.getRandomcoupleno()
+                        randomReply.getRandomReplyNo(), randomReply.getRandomReplyContent(), randomReply.getRandomReplyUserNo(),
+                        randomReply.getRandomQuestionNo(), randomReply.getRandomReplyIsDeleted(), randomReply.getRandomCoupleNo()
                 );
             } else {
                 randomReplyDTO = createEmptyReplyDTO();

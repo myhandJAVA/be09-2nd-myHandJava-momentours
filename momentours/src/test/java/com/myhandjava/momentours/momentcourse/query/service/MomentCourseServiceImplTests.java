@@ -31,8 +31,8 @@ class MomentCourseServiceImplTests {
     public void testFindMomentCourseByMomCourseNo() {
         MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
 
-        momentCourseDTO.setMomCourseCoupleNo(3);
-        momentCourseDTO.setMomCourseNo(3);
+        momentCourseDTO.setMomCourseCoupleNo(1);
+        momentCourseDTO.setMomCourseNo(1);
 
         List<MomentCourseDTO> momentCourseList = momentCourseService.findMomentCourseByMomCourseNo(momentCourseDTO);
         assertNotNull(momentCourseList);
