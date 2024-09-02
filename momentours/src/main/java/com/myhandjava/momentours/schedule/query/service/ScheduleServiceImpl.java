@@ -21,11 +21,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     public List<ScheduleDTO> findAllScheduleByCoupleNo(int coupleNo) {
         List<Schedule> schedules =  scheduleMapper.findAllScheduleByCoupleNo(coupleNo);
-
-        List<ScheduleDTO> scheduleDTOList = schedules.stream().map((schedule ->
+        List<ScheduleDTO> scheduleDTOList = schedules.stream().map(
+                schedule ->
                 new ScheduleDTO(schedule.getScheduleNo(),schedule.getScheduleStartDate(),
                         schedule.getScheduleEndDate(),schedule.getScheduleTitle(),
-                        schedule.getScheduleMemo(),schedule.getCoupleNo()))).collect(Collectors.toList());
+                        schedule.getScheduleMemo(),schedule.getCoupleNo())
+        ).collect(Collectors.toList());
 
         return scheduleDTOList;
 

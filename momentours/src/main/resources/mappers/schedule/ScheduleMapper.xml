@@ -6,12 +6,12 @@
 <mapper namespace="com.myhandjava.momentours.schedule.query.repository.ScheduleMapper">
 
     <resultMap id="scheduleResultMap" type="com.myhandjava.momentours.schedule.command.domain.aggregate.Schedule">
-        <id property="scheduleNo" column="scheduleNo"/>
-        <result property="scheduleStartDate" column="scheduleStartDate"/>
-        <result property="scheduleEndDate" column="scheduleEndDate"/>
-        <result property="scheduleTitle" column="scheduleTitle"/>
-        <result property="scheduleMemo" column="scheduleMemo"/>
-        <result property="coupleNo" column="coupleNo"/>
+        <id property="scheduleNo" column="SCHEDULE_NO"/>
+        <result property="scheduleStartDate" column="SCHEDULE_START_DATE"/>
+        <result property="scheduleEndDate" column="SCHEDULE_END_DATE"/>
+        <result property="scheduleTitle" column="SCHEDULE_TITLE"/>
+        <result property="scheduleMemo" column="SCHEDULE_MEMO"/>
+        <result property="coupleNo" column="COUPLE_NO"/>
 
     </resultMap>
 
@@ -24,6 +24,6 @@
              , COUPLE_NO
           FROM TB_SCHEDULE
          WHERE COUPLE_NO = #{ coupleNo }
-           AND SCHEDULE_IS_DELETED = 1
+           AND SCHEDULE_IS_DELETED = 0
     </select>
 </mapper>
