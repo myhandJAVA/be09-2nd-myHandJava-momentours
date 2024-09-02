@@ -20,20 +20,20 @@ public class RandomQuestion {
     @Id
     @Column(name = "rand_ques_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int randquesno;
+    private int randQuesNo;
 
     @Column(name = "rand_ques_createDate")
-    private LocalDateTime randquescreatedate;
+    private LocalDateTime randQuesCreateDate;
 
     @Column(name = "rand_ques_content")
-    private String randquescontent;
+    private String randQuesContent;
 
     @Column(name = "rand_ques_reply")
-    private int randquesreply;
+    private int randQuesReply;
 
     @Column(name = "rand_ques_is_deleted")
-    private int randquesisdeleted;
+    private int randQuesIsDeleted;
 
     @Column(name = "rand_ques_couple_no")
-    private int randquescoupleno;
+    private int randQuesCoupleNo;
 }
