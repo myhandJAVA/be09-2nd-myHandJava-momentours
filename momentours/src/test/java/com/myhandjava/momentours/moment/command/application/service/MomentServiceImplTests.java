@@ -1,5 +1,8 @@
 package com.myhandjava.momentours.moment.command.application.service;
 
+import com.myhandjava.momentours.moment.command.application.dto.MomentDTO;
+import com.myhandjava.momentours.moment.command.domain.aggregate.Moment;
+import com.myhandjava.momentours.moment.command.domain.aggregate.MomentCategory;
 import com.myhandjava.momentours.moment.command.domain.repository.MomentRepository;
 import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByCoupleNoVO;
 import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByMomentPublicVO;
@@ -54,6 +57,38 @@ class MomentServiceImplTests {
 
         System.out.println("result 공개 여부: " + result.get(0).getMomentPublic());
         result.forEach(vo -> assertTrue(vo.getMomentPublic() == 1));
+    }
+
+    @DisplayName("추억 등록 테스트")
+    @Test
+    void registMoment() {
+        // given
+        MomentDTO newMomentDTO = new MomentDTO();
+        newMomentDTO.setMomentTitle("동해 바다 여행");
+        newMomentDTO.setMomentCategory(MomentCategory.여행);
+        newMomentDTO.setMomentContent("동해 바다를 보면 왠지 모르게 설레는 마음이 커진다.");
+        newMomentDTO.setMomentPublic(1);
+        newMomentDTO.setMomentLike(3);
+        newMomentDTO.setMomentView(23);
+        newMomentDTO.setMomentCoupleNo(1);
+        newMomentDTO.setMomentIsDeleted(0);
+        newMomentDTO.setMomentLongitude(37.80605);
+        newMomentDTO.setMomentLatitude(128.9081);
+        newMomentDTO.setMomentAddress("강원도 강릉시 안현동 산1");
+        newMomentDTO.setMomentLocationName("경포대");
+
+        // when
+        momentService.registMoment(newMomentDTO);
+
+        // then
+        Moment savedMoment = momentRepository.findAll().stream()
+                .filter(moment -> moment.getMomentTitle().equals("동해 바다 여행"))
+                .findFirst()
+                .orElse(null);
+
+        assertNotNull(savedMoment);
+        assertEquals("동해 바다 여행", savedMoment.getMomentTitle());
+        assertEquals(1, savedMoment.getMomentCoupleNo());
     }
 
 }
