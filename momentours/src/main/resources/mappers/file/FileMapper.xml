@@ -12,7 +12,7 @@
         <result property="fileExtension" column="file_extension"/>
         <result property="fileDirectory" column="file_directory"/>
         <result property="fileIsDeleted" column="file_is_deleted"/>
-<!--        <result property="fileBoardSort" column="file_board_sort"/>-->
+        <result property="fileBoardSort" column="file_board_sort" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         <result property="inquiryNo" column="inquiry_no"/>
         <result property="momentNo" column="moment_no"/>
         <result property="coupleNo" column="couple_no"/>
@@ -28,9 +28,11 @@
              , file_extension
              , file_directory
              , file_is_deleted
+             , file_board_sort
              , diary_no
           FROM tb_file
          WHERE diary_no = #{ diaryNo }
+           AND file_is_deleted = false
     </select>
 
 </mapper>

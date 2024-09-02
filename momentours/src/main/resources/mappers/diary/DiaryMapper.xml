@@ -25,6 +25,7 @@
           FROM tb_diary
          WHERE couple_no = #{ coupleNo }
            AND DATE(diary_create_date) = #{diaryCreateDate}
+           AND diary_is_deleted = false
     </select>
 
 </mapper>

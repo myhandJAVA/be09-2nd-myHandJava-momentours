@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface FileService {
     List<FileEntity> saveFileDiary(List<MultipartFile> files, Diary diary) throws IOException;
+
+    void updateFileDiaryIsDeleted(Diary diary);
 }
