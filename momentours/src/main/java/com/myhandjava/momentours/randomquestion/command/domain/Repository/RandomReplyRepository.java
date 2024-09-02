@@ -3,6 +3,8 @@ package com.myhandjava.momentours.randomquestion.command.domain.Repository;
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface RandomReplyRepository extends JpaRepository<RandomReply, Integer> {
-    RandomReply findByRandomQuestionNoAndRandomReplyUserNo(int randomreplyno, int randomreplyuserno);
+    Optional<RandomReply> findByRandomReplyNo(int randomReplyNo);
 }

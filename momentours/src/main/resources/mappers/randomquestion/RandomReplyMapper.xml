@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myhandjava.momentours.randomquestion.query.repository.RandomReplyMapper">
     <resultMap id="RandomReplyResultMap" type="com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply">
-        <id property="randomreplyno" column="random_reply_no"/>
-        <result property="randomreplycontent" column="random_reply_content"/>
-        <result property="randomreplyuserno" column="random_reply_user_no"/>
-        <result property="randomreplyquestionno" column="random_reply_question_no"/>
-        <result property="randomreplyisdeleted" column="random_reply_is_deleted"/>
-        <result property="randomcoupleno" column="random_couple_no"/>
+        <id property="randomReplyNo" column="random_reply_no"/>
+        <result property="randomReplyContent" column="random_reply_content"/>
+        <result property="randomReplyUserNo" column="random_reply_user_no"/>
+        <result property="randomQuestionNo" column="random_question_no"/>
+        <result property="randomReplyIsDeleted" column="random_reply_is_deleted"/>
+        <result property="randomCoupleNo" column="random_couple_no"/>
     </resultMap>
         <!-- 랜덤 질문의 답변은 반드시 질문이 먼저 조회된 후에 질문과 같이 하나의 답변만 보여주는 쿼리만 있으면 된다 -->
     <select id="findRandomReplyByQuestionNoAndUserNo" resultMap="RandomReplyResultMap" parameterType="map">
