@@ -8,11 +8,13 @@ import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByMo
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,10 @@ public class MomentServiceImpl implements MomentService {
     @Override
     @Transactional
     public void registMoment(MomentDTO newMoment) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        newMoment.setMomentCreateDate(LocalDateTime.now());
+        newMoment.setMomentUpdateDate(LocalDateTime.now());
         momentRepository.save(modelMapper.map(newMoment, Moment.class));
+        log.info("New moment: {}", newMoment);
     }
 }

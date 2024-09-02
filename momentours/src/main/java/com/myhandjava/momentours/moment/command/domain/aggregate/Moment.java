@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class Moment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moment_no")
     private int momentNo;
 
@@ -23,7 +24,6 @@ public class Moment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "moment_category")
-    @Convert(converter = MomentCategoryConverter.class)
     private MomentCategory momentCategory;
 
     @Column(name = "moment_content")
