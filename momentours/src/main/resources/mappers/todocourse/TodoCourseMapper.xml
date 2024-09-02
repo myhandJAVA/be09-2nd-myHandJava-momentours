@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.todocourse.query.repository.TodoCourseMapper">
+
+    <resultMap id="todoCourseResultMap" type="com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO">
+        <id property="ToDoCourseNo" column="to_do_course_no"/>
+        <result property="ToDoCourseTitle" column="to_do_course_title"/>
+        <result property="ToDoCourseSort" column="to_do_course_sort"/>
+        <result property="ToDoCourseLike" column="to_do_course_like"/>
+        <result property="ToDoCourseCreateDate" column="to_do_course_create_date"/>
+        <result property="ToDoCourseUpdateDate" column="to_do_course_update_date"/>
+        <result property="ToDoCourseStartDate" column="to_do_course_start_date"/>
+        <result property="ToDoCourseEndDate" column="to_do_course_end_date"/>
+        <result property="ToDoCourseMemo" column="to_do_course_memo"/>
+        <result property="ToDoCourseIsDeleted" column="to_do_course_is_deleted"/>
+        <result property="ToDoCourseCoupleNo" column="to_do_course_couple_no"/>
+    </resultMap>
+
+    <!-- 예정 코스 전체 조회 -->
+    <select id="findAllTodoCourse" resultMap="todoCourseResultMap" parameterType="_int">
+        SELECT to_do_course_no
+        , to_do_course_title
+        , to_do_course_sort
+        , to_do_course_like
+        , to_do_course_create_date
+        , to_do_course_update_date
+        , to_do_course_start_date
+        , to_do_course_end_date
+        , to_do_course_memo
+        , to_do_course_is_deleted
+        , to_do_course_couple_no
+        FROM tb_todocourse
+        WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
+    </select>
+
+    <!-- 예정 코스 상세 조회 -->
+    <select id="findTodoCourseByTodoCourseNo"
+            resultMap="todoCourseResultMap"
+            parameterType="com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO">
+        SELECT to_do_course_no
+        , to_do_course_title
+        , to_do_course_sort
+        , to_do_course_like
+        , to_do_course_create_date
+        , to_do_course_update_date
+        , to_do_course_start_date
+        , to_do_course_end_date
+        , to_do_course_memo
+        , to_do_course_is_deleted
+        , to_do_course_couple_no
+        FROM tb_todocourse
+        WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
+        AND to_do_course_no = ${ ToDoCourseNo }
+
+    </select>
+
+</mapper>

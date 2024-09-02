@@ -5,26 +5,27 @@
 <mapper namespace="com.myhandjava.momentours.diary.query.repository.DiaryMapper">
 
     <resultMap id="diaryResultMap" type="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
-        <id property="diaryNo" column="diaryNo"/>
-        <result property="diaryContent" column="diaryContent"/>
-        <result property="diaryCreateDate" column="diaryCreateDate"/>
-        <result property="diaryUpdateDate" column="diaryUpdateDate"/>
-        <result property="diaryUserNo" column="diaryUserNo"/>
-        <result property="coupleNo" column="coupleNo"/>
-        <result property="coupleDeleted" column="coupleDeleted"/>
+        <id property="diaryNo" column="diary_no"/>
+        <result property="diaryContent" column="diary_content"/>
+        <result property="diaryCreateDate" column="diary_create_date"/>
+        <result property="diaryUpdateDate" column="diary_update_date"/>
+        <result property="diaryUserNo" column="diary_user_no"/>
+        <result property="coupleNo" column="couple_no"/>
+        <result property="diaryIsDeleted" column="diary_is_deleted"/>
     </resultMap>
 
     <select id="selectDiary" resultMap="diaryResultMap" parameterType="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
-        SELECT diaryNo
-             , diaryContent
-             , DATE_FORMAT(diaryCreateDate, '%Y-%m-%d') AS formatCreateDate
-             , DATE_FORMAT(diaryUpdateDate, '%Y-%m-%d') AS formatUpdateDate
-             , diaryUserNo
-             , coupleNo
-             , coupleIsDeleted
-          FROM diary
-         WHERE coupleNo = #{ coupleNo }
-           AND DATE(diaryCreateDate) = #{diaryCreateDate}
+        SELECT diary_no
+             , diary_content
+             , diary_create_date
+             , diary_update_date
+             , diary_user_no
+             , couple_no
+             , diary_is_deleted
+          FROM tb_diary
+         WHERE couple_no = #{ coupleNo }
+           AND DATE(diary_create_date) = #{diaryCreateDate}
+           AND diary_is_deleted = false
     </select>
 
 </mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.moment.query.repository.MomentMapper">
+
+    <resultMap id="momentResultMap" type="com.myhandjava.momentours.moment.query.dto.MomentDTO">
+        <id property="momentNo" column="moment_no"/>
+        <result property="momentTitle" column="moment_title"/>
+        <result property="momentCategory" column="moment_category"/>
+        <result property="momentContent" column="moment_content"/>
+        <result property="momentCreateDate" column="moment_create_date"/>
+        <result property="momentUpdateDate" column="moment_update_date"/>
+        <result property="momentPublic" column="moment_public"/>
+        <result property="momentLike" column="moment_like"/>
+        <result property="momentView" column="moment_view"/>
+        <result property="momentCoupleNo" column="moment_couple_no"/>
+        <result property="momentIsdeleted" column="moment_is_deleted"/>
+        <result property="momentLongitude" column="moment_longitude"/>
+        <result property="momentLatitude" column="moment_latitude"/>
+        <result property="momentAddress" column="moment_address"/>
+        <result property="momentLocationName" column="moment_location_name"/>
+    </resultMap>
+
+    <select id="findAllMomentByCoupleNo" resultMap="momentResultMap" parameterType="com.myhandjava.momentours.moment.query.dto.MomentDTO">
+        SELECT
+               moment_no
+             , moment_title
+             , moment_category
+             , moment_content
+             , DATE_FORMAT(moment_create_date, '%Y-%m-%d') AS moment_create_date
+             , DATE_FORMAT(moment_update_date, '%Y-%m-%d') AS moment_update_date
+             , moment_public
+             , moment_like
+             , moment_view
+             , moment_couple_no
+             , moment_is_deleted
+             , momment_longitude
+             , moment_latitude
+             , moment_address
+             , moment_location_name
+          FROM TB_MOMENT
+         WHERE moment_couple_no = #{ coupleNo }
+    </select>
+
+</mapper>

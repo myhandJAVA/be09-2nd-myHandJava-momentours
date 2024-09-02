@@ -24,15 +24,8 @@ class DiaryServiceImplTests {
     void testFindAllDiary() {
         DiaryDTO diaryDTO = new DiaryDTO();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = dateFormat.parse("2024-01-01");
-            diaryDTO.setDiaryCreateDate(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        diaryDTO.setCoupleNo(1);
+        diaryDTO.setDiaryCreateDate("2024-01-02");
+        diaryDTO.setCoupleNo(2);
 
         List<DiaryDTO> result = diaryService.selectDiary(diaryDTO);
 
