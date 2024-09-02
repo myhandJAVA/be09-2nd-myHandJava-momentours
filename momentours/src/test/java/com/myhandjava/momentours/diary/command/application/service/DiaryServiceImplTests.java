@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,7 +57,7 @@ class DiaryServiceImplTests {
         initialFile.setFileExtension(".jpg");
         initialFile.setFileDirectory("/uploads/");
         initialFile.setFileIsDeleted(false);
-        initialFile.setFileBoardSort(FileBoardSort.DIARY);
+        initialFile.setFileBoardSort(FileBoardSort.diary);
         initialFile.setDiary(diary);
         fileRepository.save(initialFile);
 
@@ -73,9 +74,15 @@ class DiaryServiceImplTests {
     @Transactional
     void removeDiary() {
 
-        Assertions.assertDoesNotThrow(
-                () -> diaryService.removeDiary(7, 2)
-        );
+        Assertions.assertDoesNotThrow(() -> diaryService.removeDiary(12, 2));
+
+        Diary deletedDiary = diaryRepository.findById(12)
+                .orElseThrow(() -> new AssertionError("일기 찾을 수 없습니다."));
+
+        List<FileEntity> deletedFiles = fileRepository.findByDiary(deletedDiary);
+        for (FileEntity file : deletedFiles) {
+            Assertions.assertTrue(file.isFileIsDeleted(), "isFileIsDeleted의 값이 true가 아님");
+        }
     }
 
     @Test
@@ -99,7 +106,7 @@ class DiaryServiceImplTests {
         initialFile.setFileExtension(".jpg");
         initialFile.setFileDirectory("/uploads/");
         initialFile.setFileIsDeleted(false);
-        initialFile.setFileBoardSort(FileBoardSort.DIARY);
+        initialFile.setFileBoardSort(FileBoardSort.diary);
         initialFile.setDiary(diary);
         fileRepository.save(initialFile);
 

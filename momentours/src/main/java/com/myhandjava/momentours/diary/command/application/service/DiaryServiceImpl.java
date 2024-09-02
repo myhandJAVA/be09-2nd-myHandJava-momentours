@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -56,15 +58,10 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));;
 
-        if (diary != null) {
-            DiaryDTO diaryDTO = new DiaryDTO();
-            diaryDTO.setDiaryIsDeleted(1);
+        diary.setDiaryIsDeleted(true);
 
-            Diary diary1 = modelMapper.map(diaryDTO, Diary.class);
-            diaryRepository.save(diary1);
-        } else {
-            throw new EntityNotFoundException("해당 일기가 존재하지 않습니다.");
-        }
+        fileService.updateFileDiaryIsDeleted(diary);
+        diaryRepository.save(diary);
 
     }
 
