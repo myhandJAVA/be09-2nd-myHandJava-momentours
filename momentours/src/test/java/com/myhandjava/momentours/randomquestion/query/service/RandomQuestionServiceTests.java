@@ -1,6 +1,5 @@
 package com.myhandjava.momentours.randomquestion.query.service;
 
-import com.myhandjava.momentours.config.MybatisConfiguration;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomReplyDTO;
 import org.junit.jupiter.api.DisplayName;
@@ -18,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class RandomQuestionServiceTests {
 
     @Autowired
-    private RandomQuestionService randomQuestionService;
+    private RandomQuestionAndReplyService randomQuestionService;
 
     @DisplayName("회원 번호로 가장 최신 랜덤질문 조회")
     @Test
     public void getRandomQuestion() {
         int userNo = 1;
         RandomQuestionDTO randomQuestionDTO =
-                randomQuestionService.findCurrentRandomQuestionByMemberNo(userNo);
+                randomQuestionService.findCurrentRandomQuestionByCoupleNo(userNo);
 
         assertNotNull(randomQuestionDTO);
     }
@@ -35,7 +34,7 @@ class RandomQuestionServiceTests {
     public void getAllRandomQuestion() {
         int userNo = 1;
         List<RandomQuestionDTO> randomQuestionDTOs =
-                randomQuestionService.findAllRandomQuestionByMemberNo(userNo);
+                randomQuestionService.findAllRandomQuestionByCoupleNo(userNo);
 
         assertNotNull(randomQuestionDTOs);
     }

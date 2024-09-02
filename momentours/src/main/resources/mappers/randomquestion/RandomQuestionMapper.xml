@@ -12,7 +12,7 @@
         <result property="randQuesIsDeleted" column="rand_ques_is_deleted"/>
         <result property="randQuesCoupleNo" column="rand_ques_couple_no"/>
     </resultMap>
-    <select id="findCurrentRandomQuestionByMemberNo" resultMap="RandomQuestionResultMap">
+    <select id="findCurrentRandomQuestionByCoupleNo" resultMap="RandomQuestionResultMap">
         SELECT
             rq.rand_ques_no,
             rq.rand_ques_content,
@@ -31,19 +31,18 @@
             LIMIT 1;
     </select>
 
-    <select id="findAllRandomQuestionByMemberNo" resultMap="RandomQuestionResultMap">
+    <select id="findAllRandomQuestionByCoupleNo" resultMap="RandomQuestionResultMap">
         SELECT
-               rq.rand_ques_no
+            rq.rand_ques_no
              , rq.rand_ques_content
              , rq.rand_ques_createDate
              , rq.rand_ques_reply
              , rq.rand_ques_couple_no
              , rq.rand_ques_is_deleted
-          FROM tb_randomquestion rq
-          JOIN tb_couple cl ON (rq.rand_ques_couple_no = cl.couple_no)
-           AND (cl.couple_user_no1 = #{userNo} OR cl.couple_user_no2 = #{userNo})
-          JOIN tb_user u ON u.user_no = #{userNo}
-         ORDER BY rq.rand_ques_createDate DESC
+        FROM tb_randomquestion rq
+                 JOIN tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
+        WHERE cl.couple_no = #{coupleNo}
+        ORDER BY rq.rand_ques_createDate DESC;
     </select>
 
     <select id="findRandomQuestionByDate" resultMap="RandomQuestionResultMap" parameterType="map">
