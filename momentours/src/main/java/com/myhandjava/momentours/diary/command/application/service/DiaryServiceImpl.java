@@ -26,9 +26,9 @@ public class DiaryServiceImpl implements DiaryService {
     private final FileRepository fileRepository;
 
     @Autowired
-    public DiaryServiceImpl(DiaryRepository diaryRepository, 
-                            ModelMapper modelMapper, 
-                            FileService fileService, 
+    public DiaryServiceImpl(DiaryRepository diaryRepository,
+                            ModelMapper modelMapper,
+                            FileService fileService,
                             FileRepository fileRepository) {
         this.diaryRepository = diaryRepository;
         this.modelMapper = modelMapper;
@@ -73,7 +73,6 @@ public class DiaryServiceImpl implements DiaryService {
         diary.setDiaryUpdateDate(diaryDTO.getDiaryUpdateDate());
         
         diaryRepository.save(diary);
-
         fileRepository.deleteByDiary(diary);
 
         if(diaryDTO.getFiles() != null && !diaryDTO.getFiles().isEmpty()) {

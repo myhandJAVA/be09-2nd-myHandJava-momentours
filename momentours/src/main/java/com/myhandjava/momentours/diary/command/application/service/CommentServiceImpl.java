@@ -3,6 +3,7 @@ package com.myhandjava.momentours.diary.command.application.service;
 import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Comment;
 import com.myhandjava.momentours.diary.command.domain.repository.CommentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,18 @@ public class CommentServiceImpl implements CommentService{
     public void registComment(CommentDTO commentDTO) {
         commentDTO.setCommentCreateDate(LocalDateTime.now());
         Comment comment = modelMapper.map(commentDTO, Comment.class);
+
+        commentRepository.save(comment);
+    }
+
+    // 댓글 삭제
+    @Override
+    @Transactional
+    public void removeComment(int commentNo, int commentUserNo) {
+        Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentUserNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+
+        comment.setCommentIsDeleted(true);
 
         commentRepository.save(comment);
     }

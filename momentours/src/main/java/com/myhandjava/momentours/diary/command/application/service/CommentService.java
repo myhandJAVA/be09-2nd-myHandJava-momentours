@@ -5,4 +5,6 @@ import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 
 public interface CommentService {
     void registComment(CommentDTO commentDTO);
+
+    void removeComment(int commentNo, int commentUserNo);
 }
