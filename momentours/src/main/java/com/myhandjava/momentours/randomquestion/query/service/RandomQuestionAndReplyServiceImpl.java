@@ -36,7 +36,7 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
     @Override
     public RandomQuestionDTO findCurrentRandomQuestionByCoupleNo(int coupleNo) {
 //        int coupleNo = coupleService.getCoupleByUserNo(userNo);
-        RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByMemberNo(coupleNo);  // coupleNo가 들어가야 맞지만 오류가 생기지 않도록 userNo 넣어놓음
+        RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByCoupleNo(coupleNo);  // coupleNo가 들어가야 맞지만 오류가 생기지 않도록 userNo 넣어놓음
         RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(
                 randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(), randomQuestion.getRandQuesContent(),
                 randomQuestion.getRandQuesReply(), randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
@@ -47,7 +47,7 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     public List<RandomQuestionDTO> findAllRandomQuestionByCoupleNo(int coupleNo) {
-        List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByMemberNo(coupleNo);  // userNo -> coupleNo로 바뀔 예정
+        List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByCoupleNo(coupleNo);  // userNo -> coupleNo로 바뀔 예정
 
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
                 new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
