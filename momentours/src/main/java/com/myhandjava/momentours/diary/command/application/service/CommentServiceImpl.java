@@ -4,6 +4,7 @@ import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Comment;
 import com.myhandjava.momentours.diary.command.domain.repository.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 public class CommentServiceImpl implements CommentService{
 
     private final CommentRepository commentRepository;
@@ -41,6 +43,19 @@ public class CommentServiceImpl implements CommentService{
                 .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
 
         comment.setCommentIsDeleted(true);
+
+        commentRepository.save(comment);
+    }
+
+    // 댓글 수정
+    @Override
+    @Transactional
+    public void modifyComment(int commentNo, CommentDTO commentDTO) {
+        Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentDTO.getCommentUserNo())
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+
+        comment.setCommentContent(commentDTO.getCommentContent());
+        comment.setCommentUpdateDate(LocalDateTime.now());
 
         commentRepository.save(comment);
     }

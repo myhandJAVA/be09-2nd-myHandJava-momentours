@@ -3,6 +3,7 @@ package com.myhandjava.momentours.diary.command.application.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.application.service.CommentService;
+import com.myhandjava.momentours.diary.command.domain.vo.RequestModifyCommentVO;
 import com.myhandjava.momentours.diary.command.domain.vo.RequestRegistCommentVO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,23 @@ public class CommentController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    // 댓글 수정
+    @PutMapping("/{commentNo}")
+    public ResponseEntity<ResponseMessage> modifyComment(@PathVariable int commentNo,
+                                                         @RequestBody RequestModifyCommentVO modifyComment) {
+
+        CommentDTO commentDTO = modelMapper.map(modifyComment, CommentDTO.class);
+        commentService.modifyComment(commentNo, commentDTO);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("modifyComment", modifyComment);
+
+        ResponseMessage responseMessage = new ResponseMessage(201, "댓글 수정 성공!", responseMap);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseMessage);
     }
 }
