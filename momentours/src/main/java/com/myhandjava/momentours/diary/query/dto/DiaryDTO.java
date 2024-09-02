@@ -19,7 +19,9 @@ public class DiaryDTO {
     private int coupleNo;
     private int diaryIsDeleted;
 
+
     private List<FileDTO> files;
+    private List<CommentDTO> comments;
 
 }
 
