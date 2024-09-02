@@ -55,7 +55,7 @@ public class DiaryController {
     }
 
     // 일기 삭제(soft delete)
-    @PutMapping("/{diaryNo}")
+    @DeleteMapping("/{diaryNo}")
     public ResponseEntity<?> removeDiary(@PathVariable int diaryNo, @RequestParam int userNo) {
 
         diaryService.removeDiary(diaryNo, userNo);

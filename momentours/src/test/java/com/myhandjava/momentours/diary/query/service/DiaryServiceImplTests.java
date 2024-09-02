@@ -24,8 +24,8 @@ class DiaryServiceImplTests {
     void testFindAllDiary() {
         DiaryDTO diaryDTO = new DiaryDTO();
 
-        diaryDTO.setDiaryCreateDate("2024-01-02");
-        diaryDTO.setCoupleNo(2);
+        diaryDTO.setDiaryCreateDate("2024-09-02");
+        diaryDTO.setCoupleNo(1);
 
         List<DiaryDTO> result = diaryService.selectDiary(diaryDTO);
 

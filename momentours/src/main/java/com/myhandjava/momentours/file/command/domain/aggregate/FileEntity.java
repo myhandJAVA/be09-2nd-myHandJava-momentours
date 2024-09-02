@@ -41,16 +41,21 @@ public class FileEntity {
     @Column(name = "file_board_sort", nullable = false)
     private FileBoardSort fileBoardSort;
 
-    @Column(nullable = true)
-    private int inquiryNo;
-
-    @Column(nullable = true)
-    private int momentNo;
-
-    @Column(nullable = true)
-    private int coupleNo;
+    // 엔티티가 없어서...
+//    @ManyToOne
+//    @JoinColumn(name = "inquiry_no", nullable = true)
+//    private Inquiry inquiryNo;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "moment_no", nullable = true)
+//    private Moment momentNo;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "couple_no", nullable = true)
+//    private Couple coupleNo;
 
     @ManyToOne
     @JoinColumn(name = "diary_no", nullable = true)
     private Diary diary;
+
 }
