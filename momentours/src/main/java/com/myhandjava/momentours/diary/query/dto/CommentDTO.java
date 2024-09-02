@@ -2,8 +2,6 @@ package com.myhandjava.momentours.diary.query.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
