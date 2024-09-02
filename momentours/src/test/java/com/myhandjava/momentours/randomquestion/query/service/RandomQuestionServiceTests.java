@@ -1,6 +1,5 @@
 package com.myhandjava.momentours.randomquestion.query.service;
 
-import com.myhandjava.momentours.config.MybatisConfiguration;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomReplyDTO;
 import org.junit.jupiter.api.DisplayName;
@@ -18,31 +17,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class RandomQuestionServiceTests {
 
     @Autowired
-    private RandomQuestionService randomQuestionService;
+    private RandomQuestionAndReplyServiceImpl randomQuestionService;
 
-    @DisplayName("회원 번호로 가장 최신 랜덤질문 조회")
+    @DisplayName("커플 번호로 가장 최신 랜덤질문 조회")
     @Test
     public void getRandomQuestion() {
-        int userNo = 1;
+        int coupleNo = 1;
         RandomQuestionDTO randomQuestionDTO =
-                randomQuestionService.findCurrentRandomQuestionByMemberNo(userNo);
+                randomQuestionService.findCurrentRandomQuestionByCoupleNo(coupleNo);
 
         assertNotNull(randomQuestionDTO);
     }
 
-    @DisplayName("회원 번호로 모든 랜덤질문 최신순으로 조회")
+    @DisplayName("커플 번호로 모든 랜덤질문 최신순으로 조회")
     @Test
     public void getAllRandomQuestion() {
-        int userNo = 1;
+        int coupleNo = 1;
         List<RandomQuestionDTO> randomQuestionDTOs =
-                randomQuestionService.findAllRandomQuestionByMemberNo(userNo);
+                randomQuestionService.findAllRandomQuestionByCoupleNo(coupleNo);
 
         assertNotNull(randomQuestionDTOs);
     }
 
     @DisplayName("날짜와 커플 번호로 랜덤질문 검색")
     @Test
-    public void getRandomQuestionByMemberNoAndDate() {
+    public void getRandomQuestionByCoupleNoAndDate() {
         Map<String, Object> map = new HashMap<>();
         map.put("coupleNo", 1);
         map.put("selectedDate", "2024-08-29");
@@ -54,7 +53,7 @@ class RandomQuestionServiceTests {
 
     @DisplayName("커플 번호와 키워드로 랜덤질문 검색")
     @Test
-    public void getRandomQuestionByMemberNoAndKeyword() {
+    public void getRandomQuestionByCoupleNoAndKeyword() {
         Map<String, Object> map = new HashMap<>();
         map.put("coupleNo", 1);
         map.put("keyword", "요?");
@@ -68,7 +67,7 @@ class RandomQuestionServiceTests {
     @DisplayName("회원번호와 질문번호로 랜덤질문 답변 조회")
     @Test
     public void getRandomReply() {
-        int userNo = 1;
+        int userNo = 2;
         int randomQuestionNo = 1;
         Map<String, Object> map = new HashMap<>();
         map.put("userNo", userNo);
