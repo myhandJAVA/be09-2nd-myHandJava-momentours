@@ -8,9 +8,9 @@ import java.util.Map;
 
 @Mapper
 public interface RandomQuestionMapper {
-    RandomQuestion findCurrentRandomQuestionByMemberNo(int userNo);
+    RandomQuestion findCurrentRandomQuestionByCoupleNo(int coupleNo);
 
-    List<RandomQuestion> findAllRandomQuestionByMemberNo(int userNo);
+    List<RandomQuestion> findAllRandomQuestionByCoupleNo(int userNo);
 
     RandomQuestion findRandomQuestionByDate(Map<String, Object> map);
 

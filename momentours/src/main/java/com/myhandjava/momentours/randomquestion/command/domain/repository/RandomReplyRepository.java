@@ -1,4 +1,4 @@
-package com.myhandjava.momentours.randomquestion.command.domain.Repository;
+package com.myhandjava.momentours.randomquestion.command.domain.repository;
 
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply;
 import org.springframework.data.jpa.repository.JpaRepository;
