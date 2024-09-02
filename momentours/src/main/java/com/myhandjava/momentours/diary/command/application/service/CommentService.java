@@ -7,4 +7,6 @@ public interface CommentService {
     void registComment(CommentDTO commentDTO);
 
     void removeComment(int commentNo, int commentUserNo);
+
+    void modifyComment(int commentNo, CommentDTO commentDTO);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +44,17 @@ class CommentServiceImplTests {
         Assertions.assertDoesNotThrow(() -> commentService.removeComment(4, 8));
         Comment comment = commentRepository.findById(4).get();
         Assertions.assertTrue(comment.isCommentIsDeleted(), "isCommentIsDeleted가 true가 아님");
+    }
+
+    @DisplayName("댓글 수정 확인 테스트")
+    @Test
+    @Transactional
+    void modifyComment() {
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentUserNo(1);
+        commentDTO.setCommentContent("갹!! 이것만 되면 난 이제 끝이야!! 히힛");
+
+        Assertions.assertDoesNotThrow(() -> commentService.modifyComment(5, commentDTO));
     }
 
 }
