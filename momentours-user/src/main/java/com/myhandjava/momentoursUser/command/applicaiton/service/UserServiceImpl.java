@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
         if(updateUser.getBirth()!=null) user.setUserBirth(updateUser.getBirth());
         if(updateUser.getMbti()!=null) user.setUserMbti(updateUser.getMbti());
         if(updateUser.getGender()!=null) user.setUserGender(updateUser.getGender());
+        if(updateUser.getUserPartnerNo()!=0) user.setUserPartnerNo(updateUser.getUserPartnerNo());
         user.setUserUpdateAt(LocalDateTime.now());
     }
 
@@ -56,6 +57,23 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(int userNo){
         UserEntity user = userRepository.findById(userNo).orElseThrow(IllegalArgumentException::new);
         user.setUserRole(UserRole.ROLE_LEAVE);
+    }
+
+    @Override
+    @Transactional
+    public void makeCouple(int userNo,
+                           UserDTO userDTO) {
+        UserEntity you = userRepository.findByUserEmail(userDTO.getEmail());
+        UserEntity me = userRepository.findById(userNo).orElseThrow(IllegalArgumentException::new);
+
+        me.setUserPartnerNo(you.getUserNo());
+        log.info(you.getUserPartnerNo());
+        log.info(me.getUserPartnerNo());
+        if(you.getUserPartnerNo() == me.getUserNo() && me.getUserPartnerNo() == you.getUserNo()){
+            me.setUserRole(UserRole.ROLE_COUPLE);
+            you.setUserRole(UserRole.ROLE_COUPLE);
+        }
+
     }
 
     private UserEntity dtoToEntity(UserDTO userDTO) {

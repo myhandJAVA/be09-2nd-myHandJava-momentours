@@ -1,5 +1,6 @@
 package com.myhandjava.momentoursUser.command.applicaiton.controller;
 
+import com.myhandjava.momentoursUser.command.domain.vo.RequestCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.RequestUpdateUserVO;
 import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
@@ -46,6 +47,17 @@ public class UserController {
     @DeleteMapping("/users/{userNo}")
     public ResponseEntity<ResponseMessage> deleteUser(@PathVariable int userNo){
         userService.deleteUser(userNo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PutMapping("/users/couple/{userNo}")
+    public ResponseEntity<ResponseMessage> makeCouple(@PathVariable int userNo,
+                                                      @RequestBody RequestCoupleVO yourEmail){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(yourEmail.getYourEmail());
+        userService.makeCouple(userNo,userDTO);
+
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

@@ -64,4 +64,10 @@ public class UserServiceImpl implements UserService{
         userDTO.setUserRole(userEntity.getUserRole());
         return userDTO;
     }
+
+    public UserDTO findByUserEmail(String email){
+        UserEntity foundUser = userMapper.findByUserEmail(email);
+        UserDTO userDTO = entityToDTO(foundUser);
+        return userDTO;
+    }
 }
