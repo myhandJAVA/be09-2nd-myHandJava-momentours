@@ -1,6 +1,7 @@
 package com.myhandjava.momentours.momentcourse.command.application.controller;
 
 import com.myhandjava.momentours.common.ResponseMessage;
+import com.myhandjava.momentours.momentcourse.command.application.dto.FavoriteDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCourseDTO;
 import com.myhandjava.momentours.momentcourse.command.application.service.MomentCourseService;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestModifyMomCourseVO;
@@ -113,5 +114,14 @@ public class MomentCourseController {
         reponse.addCookie(cookie);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/favorite/{momCourseNo}")
+    public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO) {
+        boolean isFavorite = momentCourseService.isFavorite(favoriteDTO);
+        if(isFavorite)
+            return ResponseEntity.status(HttpStatus.OK).body("추억코스가 즐겨찾기에 추가되었습니다.");
+        else
+            return ResponseEntity.status(HttpStatus.OK).body("추억코스가 즐겨찾기에서 취소되었습니다.");
     }
 }
