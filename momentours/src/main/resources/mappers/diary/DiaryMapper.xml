@@ -25,25 +25,47 @@
         <collection property="comments" ofType="com.myhandjava.momentours.diary.query.dto.CommentDTO" resultMap="commentResultMap"/>
     </resultMap>
 
-    <!-- 쿼리 설정 -->
+    <!-- 일기 날짜 조회(+ 날짜 검색) -->
     <select id="selectDiary" resultMap="diaryResultMap" parameterType="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
-        SELECT a.diary_no,
-        a.diary_content,
-        a.diary_create_date,
-        a.diary_update_date,
-        a.diary_user_no,
-        a.couple_no,
-        a.diary_is_deleted,
-        b.comment_no,
-        b.comment_content,
-        b.comment_create_date,
-        b.comment_update_date,
-        b.comment_user_no,
-        b.comment_is_deleted
+        SELECT a.diary_no
+             , a.diary_content
+             , a.diary_create_date
+             , a.diary_update_date
+             , a.diary_user_no
+             , a.couple_no
+             , a.diary_is_deleted
+             , b.comment_no
+             , b.comment_content
+             , b.comment_create_date
+             , b.comment_update_date
+             , b.comment_user_no
+             , b.comment_is_deleted
+          FROM tb_diary a
+          LEFT JOIN tb_comment b ON a.diary_no = b.diary_no
+         WHERE a.couple_no = #{coupleNo}
+           AND DATE(a.diary_create_date) = #{diaryCreateDate}
+           AND a.diary_is_deleted = false
+           AND b.comment_is_deleted = false
+    </select>
+
+    <!-- 일기 전체 조회 -->
+    <select id="selectAllDiary" resultMap="diaryResultMap" parameterType="_int">
+        SELECT a.diary_no
+        , a.diary_content
+        , a.diary_create_date
+        , a.diary_update_date
+        , a.diary_user_no
+        , a.couple_no
+        , a.diary_is_deleted
+        , b.comment_no
+        , b.comment_content
+        , b.comment_create_date
+        , b.comment_update_date
+        , b.comment_user_no
+        , b.comment_is_deleted
         FROM tb_diary a
         LEFT JOIN tb_comment b ON a.diary_no = b.diary_no
         WHERE a.couple_no = #{coupleNo}
-        AND DATE(a.diary_create_date) = #{diaryCreateDate}
         AND a.diary_is_deleted = false
         AND b.comment_is_deleted = false
     </select>
