@@ -8,6 +8,7 @@ import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCou
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourseSort;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomcourselocationRepository;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomentCourseRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,16 @@ public class MomentCourseServiceImpl implements MomentCourseService {
             momcourselocationRepository.save(momcourselocation);
         }
 
+    }
+
+    //추억 코스 삭제
+    @Override
+    @Transactional
+    public void removeMomentCourse(int momCourseNo, int momCourseCoupleNo) {
+        MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momCourseCoupleNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 추억코스가 존재하지 않습니다."));
+
+        momentCourse.setMomCourseIsDeleted(true);
+        momentCourseRepository.save(momentCourse);
     }
 }
