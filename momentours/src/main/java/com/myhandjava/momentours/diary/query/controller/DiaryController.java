@@ -23,8 +23,8 @@ public class DiaryController {
     }
 
 
-    @GetMapping("/all")
-    public String findDiary(@RequestParam String diaryCreateDate, @RequestParam int coupleNo) {
+    @GetMapping("")
+    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestParam int coupleNo) {
 
         DiaryDTO diaryDTO = new DiaryDTO();
 
@@ -33,6 +33,14 @@ public class DiaryController {
         diaryDTO.setCoupleNo(coupleNo);
         List<DiaryDTO> list = diaryService.selectDiary(diaryDTO);
 
-        return list.toString();
+        return list;
+    }
+
+    @GetMapping("/all")
+    public List<DiaryDTO> findAllDiary(@RequestParam int coupleNo) {
+
+        List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
+
+        return list;
     }
 }

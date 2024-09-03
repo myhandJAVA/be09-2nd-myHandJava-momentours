@@ -11,8 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -28,9 +26,9 @@ public class DiaryServiceImpl implements DiaryService {
     private final FileRepository fileRepository;
 
     @Autowired
-    public DiaryServiceImpl(DiaryRepository diaryRepository, 
-                            ModelMapper modelMapper, 
-                            FileService fileService, 
+    public DiaryServiceImpl(DiaryRepository diaryRepository,
+                            ModelMapper modelMapper,
+                            FileService fileService,
                             FileRepository fileRepository) {
         this.diaryRepository = diaryRepository;
         this.modelMapper = modelMapper;
@@ -75,7 +73,6 @@ public class DiaryServiceImpl implements DiaryService {
         diary.setDiaryUpdateDate(diaryDTO.getDiaryUpdateDate());
         
         diaryRepository.save(diary);
-
         fileRepository.deleteByDiary(diary);
 
         if(diaryDTO.getFiles() != null && !diaryDTO.getFiles().isEmpty()) {

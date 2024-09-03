@@ -39,7 +39,6 @@ public class DiaryController {
     public ResponseEntity<ResponseMessage> registDiary(@ModelAttribute RequestRegistDiaryVO newDiary,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        System.out.println("newDiary = " + newDiary);
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryService.registDiary(diaryDTO);
