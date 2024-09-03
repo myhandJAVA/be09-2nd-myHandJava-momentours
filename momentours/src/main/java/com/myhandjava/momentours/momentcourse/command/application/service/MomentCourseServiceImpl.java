@@ -1,11 +1,14 @@
 package com.myhandjava.momentours.momentcourse.command.application.service;
 
 
+import com.myhandjava.momentours.momentcourse.command.application.dto.FavoriteDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomcourselocationDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCourseDTO;
+import com.myhandjava.momentours.momentcourse.command.domain.aggregate.Favorite;
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.Momcourselocation;
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourse;
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourseSort;
+import com.myhandjava.momentours.momentcourse.command.domain.repository.FavoriteRepository;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomcourselocationRepository;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomentCourseRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service("CommandMomentCourseService")
 @Slf4j
@@ -23,12 +27,14 @@ public class MomentCourseServiceImpl implements MomentCourseService {
 
     private final MomentCourseRepository momentCourseRepository;
     private final MomcourselocationRepository momcourselocationRepository;
+    private final FavoriteRepository favoriteRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public MomentCourseServiceImpl(MomentCourseRepository momentCourseRepository, MomcourselocationRepository momcourselocationRepository, ModelMapper modelMapper) {
+    public MomentCourseServiceImpl(MomentCourseRepository momentCourseRepository, MomcourselocationRepository momcourselocationRepository, FavoriteRepository favoriteRepository, ModelMapper modelMapper) {
         this.momentCourseRepository = momentCourseRepository;
         this.momcourselocationRepository = momcourselocationRepository;
+        this.favoriteRepository = favoriteRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -121,4 +127,26 @@ public class MomentCourseServiceImpl implements MomentCourseService {
             momentCourseRepository.save(momentCourse);
         }
     }
+
+    // 추억코스 즐겨찾기
+    @Override
+    @Transactional
+    public boolean isFavorite(FavoriteDTO favoriteDTO) {
+        MomentCourse momentCourse = momentCourseRepository.findById(favoriteDTO.getFavoMomCourseNo())
+                .orElseThrow(() -> new EntityNotFoundException("해당 사용자가 존재하지 않습니다."));
+
+        // 즐겨찾기 있는지 확인
+        Optional<Favorite> existingFavorite = favoriteRepository.findByMomCourseNoAndUserId(favoriteDTO.getFavoMomCourseNo(), favoriteDTO.getFavoUserNo());
+
+        if(existingFavorite.isPresent()) {
+            favoriteRepository.delete(existingFavorite.get());
+            return false;
+        } else {
+            Favorite favorite = modelMapper.map(favoriteDTO, Favorite.class);
+            favoriteRepository.save(favorite);
+            return true;
+        }
+    }
+
+
 }
