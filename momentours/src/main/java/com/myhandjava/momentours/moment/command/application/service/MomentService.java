@@ -18,4 +18,12 @@ public interface MomentService {
     void updateMomentByTitleAndCoupleNo (int momentNo, int momentCoupleNo, MomentDTO updatedMomentDTO) throws NotFoundException;
 
     void removeMoment(int momentNo, int momentCoupleNo) throws NotFoundException;
+
+    void incrementViewCount(int momentNo) throws NotFoundException;
+
+    MomentDTO getMomentById(int momentNo);
+
+    void incrementLike(int momentNo);
+
+    void decrementLike(int momentNo);
 }

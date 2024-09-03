@@ -134,5 +134,43 @@ public class MomentServiceImpl implements MomentService {
         momentRepository.delete(moment);
 
     }
+
+    @Override
+    @Transactional
+    public void incrementViewCount(int momentNo) throws NotFoundException {
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNo(momentNo);
+
+        Moment moment = optionalMoment.get();
+        moment.setMomentView(moment.getMomentView() + 1);
+        momentRepository.save(moment);
+
+    }
+
+    @Override
+    public MomentDTO getMomentById(int momentNo) {
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNo(momentNo);
+        Moment moment = optionalMoment.get();
+
+        return modelMapper.map(moment, MomentDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public void incrementLike(int momentNo) {
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNo(momentNo);
+        Moment moment = optionalMoment.get();
+        moment.setMomentLike(moment.getMomentLike() + 1);
+        momentRepository.save(moment);
+    }
+
+    @Override
+    @Transactional
+    public void decrementLike(int momentNo) {
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNo(momentNo);
+        Moment moment = optionalMoment.get();
+        moment.setMomentLike(moment.getMomentLike() - 1);
+        momentRepository.save(moment);
+
+    }
 }
 
