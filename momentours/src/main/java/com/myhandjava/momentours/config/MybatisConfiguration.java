@@ -9,7 +9,4 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan(basePackages = "com.myhandjava.momentours", annotationClass = Mapper.class)
 public class MybatisConfiguration {
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 5ac59b64547876e6c37211afe7bc8fec83dd990f

@@ -18,4 +18,5 @@ public class UserDTO {
     private MBTI mbti;
     private UserRole userRole;
     private Gender gender;
+    private int userPartnerNo;
 }

@@ -115,6 +115,24 @@ public class MomentServiceImpl implements MomentService {
 
         momentRepository.save(moment);
 
-        }
     }
+
+    /* 설명. 커플이 작성했던 추억을 삭제하는 메소드 */
+    @Override
+    @Transactional
+    public void removeMoment(int momentNo, int momentCoupleNo) throws NotFoundException {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNoAndMomentCoupleNo(momentNo, momentCoupleNo);
+
+        if (optionalMoment.isEmpty()){
+            throw new NotFoundException("추억을 찾을 수 없습니다.");
+        }
+
+        Moment moment = optionalMoment.get();
+
+        momentRepository.delete(moment);
+
+    }
+}
 
