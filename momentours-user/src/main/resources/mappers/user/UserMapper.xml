@@ -64,4 +64,18 @@
         , USER_PARTNER_NO
         FROM TB_USER
     </select>
+
+    <select id="findUserCoupleNoByUserNo" resultType="_int" parameterType="_int">
+        SELECT B.COUPLE_NO
+          FROM TB_USER A
+          JOIN TB_COUPLE B
+            ON A.USER_NO = B.COUPLE_USER_NO1
+         WHERE USER_NO = ${userNo}
+         UNION
+         SELECT D.COUPLE_NO
+           FROM TB_USER C
+           JOIN TB_COUPLE D
+             ON C.USER_NO = D.COUPLE_USER_NO2
+          WHERE USER_NO = ${userNo}
+    </select>
 </mapper>

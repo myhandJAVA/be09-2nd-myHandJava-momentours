@@ -6,6 +6,7 @@ import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
 import com.myhandjava.momentoursUser.command.applicaiton.service.UserService;
 import com.myhandjava.momentoursUser.command.domain.vo.RequestRegistUserVO;
+import feign.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -47,8 +48,8 @@ public class UserController {
     @DeleteMapping("/users/{userNo}")
     public ResponseEntity<ResponseMessage> deleteUser(@PathVariable int userNo){
         userService.deleteUser(userNo);
-
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        ResponseMessage responseMessage = new ResponseMessage(200,"회원 탈퇴 성공",null);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     @PutMapping("/users/couple/{userNo}")
@@ -57,9 +58,9 @@ public class UserController {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(yourEmail.getYourEmail());
         userService.makeCouple(userNo,userDTO);
+        ResponseMessage responseMessage = new ResponseMessage(200,"커플 요청 성공",null);
 
-
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     private UserDTO requestUpdateUserVOToUserDTO(RequestUpdateUserVO requestUpdateUserVO) {

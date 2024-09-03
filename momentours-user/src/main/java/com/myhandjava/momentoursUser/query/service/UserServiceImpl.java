@@ -1,9 +1,14 @@
 package com.myhandjava.momentoursUser.query.service;
 
+import com.myhandjava.momentoursUser.client.MomentoursClient;
+import com.myhandjava.momentoursUser.command.applicaiton.dto.ScheduleDTO;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
+import com.myhandjava.momentoursUser.command.applicaiton.dto.UserMyPageDTO;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
+import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,10 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
+    private MomentoursClient momentoursClient;
 
     @Autowired
-    private UserServiceImpl(UserMapper userMapper) {
+    private UserServiceImpl(UserMapper userMapper,
+                            MomentoursClient momentoursClient) {
         this.userMapper = userMapper;
+        this.momentoursClient =momentoursClient;
     }
 
     @Override
@@ -69,5 +77,17 @@ public class UserServiceImpl implements UserService{
         UserEntity foundUser = userMapper.findByUserEmail(email);
         UserDTO userDTO = entityToDTO(foundUser);
         return userDTO;
+    }
+
+    @Override
+    public UserMyPageDTO viewMyPage(int userNo) {
+        int coupleNo = userMapper.findUserCoupleNoByUserNo(userNo);
+        ResponseEntity<ResponseMessage> scheduleResponse = momentoursClient.findAllSchedule(coupleNo);
+
+        UserMyPageDTO userMyPageDTO = new UserMyPageDTO();
+        userMyPageDTO.setCoupleNo(coupleNo);
+        userMyPageDTO.setUserNo(userNo);
+        userMyPageDTO.setScheduleList((List<ScheduleDTO>)scheduleResponse.getBody().getResult().get("ScheduleList"));
+        return userMyPageDTO;
     }
 }
