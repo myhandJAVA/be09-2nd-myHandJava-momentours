@@ -1,10 +1,22 @@
 # "우리의 특별한 순간들" Momentours
 | 커플을 위한 가장 완벽한 기록 서비스
 
-#### TEAM
+#### 🤝TEAM
+[최해관](https://github.com/Haegwan-Choe)&nbsp;&nbsp;&nbsp;&nbsp;[유혜진](https://github.com/yuhyejin)&nbsp;&nbsp;&nbsp;&nbsp;[이우진](https://github.com/Vorschlag-bit)&nbsp;&nbsp;&nbsp;&nbsp;[김동혁](https://github.com/dongkh9)&nbsp;&nbsp;&nbsp;&nbsp;[김정모](https://github.com/mojeeeeong)&nbsp;&nbsp;&nbsp;&nbsp;[장민근](https://github.com/caolian2003)
 
 #### 기술스택
-
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
+![YAML](https://img.shields.io/badge/yaml-%23ffffff.svg?style=for-the-badge&logo=yaml&logoColor=151515)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 #### 협업 툴
 
 ### 전체 프로젝트 일정
