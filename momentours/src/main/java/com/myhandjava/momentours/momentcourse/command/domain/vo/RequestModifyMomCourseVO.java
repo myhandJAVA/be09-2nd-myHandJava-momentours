@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class RequestRegistMomCourseVO {
+public class RequestModifyMomCourseVO {
     private String momCourseTitle;
     private MomentCourseSort momCourseSort;
     private String momCourseMemo;

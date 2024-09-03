@@ -4,4 +4,5 @@ import com.myhandjava.momentours.momentcourse.command.domain.aggregate.Momcourse
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MomcourselocationRepository extends JpaRepository<Momcourselocation, Integer> {
+    void deleteByMomCourseNo(int momCourseNo);
 }

@@ -6,4 +6,6 @@ public interface MomentCourseService {
     void registMomentCourse(MomentCourseDTO momentCourseDTO);
 
     void removeMomentCourse(int momCourseNo, int momCourseCoupleNo);
+
+    void modifyMomentCourse(int momCourseNo, MomentCourseDTO momentCourseDTO);
 }

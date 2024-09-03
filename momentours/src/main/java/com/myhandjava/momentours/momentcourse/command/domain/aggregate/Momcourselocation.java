@@ -3,7 +3,7 @@ package com.myhandjava.momentours.momentcourse.command.domain.aggregate;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "tb_momcourselocation")
+@Entity(name = "tb_momentcourselocation")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -13,11 +13,11 @@ public class Momcourselocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int courseLocationNo;
+    private Integer courseLocationNo;
 
     @Column
     private int momCourseNo;
 
-    @Column
+    @Column(nullable = true)
     private int momentNo;
 }
