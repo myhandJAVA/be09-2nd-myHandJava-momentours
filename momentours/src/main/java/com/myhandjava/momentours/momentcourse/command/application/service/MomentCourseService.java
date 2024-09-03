@@ -8,4 +8,8 @@ public interface MomentCourseService {
     void removeMomentCourse(int momCourseNo, int momCourseCoupleNo);
 
     void modifyMomentCourse(int momCourseNo, MomentCourseDTO momentCourseDTO);
+
+    void incrementLike(int momCourseNo);
+
+    void decrementLike(int momCourseNo);
 }
