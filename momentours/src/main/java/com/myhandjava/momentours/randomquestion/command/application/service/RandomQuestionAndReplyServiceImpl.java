@@ -30,6 +30,11 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
     }
 
     @Override
+    public void createRandomQuestion(int userNo) {
+
+    }
+
+    @Override
     @Transactional
     public void removeRandomReply(int randomreplyno) {
         RandomReply randomReply =
