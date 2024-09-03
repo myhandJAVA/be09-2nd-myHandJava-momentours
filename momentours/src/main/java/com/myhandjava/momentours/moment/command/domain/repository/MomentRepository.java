@@ -13,4 +13,6 @@ public interface MomentRepository extends JpaRepository<Moment, Long> {
     List<Moment> findMomentByMomentPublic(int momentPublic, Sort sort);
 
     Optional<Moment> findByMomentNoAndMomentCoupleNo(int momentNo, int momentCoupleNo);
+
+    Optional<Moment> findByMomentNo(int momentNo);
 }
