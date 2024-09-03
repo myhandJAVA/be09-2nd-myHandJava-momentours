@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myhandjava.momentoursUser.query.repository.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity">
+        <id property="userNo" column="USER_NO"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userPwd" column="USER_PWD"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+        <result property="userPhone" column="USER_PHONE"/>
+        <result property="userBirth" column="USER_BIRTH"/>
+        <result property="userMbti" column="USER_MBTI"/>
+        <result property="userRole" column="USER_ROLE"/>
+        <result property="accessibleDate" column="ACCESSIBLE_DATE"/>
+        <result property="userGender" column="USER_GENDER"/>
+        <result property="userReportCount" column="USER_REPORT_COUNT"/>
+        <result property="userCreateAt" column="USER_CREATE_AT"/>
+        <result property="userUpdateAt" column="USER_UPDATE_AT"/>
+        <result property="userLastLogin" column="USER_LAST_LOGIN"/>
+        <result property="userPartnerNo" column="USER_PARTNER_NO"/>
+    </resultMap>
+
+    <select id="findByUserEmail" resultMap="UserResultMap" parameterType="String">
+        SELECT USER_NO
+             , USER_EMAIL
+             , USER_PWD
+             , USER_NAME
+             , USER_NICKNAME
+             , USER_PHONE
+             , USER_BIRTH
+             , USER_MBTI
+             , USER_ROLE
+             , ACCESSIBLE_DATE
+             , USER_GENDER
+             , USER_REPORT_COUNT
+             , USER_CREATE_AT
+             , USER_UPDATE_AT
+             , USER_LAST_LOGIN
+             , USER_PARTNER_NO
+          FROM TB_USER
+         WHERE USER_EMAIL = '${userEmail}'
+    </select>
+
+    <select id="findAllUser" resultMap="UserResultMap">
+        SELECT USER_NO
+        , USER_EMAIL
+        , USER_PWD
+        , USER_NAME
+        , USER_NICKNAME
+        , USER_PHONE
+        , USER_BIRTH
+        , USER_MBTI
+        , USER_ROLE
+        , ACCESSIBLE_DATE
+        , USER_GENDER
+        , USER_REPORT_COUNT
+        , USER_CREATE_AT
+        , USER_UPDATE_AT
+        , USER_LAST_LOGIN
+        , USER_PARTNER_NO
+        FROM TB_USER
+    </select>
+</mapper>
