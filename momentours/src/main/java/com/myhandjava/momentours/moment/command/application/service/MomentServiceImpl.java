@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,4 +68,53 @@ public class MomentServiceImpl implements MomentService {
         momentRepository.save(modelMapper.map(newMoment, Moment.class));
         log.info("New moment: {}", newMoment);
     }
-}
+
+    /* 설명. 글(제목, 내용)과 지도 상 장소(위치, 주소, 이름) 수정하는 메소드 */
+    @Override
+    @Transactional
+    public void updateMomentByTitleAndCoupleNo(int momentNo,
+                                               int momentCoupleNo,
+                                               MomentDTO updatedMomentDTO) throws NotFoundException{
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNoAndMomentCoupleNo(momentNo, momentCoupleNo);
+
+        if (optionalMoment.isEmpty()){
+            throw new NotFoundException("추억을 찾을 수 없습니다.");
+        }
+
+        Moment moment = optionalMoment.get();
+
+        // Null 체크 후 업데이트
+        if (updatedMomentDTO.getMomentTitle() != null) {
+            moment.setMomentTitle(updatedMomentDTO.getMomentTitle());
+        }
+        if (updatedMomentDTO.getMomentContent() != null) {
+            moment.setMomentContent(updatedMomentDTO.getMomentContent());
+        }
+        if (updatedMomentDTO.getMomentCategory() != null) {
+            moment.setMomentCategory(updatedMomentDTO.getMomentCategory());
+        }
+        if (updatedMomentDTO.getMomentPublic() != moment.getMomentPublic()) {
+            moment.setMomentPublic(updatedMomentDTO.getMomentPublic());
+        }
+        if (updatedMomentDTO.getMomentLongitude() != moment.getMomentLongitude()) {
+            moment.setMomentLongitude(updatedMomentDTO.getMomentLongitude());
+        }
+        if (updatedMomentDTO.getMomentLatitude() != moment.getMomentLatitude()) {
+            moment.setMomentLatitude(updatedMomentDTO.getMomentLatitude());
+        }
+        if (updatedMomentDTO.getMomentAddress() != null) {
+            moment.setMomentAddress(updatedMomentDTO.getMomentAddress());
+        }
+        if (updatedMomentDTO.getMomentLocationName() != null) {
+            moment.setMomentLocationName(updatedMomentDTO.getMomentLocationName());
+        }
+
+        moment.setMomentUpdateDate(LocalDateTime.now());
+
+        momentRepository.save(moment);
+
+        }
+    }
+
