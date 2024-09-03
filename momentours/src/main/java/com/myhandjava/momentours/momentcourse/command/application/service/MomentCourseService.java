@@ -4,4 +4,6 @@ import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCour
 
 public interface MomentCourseService {
     void registMomentCourse(MomentCourseDTO momentCourseDTO);
+
+    void removeMomentCourse(int momCourseNo, int momCourseCoupleNo);
 }
