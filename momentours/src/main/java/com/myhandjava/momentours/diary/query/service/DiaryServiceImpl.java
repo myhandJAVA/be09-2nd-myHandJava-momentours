@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,13 +33,10 @@ public class DiaryServiceImpl implements DiaryService {
     public List<DiaryDTO> selectDiary(DiaryDTO diaryDTO) {
         List<DiaryDTO> result = diaryMapper.selectDiary(diaryDTO);
 
-        System.out.println("result = " + result);
-
-        // 입력 문자열 형식에 맞는 DateTimeFormatter 사용
+        // 날짜 포맷팅 안해도 날짜 잘 나와서 이거 다시 리팩토링 해야하는데 나중에 하겠습니다....총총총
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-        // 날짜를 포맷팅하여 새로운 리스트에 담기
         return result.stream()
                 .map(diary -> {
                     DiaryDTO formattedDiary = new DiaryDTO();
@@ -76,5 +74,13 @@ public class DiaryServiceImpl implements DiaryService {
                     return formattedDiary;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DiaryDTO> findAllDiary(int coupleNo) {
+
+        List<DiaryDTO> result = diaryMapper.selectAllDiary(coupleNo);
+
+        return result;
     }
 }
