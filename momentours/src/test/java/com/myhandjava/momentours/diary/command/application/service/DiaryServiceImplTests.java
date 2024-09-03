@@ -1,6 +1,8 @@
 package com.myhandjava.momentours.diary.command.application.service;
 
+import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
+import com.myhandjava.momentours.diary.command.domain.aggregate.Comment;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
 import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
@@ -125,6 +127,65 @@ class DiaryServiceImplTests {
         // 파일 삭제 및 재검증
         Optional<FileEntity> deletedFile = fileRepository.findById(initialFile.getFileNo());
         Assertions.assertTrue(deletedFile.isEmpty(), "파일이 삭제되었는지 확인");
+    }
+
+    @DisplayName("댓글 등록 확인 테스트")
+    @Test
+    @Transactional
+    void registerComment() {
+
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentContent("댓글 등록 드디어 끝냈다!! 다음은 수정 해야징!");
+        commentDTO.setCommentUserNo(3);
+        commentDTO.setDiaryNo(15);
+
+        Assertions.assertDoesNotThrow(() -> diaryService.registComment(commentDTO));
+    }
+
+    @DisplayName("댓글 삭제 확인 테스트")
+    @Test
+    @Transactional
+    void removeComment() {
+        Assertions.assertDoesNotThrow(() -> diaryService.removeComment(4, 8));
+    }
+
+    @DisplayName("댓글 수정 확인 테스트")
+    @Test
+    @Transactional
+    void modifyComment() {
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentUserNo(1);
+        commentDTO.setCommentContent("갹!! 이것만 되면 난 이제 끝이야!! 히힛");
+
+        Assertions.assertDoesNotThrow(() -> diaryService.modifyComment(5, commentDTO));
+    }
+
+    @DisplayName("일기 임시저장 테스트")
+    @Test
+    @Transactional
+    void registTempSave() {
+        DiaryDTO diaryDTO = new DiaryDTO();
+        diaryDTO.setDiaryContent("오늘은 열심히 프로젝트를 했다. 일기 등록을 끝내고 싶다.");
+        diaryDTO.setDiaryUserNo(1);
+        diaryDTO.setCoupleNo(1);
+
+        Diary diary = modelMapper.map(diaryDTO, Diary.class);
+
+        // 테스트용 파일 추가
+        FileEntity initialFile = new FileEntity();
+        initialFile.setFileOriginalName("initialFile.jpg");
+        initialFile.setFileSaveName("initialFile.jpg");
+        initialFile.setFileSize(BigDecimal.valueOf(1024));
+        initialFile.setFileExtension(".jpg");
+        initialFile.setFileDirectory("/uploads/");
+        initialFile.setFileIsDeleted(false);
+        initialFile.setFileBoardSort(FileBoardSort.diary);
+        initialFile.setDiary(diary);
+        fileRepository.save(initialFile);
+
+        Assertions.assertDoesNotThrow(
+                () -> diaryService.registTempDiary(diaryDTO)
+        );
     }
 
 }
