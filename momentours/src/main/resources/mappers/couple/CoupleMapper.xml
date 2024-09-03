@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myhandjava.momentours.couple.query.repository.CoupleMapper">
+
+    <resultMap id="coupleResultMap" type="com.myhandjava.momentours.couple.query.dto.CoupleDTO">
+        <id property="coupleNo" column="couple_no"/>
+        <result property="coupleName" column="couple_name"/>
+        <result property="couplePhoto" column="couple_photo"/>
+        <result property="coupleStartDate" column="couple_start_date"/>
+        <result property="coupleUserNo1" column="couple_user_no1"/>
+        <result property="coupleUserNo2" column="couple_user_no2"/>
+        <result property="coupleIsDeleted" column="couple_is_deleted"/>
+    </resultMap>
+    <select id="findCoupleByCoupleNo" resultMap="coupleResultMap">
+        SELECT
+               couple_no
+             , couple_name
+             , couple_photo
+             , couple_start_date
+             , couple_user_no1
+             , couple_user_no2
+             , couple_is_deleted
+          FROM tb_couple
+         WHERE couple_no = ${coupleNo}
+    </select>
+
+</mapper>
