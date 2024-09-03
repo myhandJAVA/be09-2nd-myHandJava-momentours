@@ -97,4 +97,28 @@ public class MomentCourseServiceImpl implements MomentCourseService {
             momcourselocationRepository.save(momcourselocation);
         }
     }
+
+    // 추억코스 좋아요
+    @Override
+    @Transactional
+    public void incrementLike(int momCourseNo) {
+        MomentCourse momentCourse = momentCourseRepository.findById(momCourseNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+
+        momentCourse.setMomCourseLike(momentCourse.getMomCourseLike() + 1);
+        momentCourseRepository.save(momentCourse);
+    }
+
+    // 추억코스 좋아요 취소
+    @Override
+    @Transactional
+    public void decrementLike(int momCourseNo) {
+        MomentCourse momentCourse = momentCourseRepository.findById(momCourseNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+
+        if(momentCourse.getMomCourseLike() > 0) {
+            momentCourse.setMomCourseLike(momentCourse.getMomCourseLike() - 1);
+            momentCourseRepository.save(momentCourse);
+        }
+    }
 }

@@ -5,6 +5,8 @@ import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCour
 import com.myhandjava.momentours.momentcourse.command.application.service.MomentCourseService;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestModifyMomCourseVO;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestRegistMomCourseVO;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController("CommandMomentCourseController")
 @RequestMapping("/momentcourse")
@@ -74,5 +79,39 @@ public class MomentCourseController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responseMessage);
+    }
+
+    // 추억 코스 좋아요
+    @PostMapping("/like/{momCourseNo}")
+    public ResponseEntity<ResponseMessage> likeMomentCourse(@PathVariable int momCourseNo,
+                                                            @CookieValue(value = "momCourseLike", defaultValue = "") String momCourseLike,
+                                                            HttpServletResponse reponse) {
+
+        Set<Integer> momCourseLikeIds = Arrays.stream(momCourseLike.split("-"))
+                .filter(id ->!id.isEmpty())
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+
+        if (!momCourseLikeIds.contains(momCourseNo)) {
+            // 좋아요 추가
+            momentCourseService.incrementLike(momCourseNo);
+            momCourseLikeIds.add(momCourseNo);
+        } else {
+            // 좋아요 취소
+            momentCourseService.decrementLike(momCourseNo);
+            momCourseLikeIds.remove(momCourseNo);
+        }
+
+        String modifydMomCourseLike = momCourseLikeIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("-"));
+
+        Cookie cookie = new Cookie("momCourseLike", modifydMomCourseLike);
+        cookie.setPath("/");
+
+        cookie.setMaxAge(60 * 60 * 24 * 365);
+        reponse.addCookie(cookie);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
