@@ -57,22 +57,48 @@
 ---
 ### 1.2 프로젝트 배경
 
+<img src="docs/시장조사1.jpeg" width="800" height="450">
+<img src="docs/시장조사2.jpeg" width="800" height="450">
+
 ------
 
 ## 2. 국내외 유사 서비스와 차별성
 
-
+<img src="docs/타서비스.jpeg" width="800" height="450">
 
 ---
 ## 3. 프로젝트 설계
 
-### 3.1 Event Stroming을 통한 DDD 설계 및 Domain 추출
+### 3.1 Event Stroming을 통한 DDD 설계 Aggregate
+
+<img src="docs/Aggregate.jpg">
+
 ---
-### 3.2 Aggregate, Bounded Context
+### 3.2 Domain
+
+<img src="docs/domain.jpg">
+
 ---
-### 3.3 요구사항 명세서
+### 3.3 Bounded Context
+
+<img src="docs/Bounded_Context.jpg">
+
 ---
-### 3.4 데이터베이스 모델링
+### 3.4 요구사항 명세서
+
+
+
+---
+### 3.5 데이터베이스 모델링
+
+#### (1) 논리 모델
+
+<img src="docs/논리모델링.png">
+
+#### (2) 물리 모델
+
+<img src="docs/물리모델링.png">
+
 ---
 ## 4. 프로젝트 수행 결과
 
