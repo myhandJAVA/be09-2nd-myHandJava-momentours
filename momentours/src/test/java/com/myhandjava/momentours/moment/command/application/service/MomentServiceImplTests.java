@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,5 +91,47 @@ class MomentServiceImplTests {
         assertEquals("동해 바다 여행", savedMoment.getMomentTitle());
         assertEquals(1, savedMoment.getMomentCoupleNo());
     }
+
+//    @DisplayName("작성자의 추억 수정 테스트")
+//    @Test
+//    void updateMomentByTitleAndCoupleNo() throws Exception {
+//        // given
+//        int momentId = 5;
+//        String originalTitle = "OriginalTitle";
+//        int coupleNo = 1;
+//
+//        // 테스트용 추억 추가
+//        Moment originalMoment = new Moment();
+//        originalMoment.setMomentTitle(originalTitle);
+//        originalMoment.setMomentCategory(MomentCategory.맛집);
+//        originalMoment.setMomentContent("과연 수정이 될까?");
+//        originalMoment.setMomentCreateDate(LocalDateTime.now());
+//        originalMoment.setMomentPublic(0);
+//        originalMoment.setMomentLike(0);
+//        originalMoment.setMomentView(0);
+//        originalMoment.setMomentCoupleNo(coupleNo);
+//        originalMoment.setMomentIsDeleted(0);
+//        originalMoment.setMomentLongitude(37.80605);
+//        originalMoment.setMomentLatitude(128.9081);
+//        originalMoment.setMomentAddress("우체국주소");
+//        originalMoment.setMomentLocationName("구내식당");
+//
+//        // 업데이트할 필드
+//        MomentDTO updatedMomentDTO = new MomentDTO();
+//        updatedMomentDTO.setMomentTitle("수정 제목");
+//        updatedMomentDTO.setMomentCategory(MomentCategory.산책);
+//        updatedMomentDTO.setMomentContent("수정됨 ㅋㅋ");
+//        updatedMomentDTO.setMomentUpdateDate(LocalDateTime.now());
+//        updatedMomentDTO.setMomentPublic(1);
+//        updatedMomentDTO.setMomentLongitude(38.00000);
+//        updatedMomentDTO.setMomentAddress("북한 어딘가");
+//        updatedMomentDTO.setMomentLocationName("냉면 맛집");
+//
+//        // when
+//        momentService.updateMomentByTitleAndCoupleNo(momentId, originalTitle, coupleNo, updatedMomentDTO);
+//
+//        // then
+//        Moment updatedMoment = momentRepository.findById(momentId).
+//    }
 
 }
