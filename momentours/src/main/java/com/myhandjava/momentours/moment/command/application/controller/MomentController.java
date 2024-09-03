@@ -45,4 +45,11 @@ public class MomentController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{momentNo}/{momentCoupleNo}")
+    public ResponseEntity<String> removeMoment(@PathVariable int momentNo,
+                                               @PathVariable int momentCoupleNo) throws NotFoundException {
+        momentService.removeMoment(momentNo, momentCoupleNo);
+
+        return ResponseEntity.noContent().build();
+    }
 }

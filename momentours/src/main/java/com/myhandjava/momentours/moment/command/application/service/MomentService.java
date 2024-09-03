@@ -16,4 +16,6 @@ public interface MomentService {
     void registMoment(MomentDTO newMoment);
 
     void updateMomentByTitleAndCoupleNo (int momentNo, int momentCoupleNo, MomentDTO updatedMomentDTO) throws NotFoundException;
+
+    void removeMoment(int momentNo, int momentCoupleNo) throws NotFoundException;
 }
