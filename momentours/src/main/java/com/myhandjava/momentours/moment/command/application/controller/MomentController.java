@@ -71,7 +71,7 @@ public class MomentController {
 
         // 해당 게시물이 쿠키에 없으면 증가
         if (!viewedMomentIds.contains(momentNo)) {
-            momentService.increamentViewCount(momentNo);
+            momentService.incrementViewCount(momentNo);
             viewedMomentIds.add(momentNo);
 
             // 업데이트 된 쿠키 다시 설정
@@ -86,4 +86,40 @@ public class MomentController {
         MomentDTO momentDTO = momentService.getMomentById(momentNo);
         return ResponseEntity.ok().body(momentDTO);
     }
+
+    @PostMapping("/{momentNo}/like")
+    public ResponseEntity<String> likeMoment(@PathVariable int momentNo,
+                                             @CookieValue(value = "likedMoments", defaultValue = "")String likedMoments,
+                                             HttpServletResponse response) throws NotFoundException {
+
+        Set<Integer> likedMomentsIds = Arrays.stream(likedMoments.split("-"))
+                .filter(id -> !id.isEmpty())
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+
+        if (!likedMomentsIds.contains(momentNo)){
+            // 좋아요 추가
+            momentService.incrementLike(momentNo);
+            likedMomentsIds.add(momentNo);
+        } else {
+            // 좋아요 취소
+            momentService.decrementLike(momentNo);
+            likedMomentsIds.remove(momentNo);
+        }
+
+        String updatedLikedMoments = likedMomentsIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("-"));
+
+        // 조건문 통과한 것을 쿠키에 담기
+        Cookie cookie = new Cookie("likedMoments", updatedLikedMoments);
+        cookie.setPath("/");
+        // 쿠키 1년
+        cookie.setMaxAge(60 * 60 * 24 * 365);
+        response.addCookie(cookie);
+
+        // 바디는 클라이언트에게 보이지 않으니 db 직접 확인
+        return ResponseEntity.ok().build();
+    }
+
 }
