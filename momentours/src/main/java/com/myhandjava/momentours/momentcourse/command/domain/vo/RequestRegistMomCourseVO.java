@@ -13,7 +13,6 @@ import java.util.List;
 public class RequestRegistMomCourseVO {
     private String momCourseTitle;
     private MomentCourseSort momCourseSort;
-    private int momCourseLike;
     private String momCourseMemo;
     private boolean momCoursePublic;
     private int momCourseCoupleNo;

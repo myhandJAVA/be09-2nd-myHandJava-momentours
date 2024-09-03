@@ -9,6 +9,7 @@ import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCou
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomcourselocationRepository;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomentCourseRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service("CommandMomentCourseService")
+@Slf4j
 public class MomentCourseServiceImpl implements MomentCourseService {
 
     private final MomentCourseRepository momentCourseRepository;
@@ -49,6 +51,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
             momcourselocationDTO.setMomCourseNo(momentCourse.getMomCourseNo());
 
             Momcourselocation momcourselocation = modelMapper.map(momcourselocationDTO, Momcourselocation.class);
+
             momcourselocationRepository.save(momcourselocation);
         }
 
@@ -63,5 +66,35 @@ public class MomentCourseServiceImpl implements MomentCourseService {
 
         momentCourse.setMomCourseIsDeleted(true);
         momentCourseRepository.save(momentCourse);
+    }
+
+    // 추억 코스 수정
+    @Override
+    @Transactional
+    public void modifyMomentCourse(int momCourseNo, MomentCourseDTO momentCourseDTO) {
+
+        momentCourseDTO.setMomCourseUpdateDate(LocalDateTime.now());
+        MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momentCourseDTO.getMomCourseNo())
+                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+
+        momentCourse.setMomCourseTitle(momentCourseDTO.getMomCourseTitle());
+        momentCourse.setMomCourseMemo(momentCourseDTO.getMomCourseMemo());
+        momentCourse.setMomCoursePublic(momentCourseDTO.isMomCoursePublic());
+        if(momentCourseDTO.getMomCourseSort().equals(MomentCourseSort.fewDay))
+            momentCourse.setMomCourseSort(MomentCourseSort.fewDay);
+        else momentCourse.setMomCourseSort(MomentCourseSort.oneDay);
+
+        momentCourseRepository.save(momentCourse);
+        momcourselocationRepository.deleteByMomCourseNo(momCourseNo);
+
+        for (Integer momentNo : momentCourseDTO.getMomentNos()) {
+            MomcourselocationDTO momcourselocationDTO = new MomcourselocationDTO();
+            momcourselocationDTO.setMomentNo(momentNo);
+            momcourselocationDTO.setMomCourseNo(momCourseNo);
+
+            Momcourselocation momcourselocation = modelMapper.map(momcourselocationDTO, Momcourselocation.class);
+
+            momcourselocationRepository.save(momcourselocation);
+        }
     }
 }

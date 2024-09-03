@@ -43,7 +43,6 @@ class MomentCourseServiceImplTests {
 
         momentCourseDTO.setMomCourseTitle("룰루랄라 추억 데이트 코스~");
         momentCourseDTO.setMomCourseSort(MomentCourseSort.oneDay);
-        momentCourseDTO.setMomCourseLike(12);
         momentCourseDTO.setMomCoursePublic(true);
         momentCourseDTO.setMomCourseMemo("여기에서는 휘낭시에를 먹어야해!");
         momentCourseDTO.setMomCourseCoupleNo(2);
@@ -65,5 +64,32 @@ class MomentCourseServiceImplTests {
         if(momentCourse.isMomCourseIsDeleted()) {
         System.out.println("isMomCourseIsDeleted 속성이 true로 삭제 완료!");
         }
+    }
+
+    @DisplayName("추억 코스 수정 테스트")
+    @Test
+    @Transactional
+    void modifyMomentCourse() {
+        List<Integer> momentNos = new ArrayList<>();
+        momentNos.add(3);
+        momentNos.add(4);
+
+        MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
+
+        momentCourseDTO.setMomCourseTitle("아아 수정수정");
+        momentCourseDTO.setMomCourseSort(MomentCourseSort.oneDay);
+        momentCourseDTO.setMomCoursePublic(false);
+        momentCourseDTO.setMomCourseMemo("여기에서는 휘낭시에를 먹어야해!");
+        momentCourseDTO.setMomCourseCoupleNo(2);
+        momentCourseDTO.setMomentNos(momentNos);
+
+        Assertions.assertDoesNotThrow(
+                () -> momentCourseService.modifyMomentCourse(14, momentCourseDTO)
+        );
+
+        System.out.println("momentCourseDTO: " + momentCourseDTO);
+
+        MomentCourse momentCourse = momentCourseRepository.findById(14).orElseThrow();
+        Assertions.assertEquals("아아 수정수정", momentCourse.getMomCourseTitle());
     }
 }

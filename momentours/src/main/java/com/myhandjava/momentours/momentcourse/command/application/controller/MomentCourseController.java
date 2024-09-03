@@ -3,6 +3,7 @@ package com.myhandjava.momentours.momentcourse.command.application.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCourseDTO;
 import com.myhandjava.momentours.momentcourse.command.application.service.MomentCourseService;
+import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestModifyMomCourseVO;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestRegistMomCourseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -48,12 +49,30 @@ public class MomentCourseController {
     // 추억 코스 삭제
     @DeleteMapping("/{momCourseNo}")
     public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
-                                                              @RequestParam int momCourseCoupleNo) {
+                                                @RequestParam int momCourseCoupleNo) {
 
         momentCourseService.removeMomentCourse(momCourseNo, momCourseCoupleNo);
 
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    // 추억 코스 수정
+    @PutMapping("/{momCourseNo}")
+    public ResponseEntity<ResponseMessage> modifyMomentCourse(@PathVariable int momCourseNo,
+                                                              @RequestBody RequestModifyMomCourseVO modifyMomentCourse){
+
+        MomentCourseDTO momentCourseDTO = modelMapper.map(modifyMomentCourse, MomentCourseDTO.class);
+        momentCourseService.modifyMomentCourse(momCourseNo, momentCourseDTO);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("modifyMomentCourse", modifyMomentCourse);
+
+        ResponseMessage responseMessage = new ResponseMessage(201, "추억 코스 수정 성공!", responseMap);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseMessage);
     }
 }
