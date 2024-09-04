@@ -92,4 +92,10 @@ public class CoupleController {
                 ));
     }
 
+    @DeleteMapping("/{coupleNo}")
+    public ResponseEntity<ResponseMessage> deleteCoupleInfo(@PathVariable int coupleNo) {
+        coupleService.deleteCouple(coupleNo);
+
+        return ResponseEntity.noContent().build();
+    }
 }

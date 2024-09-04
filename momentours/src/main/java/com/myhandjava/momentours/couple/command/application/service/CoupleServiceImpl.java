@@ -50,4 +50,13 @@ public class CoupleServiceImpl implements CoupleService {
         log.info("입력된 커플 정보: {}", newCouple);
         coupleRepository.save(newCouple);
     }
+
+    @Override
+    public void deleteCouple(int coupleNo) {
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        couple.setCoupleIsDeleted(1);
+
+        log.info("삭제된 커플 정보: {}", couple);
+        coupleRepository.save(couple);
+    }
 }

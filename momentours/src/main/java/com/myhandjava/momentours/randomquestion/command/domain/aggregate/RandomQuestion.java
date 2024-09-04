@@ -1,10 +1,7 @@
 package com.myhandjava.momentours.randomquestion.command.domain.aggregate;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class RandomQuestion {
 
     @Id
@@ -22,7 +20,7 @@ public class RandomQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int randQuesNo;
 
-    @Column(name = "rand_ques_createDate")
+    @Column(name = "rand_ques_create_date")
     private LocalDateTime randQuesCreateDate;
 
     @Column(name = "rand_ques_content")

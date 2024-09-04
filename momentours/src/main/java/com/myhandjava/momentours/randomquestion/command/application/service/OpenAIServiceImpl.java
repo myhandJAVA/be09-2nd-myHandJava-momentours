@@ -9,37 +9,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Service
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service(value = "OpenAIService")
 @Slf4j
 public class OpenAIServiceImpl implements OpenAIService {
 
     private final RestTemplate restTemplate;
     private final String apiKey;
     private final String apiUrl;
+    private final ObjectMapper objectMapper;
 
     public OpenAIServiceImpl(RestTemplate restTemplate,
                              @Value("${openai.api.key}") String apiKey,
-                             @Value("${openai.api.url}") String apiUrl) {
+                             @Value("${openai.api.url}") String apiUrl,
+                             ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
+        this.objectMapper = objectMapper;
     }
 
+    @Override
     public String generateQuestionForCouple(Map<String, Object> coupleInfo) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + apiKey);
         headers.set("Content-Type", "application/json");
 
-        // OpenAI API에 맞는 프롬프트 작성
         String prompt = buildPrompt(coupleInfo);
 
-        // Chat API에 맞는 메시지 형식으로 변경
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("model", "gpt-4o-mini");
         requestBody.put("messages", List.of(
@@ -55,7 +60,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                         "content", prompt
                 )
         ));
-        requestBody.put("max_tokens", 500); // max_tokens는 사용할 토큰의 최대 수를 의미합니다.
+        requestBody.put("max_tokens", 500);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
@@ -63,13 +68,21 @@ public class OpenAIServiceImpl implements OpenAIService {
         while (retries > 0) {
             try {
                 ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
-                return response.getBody();
+                String responseBody = response.getBody();
+
+                // JSON 응답에서 질문 내용만 추출
+                String questionContent = extractQuestionContent(responseBody);
+                // " " 없애기 위한 subString
+                questionContent = questionContent.replace("\"","");
+                questionContent = questionContent.replace("\\","");
+
+                return questionContent;
             } catch (Exception e) {
                 if (e instanceof HttpClientErrorException.TooManyRequests) {
                     log.warn("쿼터 초과 오류 발생, 재시도 중...");
                     retries--;
                     try {
-                        TimeUnit.SECONDS.sleep(30); // 30초 대기 후 재시도
+                        TimeUnit.SECONDS.sleep(30);
                     } catch (InterruptedException ie) {
                         Thread.currentThread().interrupt();
                         throw new RuntimeException("재시도 대기 중 인터럽트 발생", ie);
@@ -80,22 +93,31 @@ public class OpenAIServiceImpl implements OpenAIService {
                 }
             }
         }
-
         return "OpenAI API 호출 중 에러가 발생했습니다.";
     }
 
+    private String extractQuestionContent(String responseBody) throws IOException {
+        JsonNode root = objectMapper.readTree(responseBody);
+        JsonNode choices = root.path("choices");
+        if (choices.isArray() && choices.size() > 0) {
+            JsonNode message = choices.get(0).path("message");
+            return message.path("content").asText();
+        }
+        return "질문 내용을 추출할 수 없습니다.";
+    }
+
     public String buildPrompt(Map<String, Object> coupleInfo) {
-        // 커플 정보를 기반으로 질문을 생성할 프롬프트를 작성합니다.
+        // 기존 buildPrompt 메서드 내용
         return "\"당신은 인기 있는 커플 앱을 위한 매력적인 랜덤 질문을 생성하게 됩니다. 주어진 커플의 정보를 바탕으로, " +
-                "그들이 서로의 감정과 생각을 깊이 있게 탐구하면서도 재미있게 대화할 수 있는 질문을 만들어주세요. " +
-                "이 질문은:\n" +
+                "그들이 서로의 감정과 생각을 깊이 있게 탐구하면서도 재미있게 대화할 수 있는 질문 1개를 만들어주세요. " +
+                "이 질문의 요구사항은:\n" +
                 "1. 호기심을 자극하고 상대방의 답변이 정말 궁금해지게 만들어야 합니다.\n" +
                 "2. 가볍고 재미있으면서도 관계에 대한 통찰을 제공할 수 있어야 합니다.\n" +
                 "3. 약간의 도발적인 요소나 유머를 포함할 수 있지만, 결코 불편하거나 부적절하지 않아야 합니다.\n" +
-                "4. 커플이 서로에 대해 새로운 면을 발견하거나 잊고 있던 추억을 떠올리게 할 수 있어야 합니다.\n" +
-                "5. 대화를 시작하기 쉽고, 자연스럽게 더 깊은 대화로 이어질 수 있는 질문이어야 합니다.\n" +
-                "또한, 이 질문은 커플에게 직접 제공될 예정이므로 주어진 개인정보에 대해서는 언급하지 마세요.\n" +
-                "질문의 예시 5가지를 제공하겠습니다." +
+                "4. 랜덤 질문은 데이터 베이스에 저장될 예정이므로 당신의 답변은 81자를 넘지 마세요. \n" +
+                "또한, 이 질문은 커플에게 직접 제공될 예정이므로 주어진 개인정보에 대해서는 언급하지 말고 질문외에 쓸데없는 이야기는" +
+                "덧붙이지 마세요.\n" +
+                "좋은 질문을 만들기 위한 질문의 예시 5가지를 제공하겠습니다." +
                 "1. 이젠 말할 수 있다! 난 사실... 너의 관심을 위해 '이런'행동을 했어\n" +
                 "2. 당신이 가장 좋아하는 아이스크림은? 서로의 사소한 부분도 궁금해요!\n" +
                 "3. 최근, 발견한 상대의 귀여운 모습이 있다면 무엇인가요?\n" +
@@ -111,3 +133,4 @@ public class OpenAIServiceImpl implements OpenAIService {
                 "; 자주하는 데이트 카테고리: " + coupleInfo.get("dateCategories");
     }
 }
+
