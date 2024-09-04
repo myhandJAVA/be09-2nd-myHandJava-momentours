@@ -1,5 +1,6 @@
 package com.myhandjava.momentoursUser.security;
 
+import com.myhandjava.momentoursUser.query.repository.UserMapper;
 import com.myhandjava.momentoursUser.query.service.UserService;
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,19 @@ public class WebSecurity {
     private UserService userService;
     private Environment env;
     private JwtUtil jwtUtil;
+    private UserMapper userMapper;
 
     @Autowired
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder
                         , UserService userService
                         , Environment env
-                        , JwtUtil jwtUtil) {
+                        , JwtUtil jwtUtil
+                        , UserMapper userMapper) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userService = userService;
         this.env = env;
         this.jwtUtil = jwtUtil;
+        this.userMapper = userMapper;
     }
 
     @Bean
@@ -63,7 +67,7 @@ public class WebSecurity {
     }
 
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager, userService, env);
+        return new AuthenticationFilter(authenticationManager, userService, env,userMapper);
     }
 
 }
