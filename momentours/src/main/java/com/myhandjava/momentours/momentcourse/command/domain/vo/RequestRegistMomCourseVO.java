@@ -15,6 +15,5 @@ public class RequestRegistMomCourseVO {
     private MomentCourseSort momCourseSort;
     private String momCourseMemo;
     private boolean momCoursePublic;
-    private int momCourseCoupleNo;
     private List<Integer> momentNos;
 }

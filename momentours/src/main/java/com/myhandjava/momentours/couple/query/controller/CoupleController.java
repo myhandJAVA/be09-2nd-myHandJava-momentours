@@ -3,6 +3,7 @@ package com.myhandjava.momentours.couple.query.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.query.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.query.service.CoupleServiceImpl;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,8 @@ public class CoupleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> findCouple(@RequestBody int coupleNo) {
+    public ResponseEntity<ResponseMessage> findCouple(@RequestAttribute("coupleNo") Claims getCoupleNo) {
+        int coupleNo = Integer.parseInt(getCoupleNo.getAudience());
         CoupleDTO selectedCouple = coupleService.findCoupleByCoupleNo(coupleNo);
         Map<String, Object> map = new HashMap<>();
         map.put("selectedCouple", selectedCouple);

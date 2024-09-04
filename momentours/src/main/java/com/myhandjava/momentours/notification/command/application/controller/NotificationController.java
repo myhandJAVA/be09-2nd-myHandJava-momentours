@@ -3,6 +3,7 @@ package com.myhandjava.momentours.notification.command.application.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.notification.command.application.dto.NotificationDTO;
 import com.myhandjava.momentours.notification.command.application.service.NotificationService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,11 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @PostMapping("/regist")
-    public ResponseEntity<ResponseMessage> registNotification(NotificationDTO newNotification) {
+    public ResponseEntity<ResponseMessage> registNotification(NotificationDTO newNotification,
+                                                              @RequestAttribute("userNo") Claims userNo) {
+        int noticeUserNo = Integer.parseInt(userNo.getAudience());
+
+
         notificationService.registNotification(newNotification);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("newNotification", newNotification);

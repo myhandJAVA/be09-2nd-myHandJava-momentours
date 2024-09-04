@@ -9,5 +9,4 @@ import lombok.*;
 @ToString
 public class RequestModifyCommentVO {
     private String commentContent;
-    private int commentUserNo;
 }

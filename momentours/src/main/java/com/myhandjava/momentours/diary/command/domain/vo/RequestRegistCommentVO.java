@@ -9,6 +9,5 @@ import lombok.*;
 @ToString
 public class RequestRegistCommentVO {
     private String commentContent;
-    private int commentUserNo;
     private int diaryNo;
 }

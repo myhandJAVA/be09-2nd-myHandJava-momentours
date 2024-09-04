@@ -15,8 +15,6 @@ public class RequestRegistDiaryVO {
     private int diaryNo;
     private String diaryContent;
     private LocalDateTime diaryCreateDate;
-    private int diaryUserNo;
-    private int coupleNo;
 
     List<MultipartFile> files;
 }
