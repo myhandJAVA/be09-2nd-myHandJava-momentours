@@ -15,6 +15,7 @@ public class TodoCourseDTO {
 //    private int ToDoCourseNo;
     private String toDoCourseTitle;
     private MomentCourseSort toDoCourseSort;
+    private int toDoCourseLike;
     private LocalDateTime toDoCourseCreateDate;
     private LocalDateTime toDoCourseUpdateDate;
     private LocalDateTime toDoCourseStartDate;

@@ -87,11 +87,19 @@ class TodoCourseServiceImplTests {
     void removeTodoCourse() {
         Assertions.assertDoesNotThrow(() -> todoCourseService.removeTodoCourse(4, 1));
 
-        Optional<TodoCourse> todoCourseOpt = todoCourseRepository.findByToDoCourseNoAndToDoCourseCoupleNo(4, 1);
+        Optional<TodoCourse> todoCourseOpt = todoCourseRepository.findByToDoCourseNoAndToDoCourseCoupleNo(
+                4, 1);
         TodoCourse todoCourse = todoCourseOpt.orElseThrow(() -> new RuntimeException("예정코스가 없습니다."));
         if (todoCourse.isToDoCourseIsDeleted()) {
             System.out.println("isToDoCourseIsDeleted 속성이 true로 삭제 완료!");
         }
+    }
+
+    @DisplayName("예정 코스 좋아요 기능 테스트")
+    @Test
+    @Transactional
+    void incrementLike() {
+        Assertions.assertDoesNotThrow(() -> todoCourseService.incrementLike(1));
     }
 
 }

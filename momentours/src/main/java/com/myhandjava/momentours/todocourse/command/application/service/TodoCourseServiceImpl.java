@@ -88,4 +88,28 @@ public class TodoCourseServiceImpl implements TodoCourseService {
         todoCourseRepository.save(todoCourse);
 
     }
+
+    // 예정 코스 좋아요
+    @Override
+    @Transactional
+    public void incrementLike(int todoCourseNo) {
+        TodoCourse todoCourse = todoCourseRepository.findById(todoCourseNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 예정 코스가 존재하지 않습니다."));
+
+        todoCourse.setToDoCourseLike(todoCourse.getToDoCourseLike() + 1);
+        todoCourseRepository.save(todoCourse);
+    }
+
+    // 예정 코스 좋아요 취소
+    @Override
+    public void decrementLike(int todoCourseNo) {
+        TodoCourse todoCourse = todoCourseRepository.findById(todoCourseNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 예정 코스가 좋재하지 않습니다."));
+
+        if (todoCourse.getToDoCourseLike() > 0) {
+            todoCourse.setToDoCourseLike(todoCourse.getToDoCourseLike() - 1);
+            todoCourseRepository.save(todoCourse);
+        }
+
+    }
 }
