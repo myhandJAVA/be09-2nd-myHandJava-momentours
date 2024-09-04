@@ -5,7 +5,9 @@ import com.myhandjava.momentours.momentcourse.query.service.MomentCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/momentcourse")
@@ -19,7 +21,7 @@ public class MomentCourseController {
     }
 
     // 커플 번호를 통해 해당 커플의 전체 추억 코스 조회
-    @GetMapping("/momCourse/{momCourseCoupleNo}")     // 이렇게 해도 되는건가?
+    @GetMapping("/{momCourseCoupleNo}")     // 이렇게 해도 되는건가?
     public List<MomentCourseDTO> findAllMomentCourse(@PathVariable int momCourseCoupleNo) {
         List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(momCourseCoupleNo);
 
@@ -27,7 +29,7 @@ public class MomentCourseController {
     }
 
     // 추억 코스 번호로 상세 조회
-    @GetMapping("/momCourse/{momCourseCoupleNo}/{momCourseNo}")
+    @GetMapping("/{momCourseCoupleNo}/{momCourseNo}")
     public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@PathVariable int momCourseCoupleNo,
                                                                @PathVariable int momCourseNo) {
 
@@ -41,4 +43,15 @@ public class MomentCourseController {
         return momentCourseList;
     }
 
+    @GetMapping("/search")
+    public List<MomentCourseDTO> searchMomentCourse(@RequestParam(required = false) String searchCondition,
+                                                    @RequestParam(required = false) String keyword) {
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("searchCondition", searchCondition);
+        searchMap.put("keyword", keyword);
+
+        List<MomentCourseDTO> searchList = momentCourseService.searchMomentCourse(searchMap);
+
+        return searchList;
+    }
 }

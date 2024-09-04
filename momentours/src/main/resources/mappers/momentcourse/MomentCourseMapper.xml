@@ -17,6 +17,21 @@
         <result property="momCourseCoupleNo" column="mom_course_couple_no"/>
         <result property="momCourseFavorite" column="mom_course_favorite"/>
 
+        <collection property="momCourseLocations" ofType="com.myhandjava.momentours.momentcourse.query.dto.MomcourselocationDTO"
+                    resultMap="momCourseLocationResultMap"/>
+        <collection property="moments" ofType="com.myhandjava.momentours.moment.query.dto.MomentDTO"
+                    resultMap="momentResultMap"/>
+    </resultMap>
+
+    <resultMap id="momCourseLocationResultMap" type="com.myhandjava.momentours.momentcourse.query.dto.MomcourselocationDTO">
+        <id property="courseLocationNo" column="course_location_no"/>
+        <result property="momCourseNo" column="mom_course_no"/>
+        <result property="momentNo" column="moment_no"/>
+    </resultMap>
+
+    <resultMap id="momentResultMap" type="com.myhandjava.momentours.moment.query.dto.MomentDTO">
+        <id property="momentNo" column="moment_no"/>
+        <result property="momentLocationName" column="moment_location_name"/>
     </resultMap>
 
     <!-- 추억 코스 전체 조회 -->
@@ -57,5 +72,23 @@
               OR mom_course_public = true)
               AND mom_course_no = ${ momCourseNo }
     </select>
-    
+
+    <select id="searchMomentCourse" parameterType="map" resultMap="momentCourseResultMap">
+        SELECT DISTINCT mc.*, m.moment_location_name
+        FROM tb_momentcourse mc
+        LEFT JOIN tb_momcourselocation ml ON mc.mom_course_no = ml.mom_course_no
+        LEFT JOIN tb_moment m ON ml.moment_no = m.moment_no
+        WHERE mc.mom_course_public = true
+        <if test="searchCondition == 'courseName' and keyword != null and keyword != ''">
+            AND mc.mom_course_title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="searchCondition == 'locationName' and keyword != null and keyword != ''">
+            AND m.moment_location_name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="searchCondition == 'courseAndLocation' and keyword != null and keyword != ''">
+            AND (mc.mom_course_title LIKE CONCAT('%', #{keyword}, '%')
+            OR m.moment_location_name LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </select>
+
 </mapper>
