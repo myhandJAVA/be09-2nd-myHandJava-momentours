@@ -60,7 +60,14 @@ public class TodoCourseController {
         ResponseMessage responseMessage = new ResponseMessage(201, "예정 코스 수정 성공!", responseMap);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
 
+    // 예정 코스 삭제
+    @DeleteMapping("/{todoCourseNo}")
+    public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
+                                              @RequestParam int todoCourseCoupleNo) {
+        todoCourseService.removeTodoCourse(todoCourseNo, todoCourseCoupleNo);
 
+        return ResponseEntity.noContent().build();
     }
 }
