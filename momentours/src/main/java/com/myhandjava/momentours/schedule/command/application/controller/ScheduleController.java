@@ -22,7 +22,7 @@ public class ScheduleController {
     @PostMapping("/calendar")
     public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
                                                           @RequestAttribute("claims") Claims claims){
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        Integer coupleNo = (Integer)claims.get("coupleNo");
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
