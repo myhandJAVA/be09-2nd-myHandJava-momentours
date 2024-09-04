@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+@Service("MomentCommandServiceImpl")
 @Slf4j
 public class MomentServiceImpl implements MomentService {
 
@@ -133,6 +133,21 @@ public class MomentServiceImpl implements MomentService {
 
         momentRepository.delete(moment);
 
+    }
+
+    @Override
+    @Transactional
+    public void softRemoveMoment(int momentNo) throws NotFoundException {
+
+        Optional<Moment> optionalMoment = momentRepository.findByMomentNo(momentNo);
+
+        if (optionalMoment.isEmpty()){
+            throw new NotFoundException("추억을 찾을 수 없습니다.");
+        }
+        Moment moment = optionalMoment.get();
+        moment.setMomentIsDeleted(1);
+
+        momentRepository.save(moment);
     }
 
     @Override
