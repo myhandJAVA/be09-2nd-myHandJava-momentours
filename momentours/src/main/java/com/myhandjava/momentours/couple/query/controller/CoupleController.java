@@ -23,8 +23,8 @@ public class CoupleController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> findCouple(@RequestAttribute("coupleNo") Claims getCoupleNo) {
-        int coupleNo = Integer.parseInt(getCoupleNo.getAudience());
+    public ResponseEntity<ResponseMessage> findCouple(@RequestAttribute("claims") Claims getCoupleNo) {
+        int coupleNo = Integer.parseInt(getCoupleNo.get("coupleNo", String.class));
         CoupleDTO selectedCouple = coupleService.findCoupleByCoupleNo(coupleNo);
         Map<String, Object> map = new HashMap<>();
         map.put("selectedCouple", selectedCouple);

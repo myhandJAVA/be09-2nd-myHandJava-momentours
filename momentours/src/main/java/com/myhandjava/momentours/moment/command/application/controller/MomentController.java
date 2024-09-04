@@ -25,9 +25,9 @@ public class MomentController {
     private MomentService momentService;
 
     @GetMapping("couple")
-    public List<ResponseFindMomentByCoupleNoVO> findMomentByMomentCoupleNo(@RequestAttribute("coupleNo") Claims coupleNo) {
-        int momentCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        return momentService.findMomentByMomentCoupleNo(momentCoupleNo);
+    public List<ResponseFindMomentByCoupleNoVO> findMomentByMomentCoupleNo(@RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        return momentService.findMomentByMomentCoupleNo(coupleNo);
     }
 
     @GetMapping("/public/{momentPublic}")
@@ -44,9 +44,9 @@ public class MomentController {
 
     @PutMapping("/updateByUser")
     public ResponseEntity<String> updateMoment(@RequestBody MomentDTO updatedMomentDTO,
-                                               @RequestAttribute("coupleNo") Claims coupleNo) throws NotFoundException {
-        int momentCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        updatedMomentDTO.setMomentCoupleNo(momentCoupleNo);
+                                               @RequestAttribute("claims") Claims claims) throws NotFoundException {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        updatedMomentDTO.setMomentCoupleNo(coupleNo);
         momentService.updateMomentByTitleAndCoupleNo(
                 updatedMomentDTO.getMomentNo(),
                 updatedMomentDTO.getMomentCoupleNo(),
@@ -57,9 +57,9 @@ public class MomentController {
 
     @DeleteMapping("/{momentNo}")
     public ResponseEntity<String> removeMoment(@PathVariable int momentNo,
-                                               @RequestAttribute("coupleNo") Claims coupleNo) throws NotFoundException {
-        int momentCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        momentService.removeMoment(momentNo, momentCoupleNo);
+                                               @RequestAttribute("claims") Claims claims) throws NotFoundException {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        momentService.removeMoment(momentNo, coupleNo);
 
         return ResponseEntity.noContent().build();
     }

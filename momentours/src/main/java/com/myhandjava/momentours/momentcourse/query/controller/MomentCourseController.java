@@ -23,22 +23,22 @@ public class MomentCourseController {
 
     // 커플 번호를 통해 해당 커플의 전체 추억 코스 조회
     @GetMapping("")     // 이렇게 해도 되는건가?
-    public List<MomentCourseDTO> findAllMomentCourse(@RequestAttribute("coupleNo") Claims coupleNo) {
-        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(momCourseCoupleNo);
+    public List<MomentCourseDTO> findAllMomentCourse(@RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(coupleNo);
 
         return momentCourseList;
     }
 
     // 추억 코스 번호로 상세 조회
     @GetMapping("/{momCourseNo}")
-    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestAttribute("coupleNo") Claims coupleNo,
+    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestAttribute("claims") Claims claims,
                                                                @PathVariable int momCourseNo) {
 
-        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
 
-        momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);
+        momentCourseDTO.setMomCourseCoupleNo(coupleNo);
         momentCourseDTO.setMomCourseNo(momCourseNo);
 
         List<MomentCourseDTO> momentCourseList = momentCourseService.findMomentCourseByMomCourseNo(momentCourseDTO);
