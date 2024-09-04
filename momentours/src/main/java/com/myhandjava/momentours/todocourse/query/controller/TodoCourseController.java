@@ -5,7 +5,9 @@ import com.myhandjava.momentours.todocourse.query.service.TodoCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/todocourse")
@@ -39,5 +41,17 @@ public class TodoCourseController {
         List<TodoCourseDTO> todoCourseList = todoCourseService.findTodoCourseByTodoCourseNo(todoCourseDTO);
 
         return todoCourseList;
+    }
+
+    @GetMapping("/search")
+    public List<TodoCourseDTO> searchTodoCourse(@RequestParam(required = false) String searchCondition,
+                                                @RequestParam(required = false) String keyword) {
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("searchCondition", searchCondition);
+        searchMap.put("keyword", keyword);
+
+        List<TodoCourseDTO> searchList = todoCourseService.searchToDoCourse(searchMap);
+
+        return searchList;
     }
 }
