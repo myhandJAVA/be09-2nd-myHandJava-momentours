@@ -3,6 +3,8 @@ package com.myhandjava.momentours.schedule.query.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
 import com.myhandjava.momentours.schedule.query.service.ScheduleService;
+import com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO;
+import com.myhandjava.momentours.todocourse.query.service.TodoCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +17,24 @@ import java.util.Map;
 @RestController
 public class ScheduleController {
     ScheduleService scheduleService;
+    TodoCourseService todoCourseService;
 
     @Autowired
-    private ScheduleController(ScheduleService scheduleService){
+    private ScheduleController(ScheduleService scheduleService,
+                               TodoCourseService todoCourseService){
         this.scheduleService = scheduleService;
+        this.todoCourseService = todoCourseService;
     }
 
     @GetMapping("/calendar/{coupleNo}")
     public ResponseEntity<ResponseMessage> findAllSchedule(@PathVariable int coupleNo){
 
         List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
+        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("ScheduleList",coupleScheduleList);
+        responseMap.put("todoCourseList",todoCourseList);
 
         ResponseMessage responseMessage = new ResponseMessage(200,"일정 조회 성공",responseMap);
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
