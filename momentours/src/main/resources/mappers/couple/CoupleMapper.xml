@@ -23,7 +23,34 @@
              , couple_user_no2
              , couple_is_deleted
           FROM tb_couple
-         WHERE couple_no = ${coupleNo}
+         WHERE couple_no = #{coupleNo}
     </select>
 
+    <select id="getCoupleInfo" parameterType="int" resultType="Map">
+        SELECT
+                c.couple_no
+              , u1.user_no AS user1_no
+              , u2.user_no AS user2_no
+              , u1.user_name AS user1_name
+              , u2.user_name AS user2_name
+              , u1.user_gender AS user1_gender
+              , u2.user_gender AS user2_gender
+              , u1.user_mbti AS user1_mbti
+              , u2.user_mbti AS user2_mbti
+              , u1.user_birth AS user1_birth, u2.user_birth AS user2_birth
+              , c.couple_start_date AS anniversary
+        FROM tb_couple c
+        JOIN tb_user u1 ON c.couple_user_no1 = u1.user_no
+        JOIN tb_user u2 ON c.couple_user_no2 = u2.user_no
+        WHERE c.couple_no = #{coupleNo}
+    </select>
+    
+    <select id="getTopDateCategories" parameterType="int" resultType="String">
+        SELECT m.moment_category
+          FROM tb_moment m
+         WHERE m.moment_couple_no = #{coupleNo}
+         GROUP BY m.moment_category
+         ORDER BY COUNT(*) DESC
+         LIMIT 4
+    </select>
 </mapper>

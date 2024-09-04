@@ -6,7 +6,6 @@ import com.myhandjava.momentours.couple.command.domain.repository.CoupleReposito
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,5 +48,14 @@ public class CoupleServiceImpl implements CoupleService {
 
         log.info("입력된 커플 정보: {}", newCouple);
         coupleRepository.save(newCouple);
+    }
+
+    @Override
+    public void deleteCouple(int coupleNo) {
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        couple.setCoupleIsDeleted(1);
+
+        log.info("삭제된 커플 정보: {}", couple);
+        coupleRepository.save(couple);
     }
 }

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -24,4 +26,12 @@ class CoupleQueryServiceImplTests {
         assertEquals(coupleNo, coupleDTO.getCoupleNo());
     }
 
+    @DisplayName("랜덤 질문을 위한 커플 번호로 회원 정보 추출")
+    @Test
+    void getUserInfoByCoupleNo() {
+        int coupleNo = 1;
+        Map<String, Object> map = coupleService.getCoupleInfo(coupleNo);
+
+        assertNotNull(map);
+    }
 }
