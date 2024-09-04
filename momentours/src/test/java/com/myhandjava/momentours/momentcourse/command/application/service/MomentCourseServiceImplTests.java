@@ -92,4 +92,11 @@ class MomentCourseServiceImplTests {
         MomentCourse momentCourse = momentCourseRepository.findById(14).orElseThrow();
         Assertions.assertEquals("아아 수정수정", momentCourse.getMomCourseTitle());
     }
+
+    @DisplayName("추억 코스 좋아요 기능 테스트")
+    @Test
+    @Transactional
+    void incrementLike() {
+        Assertions.assertDoesNotThrow(() -> momentCourseService.incrementLike(1));
+    }
 }
