@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CoupleServiceImplTests {
+class CoupleQueryServiceImplTests {
 
     @Autowired
     private CoupleServiceImpl coupleService;
@@ -23,4 +23,5 @@ class CoupleServiceImplTests {
         assertNotNull(coupleDTO);
         assertEquals(coupleNo, coupleDTO.getCoupleNo());
     }
+
 }

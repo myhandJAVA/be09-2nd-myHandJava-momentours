@@ -5,6 +5,7 @@ import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.application.service.CoupleServiceImpl;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistNumberVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
+import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,4 +75,21 @@ public class CoupleController {
                 )
         );
     }
+
+    @PatchMapping("/{coupleNo}")
+    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo, @PathVariable int coupleNo) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
+
+        coupleService.updateCouple(coupleNo, updatedCouple);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("updatedCouple", updatedCouple);
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        200, "커플 정보가 수정되었습니다.", map
+                ));
+    }
+
 }
