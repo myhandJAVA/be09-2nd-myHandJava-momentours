@@ -1,5 +1,6 @@
 package com.myhandjava.momentours.couple.command.application.controller;
 
+import com.myhandjava.momentours.client.UserClient;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.application.service.CoupleServiceImpl;
@@ -23,22 +24,26 @@ public class CoupleController {
 
     private final ModelMapper modelMapper;
     private final CoupleServiceImpl coupleService;
+    private final UserClient userClient;
 
     @Autowired
-    public CoupleController(ModelMapper modelMapper, CoupleServiceImpl coupleService) {
+    public CoupleController(ModelMapper modelMapper, CoupleServiceImpl coupleService, UserClient userClient) {
         this.modelMapper = modelMapper;
         this.coupleService = coupleService;
+        this.userClient = userClient;
     }
 
     @PostMapping("")
     public ResponseEntity<String> registNewCouple(@RequestAttribute("claims") Claims claims) {
         int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
         // 여기서 유저 번호로 유저 서비스에서 유저 테이블에 있는 파트너 번호 속성 조회해야 함
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("userNumber", claims.get("userNo", String.class));
+        ResponseEntity<ResponseMessage> response = userClient.findByUserNo(userNo1);
+        Map<String, Object> map = response.getBody().getResult();
+//        UserDTO userDTO = map.get("user");
+
 
         return ResponseEntity.ok()
-                .headers(headers)
+//                .headers(headers)
                 .body("회원 번호 2개 리턴 성공");
     }
 
