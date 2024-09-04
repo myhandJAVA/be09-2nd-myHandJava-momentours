@@ -76,13 +76,13 @@ public class CoupleController {
         );
     }
 
-    @PatchMapping("/{coupleNo}")
-    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo, @PathVariable int coupleNo) {
+    @PatchMapping("")
+    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
 
-        coupleService.updateCouple(coupleNo, updatedCouple);
+        coupleService.updateCouple(updateInfo.getCoupleNo(), updatedCouple);
 
         Map<String, Object> map = new HashMap<>();
         map.put("updatedCouple", updatedCouple);

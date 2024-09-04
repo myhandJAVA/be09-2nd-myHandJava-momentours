@@ -21,16 +21,16 @@ public class MomentCourseController {
     }
 
     // 커플 번호를 통해 해당 커플의 전체 추억 코스 조회
-    @GetMapping("/{momCourseCoupleNo}")     // 이렇게 해도 되는건가?
-    public List<MomentCourseDTO> findAllMomentCourse(@PathVariable int momCourseCoupleNo) {
+    @GetMapping("")     // 이렇게 해도 되는건가?
+    public List<MomentCourseDTO> findAllMomentCourse(@RequestBody int momCourseCoupleNo) {
         List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(momCourseCoupleNo);
 
         return momentCourseList;
     }
 
     // 추억 코스 번호로 상세 조회
-    @GetMapping("/{momCourseCoupleNo}/{momCourseNo}")
-    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@PathVariable int momCourseCoupleNo,
+    @GetMapping("/{momCourseNo}")
+    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestBody int momCourseCoupleNo,
                                                                @PathVariable int momCourseNo) {
 
         MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
