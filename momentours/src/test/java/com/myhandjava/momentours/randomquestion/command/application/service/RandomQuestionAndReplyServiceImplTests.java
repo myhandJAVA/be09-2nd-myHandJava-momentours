@@ -2,7 +2,6 @@ package com.myhandjava.momentours.randomquestion.command.application.service;
 
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
-import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
