@@ -24,6 +24,7 @@
         <result property="userPartnerNo" column="USER_PARTNER_NO"/>
     </resultMap>
 
+
     <select id="findByUserEmail" resultMap="UserResultMap" parameterType="String">
         SELECT USER_NO
              , USER_EMAIL
@@ -78,4 +79,38 @@
              ON C.USER_NO = D.COUPLE_USER_NO2
           WHERE USER_NO = ${userNo}
     </select>
+
+    <select id="searchUserWithEmail" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_NICKNAME
+        , USER_MBTI
+        , USER_GENDER
+        FROM TB_USER
+        WHERE USER_EMAIL = #{ userEmail }
+    </select>
+
+    <select id="searchUserWithNickname" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_NICKNAME
+        , USER_MBTI
+        , USER_GENDER
+        FROM TB_USER
+        WHERE USER_NICKNAME = #{ nickname }
+    </select>
+
+
+    <select id="getUserPwd" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_PWD
+        FROM TB_USER
+        WHERE USER_EMAIL = #{ userEmail }
+    </select>
+
+
+    <select id="getUserIdWithPhone" resultMap="UserResultMap" parameterType="String">
+        SELECT USER_EMAIL
+        FROM TB_USER
+        WHERE USER_PHONE = #{ userPhone }
+    </select>
+
 </mapper>
