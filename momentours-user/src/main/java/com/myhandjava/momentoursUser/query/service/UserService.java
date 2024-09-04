@@ -20,4 +20,6 @@ public interface UserService extends UserDetailsService {
 
 
     ResponseUserIdVO getUserIdByPhone(String userPhone);
+
+    UserDTO findByUserNo(int userNo);
 }

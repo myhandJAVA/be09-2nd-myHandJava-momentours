@@ -113,4 +113,25 @@
         WHERE USER_PHONE = #{ userPhone }
     </select>
 
+    <select id="findUserByUserNo" resultMap="UserResultMap" parameterType="_int">
+        SELECT USER_NO
+             , USER_EMAIL
+             , USER_PWD
+             , USER_NAME
+             , USER_NICKNAME
+             , USER_PHONE
+             , USER_BIRTH
+             , USER_MBTI
+             , USER_ROLE
+             , ACCESSIBLE_DATE
+             , USER_GENDER
+             , USER_REPORT_COUNT
+             , USER_CREATE_AT
+             , USER_UPDATE_AT
+             , USER_LAST_LOGIN
+             , USER_PARTNER_NO
+          FROM TB_USER
+         WHERE USER_NO = ${userNo}
+    </select>
+
 </mapper>
