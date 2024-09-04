@@ -12,7 +12,7 @@ public interface UserMapper {
 
     List<UserEntity> findAllUser();
 
-    int findUserCoupleNoByUserNo(int userNo);
+    Integer findUserCoupleNoByUserNo(int userNo);
 
     UserEntity searchUserWithEmail(String userEmail);
 

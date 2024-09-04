@@ -2,6 +2,9 @@ package com.myhandjava.momentoursUser.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
+import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
+import com.myhandjava.momentoursUser.query.repository.UserMapper;
 import com.myhandjava.momentoursUser.query.service.UserService;
 import com.myhandjava.momentoursUser.command.domain.vo.RequestLoginVO;
 import io.jsonwebtoken.Claims;
@@ -32,11 +35,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private UserService userSerivce;
     private Environment env;
+    private UserService userService;
+    private UserMapper userMapper;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userSerivce, Environment env) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager,
+                                UserService userSerivce,
+                                Environment env,
+                                UserMapper userMapper) {
         super(authenticationManager);
         this.userSerivce = userSerivce;
         this.env = env;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -62,6 +71,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
         String userName = ((User)authResult.getPrincipal()).getUsername();
+        UserEntity userEntity = userMapper.findByUserEmail(userName);
+        int userNo = userEntity.getUserNo();
+        Integer coupleNo = userMapper.findUserCoupleNoByUserNo(userNo);
+
+
 
         List<String> roles = authResult.getAuthorities().stream()
                             .map(role -> role.getAuthority())
@@ -69,6 +83,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put("auth", roles);
+        claims.put("userNo",userNo);
+        claims.put("coupleNo",coupleNo);
 
         String token = Jwts.builder()
                 .setClaims(claims)
