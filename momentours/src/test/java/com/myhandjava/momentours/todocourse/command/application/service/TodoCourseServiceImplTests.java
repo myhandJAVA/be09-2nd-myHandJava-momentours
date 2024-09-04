@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,6 +79,19 @@ class TodoCourseServiceImplTests {
 
         TodoCourse todoCourse = todoCourseRepository.findById(1).orElseThrow();
         Assertions.assertEquals("수정수정수정!!!", todoCourse.getToDoCourseTitle());
+    }
+
+    @DisplayName("예정 코스 삭제 테스트")
+    @Test
+    @Transactional
+    void removeTodoCourse() {
+        Assertions.assertDoesNotThrow(() -> todoCourseService.removeTodoCourse(4, 1));
+
+        Optional<TodoCourse> todoCourseOpt = todoCourseRepository.findByToDoCourseNoAndToDoCourseCoupleNo(4, 1);
+        TodoCourse todoCourse = todoCourseOpt.orElseThrow(() -> new RuntimeException("예정코스가 없습니다."));
+        if (todoCourse.isToDoCourseIsDeleted()) {
+            System.out.println("isToDoCourseIsDeleted 속성이 true로 삭제 완료!");
+        }
     }
 
 }
