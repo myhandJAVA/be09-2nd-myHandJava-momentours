@@ -1,9 +1,13 @@
 package com.myhandjava.momentoursUser.query.service;
 
-import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
+import com.myhandjava.momentoursUser.client.MomentoursClient;
+import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
+import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
+import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,10 +22,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
+    private MomentoursClient momentoursClient;
 
     @Autowired
-    private UserServiceImpl(UserMapper userMapper) {
+    private UserServiceImpl(UserMapper userMapper,
+                            MomentoursClient momentoursClient) {
         this.userMapper = userMapper;
+        this.momentoursClient =momentoursClient;
     }
 
     @Override
@@ -69,5 +76,100 @@ public class UserServiceImpl implements UserService{
         UserEntity foundUser = userMapper.findByUserEmail(email);
         UserDTO userDTO = entityToDTO(foundUser);
         return userDTO;
+    }
+
+    @Override
+    public UserMyPageDTO viewMyPage(int userNo) {
+        int coupleNo = userMapper.findUserCoupleNoByUserNo(userNo);
+        ResponseEntity<ResponseMessage> scheduleResponse = momentoursClient.findAllSchedule(coupleNo);
+
+        UserMyPageDTO userMyPageDTO = new UserMyPageDTO();
+        userMyPageDTO.setCoupleNo(coupleNo);
+        userMyPageDTO.setUserNo(userNo);
+        userMyPageDTO.setScheduleList((List<ScheduleDTO>)scheduleResponse.getBody().getResult().get("ScheduleList"));
+        return userMyPageDTO;
+    }
+
+    @Override
+    public UserInfoDTO searchUserWithId(String userEmail) {
+        // Email로 조회
+        UserEntity user = userMapper.searchUserWithEmail(userEmail);
+
+        UserInfoDTO returnUserInfo = UserToUserDTO(user);
+
+        return returnUserInfo;    }
+
+    @Override
+    public UserInfoDTO searchByNickname(String userNickname) {
+        // Nickname으로 조회
+        UserEntity user = userMapper.searchUserWithNickname(userNickname);
+
+        UserInfoDTO returnUserInfo = UserToUserDTO(user);
+
+        return returnUserInfo;    }
+
+    @Override
+    public UserEntityDTO getUserPwdByEmail(String userEmail) {
+        UserEntity user = userMapper.getUserPwd(userEmail);
+
+        UserEntityDTO userPwd = setUserPwdToDTO(user);
+
+        return userPwd;    }
+
+
+    @Override
+    public ResponseUserIdVO getUserIdByPhone(String userPhone) {
+        UserEntity user = userMapper.getUserIdWithPhone(userPhone);
+
+        ResponseUserIdVO Result = UserToResponseUserIdVO(user);
+
+        return Result;    }
+
+    private ResponseUserIdVO UserToResponseUserIdVO(UserEntity user) {
+        // getUserIdByPhone() 타입 변환용 메소드
+        ResponseUserIdVO returnValue = new ResponseUserIdVO();
+        returnValue.setUserEmail(user.getUserEmail());
+
+        return returnValue;
+    }
+
+    private UserEntityDTO setUserPwdToDTO(UserEntity user) {
+        // UserPwd set 메소드
+        UserEntityDTO userPwdInfo = new UserEntityDTO();
+
+        userPwdInfo.setUserPwd(user.getUserPwd());
+
+        return userPwdInfo;
+    }
+
+    private UserEntityDTO setUserInfoToDTO(UserEntity user) {
+        // For Admin 회원 정보 조회용 메소드
+        UserEntityDTO userInfo = new UserEntityDTO();
+        userInfo.setUserBirth(user.getUserBirth());
+        userInfo.setUserEmail(user.getUserEmail());
+        userInfo.setUserNo(user.getUserNo());
+        userInfo.setUserName(user.getUserName());
+        userInfo.setUserPhone(user.getUserPhone());
+        userInfo.setUserRole(user.getUserRole());
+        userInfo.setUserGender(user.getUserGender());
+        userInfo.setUserMBTI(user.getUserMbti());
+        userInfo.setUserNickname(user.getUserNickname());
+        userInfo.setUserReportCount(user.getUserReportCount());
+        userInfo.setAccessibleDate(user.getAccessibleDate());
+        userInfo.setUserCreateAt(user.getUserCreateAt());
+        userInfo.setUserUpdateAt(user.getUserUpdateAt());
+
+        return userInfo;
+    }
+
+    private UserInfoDTO UserToUserDTO(UserEntity user) {
+        /* 매핑용 메소드 */
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+
+        userInfoDTO.setUserNickname(user.getUserNickname());
+        userInfoDTO.setUserMBTI(user.getUserMbti());
+        userInfoDTO.setUserGender(user.getUserGender());
+
+        return userInfoDTO;
     }
 }

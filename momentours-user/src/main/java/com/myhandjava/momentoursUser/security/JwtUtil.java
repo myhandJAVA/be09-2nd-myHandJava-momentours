@@ -34,7 +34,6 @@ public class JwtUtil {
         this.userService = userSerivce;
     }
 
-    /* 설명. Token 검증(Bearer 토큰이 넘어왔고, 우리 사이트의 secret key로 만들어 졌는가, 만료되었는지와 내용이 비어있진 않은지) */
     public boolean validateToken(String token) {
 
         try {
@@ -52,21 +51,16 @@ public class JwtUtil {
         return true;
     }
     
-    /* 설명. 넘어온 AccessToken으로 인증 객체 추출 */
     public Authentication getAuthentication(String token) {
 
-        /* 설명. 토큰을 들고 왔던 들고 오지 않았던(로그인 시) 동일하게 security가 관리 할 UserDetails 타입을 정의 */
         UserDetails userDetails = userService.loadUserByUsername(this.getUserId(token));
 
-        /* 설명. 토큰에서 claim들 추출 */
         Claims claims = parseClaims(token);
-        log.info("넘어온 AccessToken claims 확인: {}", claims);
 
         Collection<? extends GrantedAuthority> authorities = null;
         if(claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         } else {
-            /* 설명. 클레임에서 권한 정보들 가져오기 */
              authorities =
                     Arrays.stream(claims.get("auth").toString()
                                     .replace("[", "")
@@ -79,12 +73,10 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
-    /* 설명. Token에서 Claims 추출 */
     public Claims parseClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    /* 설명. Token에서 사용자의 id(subject 클레임) 추출 */
     public String getUserId(String token) {
         return parseClaims(token).getSubject();
     }
