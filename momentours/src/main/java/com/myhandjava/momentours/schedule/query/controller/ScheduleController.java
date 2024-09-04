@@ -26,8 +26,8 @@ public class ScheduleController {
         this.todoCourseService = todoCourseService;
     }
 
-    @GetMapping("/calendar/{coupleNo}")
-    public ResponseEntity<ResponseMessage> findAllSchedule(@PathVariable int coupleNo){
+    @GetMapping("/calendar")
+    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestBody int coupleNo){
 
         List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
