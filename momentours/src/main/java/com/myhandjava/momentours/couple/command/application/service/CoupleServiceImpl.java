@@ -5,6 +5,8 @@ import com.myhandjava.momentours.couple.command.domain.aggregate.Couple;
 import com.myhandjava.momentours.couple.command.domain.repository.CoupleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,7 @@ public class CoupleServiceImpl implements CoupleService {
 
     @Override
     public void inputCoupleInfo(int userNo1, int userNo2, CoupleDTO couple) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Couple newCouple = modelMapper.map(couple, Couple.class);
         newCouple.setCoupleUserNo1(userNo1);
         newCouple.setCoupleUserNo2(userNo2);

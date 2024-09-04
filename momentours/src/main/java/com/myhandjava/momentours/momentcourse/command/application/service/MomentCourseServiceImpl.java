@@ -133,16 +133,18 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     @Transactional
     public boolean isFavorite(FavoriteDTO favoriteDTO) {
         MomentCourse momentCourse = momentCourseRepository.findById(favoriteDTO.getFavoMomCourseNo())
-                .orElseThrow(() -> new EntityNotFoundException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 추억코스가 존재하지 않습니다."));
 
         // 즐겨찾기 있는지 확인
-        Optional<Favorite> existingFavorite = favoriteRepository.findByMomCourseNoAndUserId(favoriteDTO.getFavoMomCourseNo(), favoriteDTO.getFavoUserNo());
+        Optional<Favorite> existingFavorite = favoriteRepository.findByFavoMomCourseNoAndFavoUserNo(favoriteDTO.getFavoMomCourseNo(), favoriteDTO.getFavoUserNo());
 
         if(existingFavorite.isPresent()) {
             favoriteRepository.delete(existingFavorite.get());
             return false;
         } else {
-            Favorite favorite = modelMapper.map(favoriteDTO, Favorite.class);
+            Favorite favorite = new Favorite();
+            favorite.setFavoMomCourseNo(favoriteDTO.getFavoMomCourseNo());
+            favorite.setFavoUserNo(favoriteDTO.getFavoUserNo());
             favoriteRepository.save(favorite);
             return true;
         }
