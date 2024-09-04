@@ -39,11 +39,12 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             }
 
             HttpHeaders headers = request.getHeaders();
-            Set<String> keys = headers.keySet();
+            log.info("headers: {}",headers);
 
 
             String BearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
             String jwt = BearerToken.replace("Bearer ", "");
+            log.info("jwt: {}",jwt);
 
             if(!isJwtValid(jwt)) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);

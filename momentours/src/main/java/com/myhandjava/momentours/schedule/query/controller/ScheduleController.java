@@ -28,7 +28,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("coupleNo") Claims coupleNo){
+    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("claims") Claims coupleNo){
 
         int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
         List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(scheduleCoupleNo);

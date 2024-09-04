@@ -76,7 +76,7 @@
     <select id="searchMomentCourse" parameterType="map" resultMap="momentCourseResultMap">
         SELECT DISTINCT mc.*, m.moment_location_name
         FROM tb_momentcourse mc
-        LEFT JOIN tb_momcourselocation ml ON mc.mom_course_no = ml.mom_course_no
+        LEFT JOIN tb_momentcourselocation ml ON mc.mom_course_no = ml.mom_course_no
         LEFT JOIN tb_moment m ON ml.moment_no = m.moment_no
         WHERE mc.mom_course_public = true
         <if test="searchCondition == 'courseName' and keyword != null and keyword != ''">

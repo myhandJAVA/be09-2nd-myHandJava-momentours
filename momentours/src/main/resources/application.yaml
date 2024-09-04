@@ -44,3 +44,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+token:
+  expiration_time: 43200000
+  secret: K0HHLFxls3IXU9tafT999JvEC3c80Dhy7qv41YyY99Pe1agCbJyiv558uBWHTQiYzRDdju9/CLtZltizLjGgSQ==
