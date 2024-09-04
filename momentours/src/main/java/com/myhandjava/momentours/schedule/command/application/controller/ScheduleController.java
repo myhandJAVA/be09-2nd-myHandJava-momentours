@@ -4,6 +4,7 @@ import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
 import io.jsonwebtoken.Claims;
+import jakarta.ws.rs.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,13 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
     }
 
-    @PutMapping("/calendar")
+    @PutMapping("/calendar/{scheduleNo}")
     public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO,
+                                                          @PathVariable int scheduleNo,
                                                           @RequestAttribute("claims") Claims claims){
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        Integer coupleNo = (Integer)claims.get("coupleNo");
         scheduleDTO.setCoupleNo(coupleNo);
+        scheduleDTO.setScheduleNo(scheduleNo);
         scheduleService.updateSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
@@ -47,10 +50,12 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
-    @DeleteMapping("/calendar")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@RequestBody ScheduleDTO scheduleDTO,
+    @DeleteMapping("/calendar/{scheduleNo}")
+    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable int scheduleNo,
                                                           @RequestAttribute("claims") Claims claims){
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        Integer coupleNo = (Integer)claims.get("coupleNo");
+        scheduleDTO.setScheduleNo(scheduleNo);
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.deleteSchedule(scheduleDTO);
 
