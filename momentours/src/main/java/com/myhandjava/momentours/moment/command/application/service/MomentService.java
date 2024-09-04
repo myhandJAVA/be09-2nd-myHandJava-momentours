@@ -19,6 +19,8 @@ public interface MomentService {
 
     void removeMoment(int momentNo, int momentCoupleNo) throws NotFoundException;
 
+    void softRemoveMoment(int momentNo) throws NotFoundException;
+
     void incrementViewCount(int momentNo) throws NotFoundException;
 
     MomentDTO getMomentById(int momentNo);

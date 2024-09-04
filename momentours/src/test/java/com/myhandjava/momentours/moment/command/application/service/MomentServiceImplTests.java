@@ -142,4 +142,36 @@ class MomentServiceImplTests {
         assertEquals(1, updatedMoment.getMomentPublic());
     }
 
+//    @DisplayName("추억 삭제 테스트")
+//    @Test
+//    void removeMoment() throws Exception {
+//        // given
+//        int momentNo = 1;
+//        int coupleNo = 1;
+//
+//        // when
+//        momentService.removeMoment(momentNo, coupleNo);
+//
+//        //then
+//
+//    }
+    @DisplayName("추억 soft delete 테스트")
+    @Test
+    void softRemoveMoment() throws Exception {
+
+        int momentNo = 1;
+
+        momentService.softRemoveMoment(momentNo);
+
+        Moment deletedMoment = momentRepository.findByMomentNo(momentNo)
+                .orElseThrow(() -> new AssertionError("추억을 찾을 수 없습니다."));
+
+        assertNotNull(deletedMoment);
+        assertEquals(1, deletedMoment.getMomentIsDeleted());
+
+
+    }
+
+
+
 }
