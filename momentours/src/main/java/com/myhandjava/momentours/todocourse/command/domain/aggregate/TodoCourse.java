@@ -17,36 +17,36 @@ public class TodoCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private int ToDoCourseNo;
+    private int toDoCourseNo;
 
     @Column
-    private String ToDoCourseTitle;
+    private String toDoCourseTitle;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private MomentCourseSort ToDoCourseSort;
+    private MomentCourseSort toDoCourseSort;
 
     @Column
-    private int ToDoCourseLike;
+    private int toDoCourseLike;
 
     @Column
-    private LocalDateTime ToDoCourseCreateDate;
+    private LocalDateTime toDoCourseCreateDate;
 
     @Column
-    private LocalDateTime ToDoCourseUpdateDate;
+    private LocalDateTime toDoCourseUpdateDate;
 
     @Column
-    private LocalDateTime ToDoCourseStartDate;
+    private LocalDateTime toDoCourseStartDate;
 
     @Column
-    private LocalDateTime ToDoCourseEndDate;
+    private LocalDateTime toDoCourseEndDate;
 
     @Column
-    private String ToDoCourseMemo;
+    private String toDoCourseMemo;
 
     @Column
-    private boolean ToDoCourseIsDeleted;
+    private boolean toDoCourseIsDeleted;
 
     @Column
-    private int ToDoCourseCoupleNo;
+    private int toDoCourseCoupleNo;
 }

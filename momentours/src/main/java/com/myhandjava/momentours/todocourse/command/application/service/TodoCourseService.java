@@ -6,4 +6,6 @@ public interface TodoCourseService {
 
     // 예정 코스 등록
     void registTodoCourse(TodoCourseDTO newTodoCourse);
+
+    void modifyTodoCourse(int todoCourseNo, TodoCourseDTO todoCourseDTO);
 }
