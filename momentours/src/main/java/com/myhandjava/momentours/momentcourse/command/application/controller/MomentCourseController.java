@@ -38,7 +38,7 @@ public class MomentCourseController {
 
     // 추억 코스 등록
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse) {
+    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody int newMomentCourse) {
         log.info("newMomentCourse {}", newMomentCourse);
         MomentCourseDTO momentCourseDTO = modelMapper.map(newMomentCourse, MomentCourseDTO.class);
         momentCourseService.registMomentCourse(momentCourseDTO);
@@ -55,12 +55,12 @@ public class MomentCourseController {
     // 추억 코스 삭제
     @DeleteMapping("/{momCourseNo}")
     public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
-                                                @RequestParam int momCourseCoupleNo) {
+                                                @RequestBody int momCourseCoupleNo) {
 
         momentCourseService.removeMomentCourse(momCourseNo, momCourseCoupleNo);
 
         return ResponseEntity
-                .noContent()
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 

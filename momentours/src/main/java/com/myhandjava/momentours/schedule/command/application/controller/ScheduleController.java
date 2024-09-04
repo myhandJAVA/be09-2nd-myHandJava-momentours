@@ -18,38 +18,35 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @PostMapping("/calendar/{coupleNo}")
-    public ResponseEntity<ResponseMessage> registSchedule(@PathVariable int coupleNo, @RequestBody ScheduleDTO scheduleDTO){
+    @PostMapping("/calendar")
+    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO){
 
-        scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("newSchedule","/calendar/"+ coupleNo);
+        responseMap.put("newSchedule","/calendar/");
 
         ResponseMessage responseMessage = new ResponseMessage(201,"일정 생성 성공", responseMap );
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
     }
 
-    @PutMapping("/calendar/{coupleNo}")
-    public ResponseEntity<ResponseMessage> updateSchedule(@PathVariable int coupleNo, @RequestBody ScheduleDTO scheduleDTO){
-        scheduleDTO.setCoupleNo(coupleNo);
+    @PutMapping("/calendar")
+    public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO){
         scheduleService.updateSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("newSchedule","/calendar/"+ coupleNo);
+        responseMap.put("newSchedule","/calendar/");
 
         ResponseMessage responseMessage = new ResponseMessage(200,"일정 수정 성공", responseMap );
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
-    @DeleteMapping("/calendar/{coupleNo}")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable int coupleNo, @RequestBody ScheduleDTO scheduleDTO){
-        scheduleDTO.setCoupleNo(coupleNo);
+    @DeleteMapping("/calendar")
+    public ResponseEntity<ResponseMessage> deleteSchedule(@RequestBody ScheduleDTO scheduleDTO){
         scheduleService.deleteSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("deletedSchedule","/calendar/"+ coupleNo);
+        responseMap.put("deletedSchedule","/calendar/");
 
         ResponseMessage responseMessage = new ResponseMessage(200,"일정 삭제 성공", responseMap );
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);

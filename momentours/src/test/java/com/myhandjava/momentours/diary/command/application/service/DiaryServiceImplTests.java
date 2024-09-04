@@ -75,7 +75,9 @@ class DiaryServiceImplTests {
     @Test
     @Transactional
     void removeDiary() {
-
+//
+//        DiaryDTO diaryDTO = new DiaryDTO();
+//        diaryDTO.setDiaryUserNo(2);
         Assertions.assertDoesNotThrow(() -> diaryService.removeDiary(12, 2));
 
         Diary deletedDiary = diaryRepository.findById(12)
