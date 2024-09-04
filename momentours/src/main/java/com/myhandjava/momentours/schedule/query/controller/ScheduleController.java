@@ -28,11 +28,11 @@ public class ScheduleController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("coupleNo") Claims coupleNo){
+    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("claims") Claims claims){
 
-        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(scheduleCoupleNo);
-        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(scheduleCoupleNo);
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
+        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("ScheduleList",coupleScheduleList);

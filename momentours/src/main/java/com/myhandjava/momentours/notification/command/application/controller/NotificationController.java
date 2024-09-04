@@ -23,9 +23,9 @@ public class NotificationController {
 
     @PostMapping("/regist")
     public ResponseEntity<ResponseMessage> registNotification(NotificationDTO newNotification,
-                                                              @RequestAttribute("userNo") Claims userNo) {
-        int noticeUserNo = Integer.parseInt(userNo.getAudience());
-
+                                                              @RequestAttribute("claims") Claims claims) {
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
+        newNotification.setNoticeUserNo(userNo);
 
         notificationService.registNotification(newNotification);
         Map<String, Object> responseMap = new HashMap<>();

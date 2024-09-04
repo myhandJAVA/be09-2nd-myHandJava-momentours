@@ -79,10 +79,10 @@ public class CoupleController {
 
     @PatchMapping("")
     public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo,
-                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
+                                                            @RequestAttribute("claims") Claims coupleNo) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        int updateCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int updateCoupleNo = Integer.parseInt(coupleNo.get("coupleNo", String.class));
         updateInfo.setCoupleNo(updateCoupleNo);
         CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
 

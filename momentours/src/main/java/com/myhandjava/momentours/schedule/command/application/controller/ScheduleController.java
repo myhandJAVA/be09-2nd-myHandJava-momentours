@@ -21,9 +21,9 @@ public class ScheduleController {
 
     @PostMapping("/calendar")
     public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
-                                                          @RequestAttribute("coupleNo") Claims coupleNo){
-        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        scheduleDTO.setCoupleNo(scheduleCoupleNo);
+                                                          @RequestAttribute("claims") Claims claims){
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
@@ -35,9 +35,9 @@ public class ScheduleController {
 
     @PutMapping("/calendar")
     public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO,
-                                                          @RequestAttribute("coupleNo") Claims coupleNo){
-        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        scheduleDTO.setCoupleNo(scheduleCoupleNo);
+                                                          @RequestAttribute("claims") Claims claims){
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.updateSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
@@ -49,9 +49,9 @@ public class ScheduleController {
 
     @DeleteMapping("/calendar")
     public ResponseEntity<ResponseMessage> deleteSchedule(@RequestBody ScheduleDTO scheduleDTO,
-                                                          @RequestAttribute("coupleNo") Claims coupleNo){
-        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        scheduleDTO.setCoupleNo(scheduleCoupleNo);
+                                                          @RequestAttribute("claims") Claims claims){
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.deleteSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
