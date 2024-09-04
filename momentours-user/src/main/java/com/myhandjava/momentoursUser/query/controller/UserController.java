@@ -3,6 +3,7 @@ package com.myhandjava.momentoursUser.query.controller;
 import com.myhandjava.momentoursUser.client.MomentoursClient;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
+import com.myhandjava.momentoursUser.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserPwdVO;
 import com.myhandjava.momentoursUser.common.ResponseMessage;
@@ -43,6 +44,15 @@ public class UserController {
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("user",userDTO);
         ResponseMessage responseMessage = new ResponseMessage(200,"회원 조회 성공",responseMap);
+        return ResponseEntity.ok().body(responseMessage);
+    }
+
+    @GetMapping("/users/{userNo}/partner")
+    public ResponseEntity<ResponseMessage> findPartnerByUserNo(@PathVariable int userNo){
+        RequestSignCoupleVO requestSignCoupleVO =  userService.findPartnerByUserNo(userNo);
+        Map<String,Object> responseMap = new HashMap<>();
+        responseMap.put("userNos",requestSignCoupleVO);
+        ResponseMessage responseMessage = new ResponseMessage(200, "파트너 회원 번호 반환", responseMap);
         return ResponseEntity.ok().body(responseMessage);
     }
 

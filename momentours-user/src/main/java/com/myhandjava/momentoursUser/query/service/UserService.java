@@ -1,6 +1,7 @@
 package com.myhandjava.momentoursUser.query.service;
 
 import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
+import com.myhandjava.momentoursUser.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -22,4 +23,6 @@ public interface UserService extends UserDetailsService {
     ResponseUserIdVO getUserIdByPhone(String userPhone);
 
     UserDTO findByUserNo(int userNo);
+
+    RequestSignCoupleVO findPartnerByUserNo(int userNo);
 }

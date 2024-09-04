@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name="momentours-user",url="localhost:8123")
 public interface UserClient {
-    @GetMapping("/users/{userNo}")
-    ResponseEntity<ResponseMessage> findByUserNo(@PathVariable int userNo);
+    @GetMapping("/users/{userNo}/partner")
+    ResponseEntity<ResponseMessage> findPartnerByUserNo(@PathVariable int userNo);
 }

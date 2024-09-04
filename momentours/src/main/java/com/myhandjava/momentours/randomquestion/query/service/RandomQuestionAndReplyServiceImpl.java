@@ -118,7 +118,7 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
     }
 
     @Override
-    public List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo , int userNo) {
+    public List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo , int userNo, int partnerNo) {
         // 회원 번호로 모든 랜덤 질문 가져오기
         List<RandomQuestionDTO> randomQuestionList = findAllRandomQuestionByCoupleNo(coupleNo);
 //        int partnerNo = coupleService.getPartnerNoByUserNo(userNo);
