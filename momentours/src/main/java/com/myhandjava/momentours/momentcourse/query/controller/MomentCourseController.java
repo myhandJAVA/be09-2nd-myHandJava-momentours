@@ -2,6 +2,7 @@ package com.myhandjava.momentours.momentcourse.query.controller;
 
 import com.myhandjava.momentours.momentcourse.query.dto.MomentCourseDTO;
 import com.myhandjava.momentours.momentcourse.query.service.MomentCourseService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,8 @@ public class MomentCourseController {
 
     // 커플 번호를 통해 해당 커플의 전체 추억 코스 조회
     @GetMapping("")     // 이렇게 해도 되는건가?
-    public List<MomentCourseDTO> findAllMomentCourse(@RequestBody int momCourseCoupleNo) {
+    public List<MomentCourseDTO> findAllMomentCourse(@RequestAttribute("coupleNo") Claims coupleNo) {
+        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
         List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(momCourseCoupleNo);
 
         return momentCourseList;
@@ -30,9 +32,10 @@ public class MomentCourseController {
 
     // 추억 코스 번호로 상세 조회
     @GetMapping("/{momCourseNo}")
-    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestBody int momCourseCoupleNo,
+    public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestAttribute("coupleNo") Claims coupleNo,
                                                                @PathVariable int momCourseNo) {
 
+        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
         MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
 
         momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);

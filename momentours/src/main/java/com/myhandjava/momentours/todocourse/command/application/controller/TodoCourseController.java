@@ -5,6 +5,7 @@ import com.myhandjava.momentours.todocourse.command.application.dto.TodoCourseDT
 import com.myhandjava.momentours.todocourse.command.application.service.TodoCourseService;
 import com.myhandjava.momentours.todocourse.command.domain.vo.RequestModifyTodoCourseVO;
 import com.myhandjava.momentours.todocourse.command.domain.vo.RequestRegistTodoCourseVO;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +37,13 @@ public class TodoCourseController {
 
     // 예정 코스 등록
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registTodoCourse(@ModelAttribute RequestRegistTodoCourseVO newTodoCourse) {
+    public ResponseEntity<ResponseMessage> registTodoCourse(@ModelAttribute RequestRegistTodoCourseVO newTodoCourse,
+                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
 
-        System.out.println("newTodoCourse = " + newTodoCourse);
+        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
 
         TodoCourseDTO todoCourseDTO = modelMapper.map(newTodoCourse, TodoCourseDTO.class);
+        todoCourseDTO.setToDoCourseCoupleNo(toDoCourseCoupleNo);
         todoCourseService.registTodoCourse(todoCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -54,9 +57,12 @@ public class TodoCourseController {
     // 예정 코스 수정
     @PutMapping("/{todoCourseNo}")
     public ResponseEntity<ResponseMessage> modifyTodoCourse(@PathVariable int todoCourseNo,
-                                                            @RequestBody RequestModifyTodoCourseVO modifyTodoCourse) {
+                                                            @RequestBody RequestModifyTodoCourseVO modifyTodoCourse,
+                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
 
+        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
         TodoCourseDTO todoCourseDTO = modelMapper.map(modifyTodoCourse, TodoCourseDTO.class);
+        todoCourseDTO.setToDoCourseCoupleNo(toDoCourseCoupleNo);
         todoCourseService.modifyTodoCourse(todoCourseNo, todoCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -70,8 +76,9 @@ public class TodoCourseController {
     // 예정 코스 삭제
     @DeleteMapping("/{todoCourseNo}")
     public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
-                                              @RequestBody int todoCourseCoupleNo) {
-        todoCourseService.removeTodoCourse(todoCourseNo, todoCourseCoupleNo);
+                                              @RequestAttribute("coupleNo") Claims coupleNo) {
+        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        todoCourseService.removeTodoCourse(todoCourseNo, toDoCourseCoupleNo);
 
         return ResponseEntity.noContent().build();
     }

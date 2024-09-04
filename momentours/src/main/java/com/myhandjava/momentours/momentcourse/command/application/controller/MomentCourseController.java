@@ -6,6 +6,7 @@ import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCour
 import com.myhandjava.momentours.momentcourse.command.application.service.MomentCourseService;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestModifyMomCourseVO;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestRegistMomCourseVO;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +39,16 @@ public class MomentCourseController {
 
     // 추억 코스 등록
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody int newMomentCourse) {
-        log.info("newMomentCourse {}", newMomentCourse);
+    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse,
+                                                              @RequestAttribute("coupleNo") Claims coupleNo) {
+        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+
         MomentCourseDTO momentCourseDTO = modelMapper.map(newMomentCourse, MomentCourseDTO.class);
+
+        momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);
+
         momentCourseService.registMomentCourse(momentCourseDTO);
+
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("newMomentCourse", newMomentCourse);
 
@@ -55,7 +62,8 @@ public class MomentCourseController {
     // 추억 코스 삭제
     @DeleteMapping("/{momCourseNo}")
     public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
-                                                @RequestBody int momCourseCoupleNo) {
+                                                @RequestAttribute("coupleNo") Claims coupleNo) {
+        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
 
         momentCourseService.removeMomentCourse(momCourseNo, momCourseCoupleNo);
 
@@ -67,9 +75,11 @@ public class MomentCourseController {
     // 추억 코스 수정
     @PutMapping("/{momCourseNo}")
     public ResponseEntity<ResponseMessage> modifyMomentCourse(@PathVariable int momCourseNo,
-                                                              @RequestBody RequestModifyMomCourseVO modifyMomentCourse){
-
+                                                              @RequestBody RequestModifyMomCourseVO modifyMomentCourse,
+                                                              @RequestAttribute("coupleNo") Claims coupleNo){
+        int momCourseCoupleNo  = Integer.parseInt(coupleNo.getAudience());
         MomentCourseDTO momentCourseDTO = modelMapper.map(modifyMomentCourse, MomentCourseDTO.class);
+        momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);
         momentCourseService.modifyMomentCourse(momCourseNo, momentCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -117,7 +127,10 @@ public class MomentCourseController {
     }
 
     @PostMapping("/favorite/{momCourseNo}")
-    public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO) {
+    public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO,
+                                                       @RequestAttribute("userNo") Claims userNo) {
+        int favoUserNo = Integer.parseInt(userNo.getAudience());
+        favoriteDTO.setFavoUserNo(favoUserNo);
         boolean isFavorite = momentCourseService.isFavorite(favoriteDTO);
         if(isFavorite)
             return ResponseEntity.status(HttpStatus.OK).body("추억코스가 즐겨찾기에 추가되었습니다.");

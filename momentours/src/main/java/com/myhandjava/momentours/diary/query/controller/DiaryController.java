@@ -2,6 +2,7 @@ package com.myhandjava.momentours.diary.query.controller;
 
 import com.myhandjava.momentours.diary.query.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.query.service.DiaryService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,22 +25,24 @@ public class DiaryController {
 
 
     @GetMapping("")
-    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestParam int coupleNo) {
+    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("coupleNo") Claims coupleNo) {
 
+        int diaryCoupleNo = Integer.parseInt(coupleNo.getAudience());
         DiaryDTO diaryDTO = new DiaryDTO();
 
         diaryDTO.setDiaryCreateDate(diaryCreateDate);
 
-        diaryDTO.setCoupleNo(coupleNo);
+        diaryDTO.setCoupleNo(diaryCoupleNo);
         List<DiaryDTO> list = diaryService.selectDiary(diaryDTO);
 
         return list;
     }
 
     @GetMapping("/all")
-    public List<DiaryDTO> findAllDiary(@RequestParam int coupleNo) {
+    public List<DiaryDTO> findAllDiary(@RequestAttribute("coupleNo") Claims coupleNo) {
 
-        List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
+        int diaryCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        List<DiaryDTO> list = diaryService.findAllDiary(diaryCoupleNo);
 
         return list;
     }

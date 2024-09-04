@@ -6,6 +6,7 @@ import com.myhandjava.momentours.couple.command.application.service.CoupleServic
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistNumberVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
+import io.jsonwebtoken.Claims;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +78,12 @@ public class CoupleController {
     }
 
     @PatchMapping("")
-    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo) {
+    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo,
+                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        int updateCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        updateInfo.setCoupleNo(updateCoupleNo);
         CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
 
         coupleService.updateCouple(updateInfo.getCoupleNo(), updatedCouple);

@@ -5,6 +5,7 @@ import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
 import com.myhandjava.momentours.schedule.query.service.ScheduleService;
 import com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO;
 import com.myhandjava.momentours.todocourse.query.service.TodoCourseService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,11 @@ public class ScheduleController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestBody int coupleNo){
+    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("coupleNo") Claims coupleNo){
 
-        List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
-        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
+        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(scheduleCoupleNo);
+        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(scheduleCoupleNo);
 
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("ScheduleList",coupleScheduleList);

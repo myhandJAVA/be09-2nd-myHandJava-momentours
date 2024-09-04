@@ -3,6 +3,7 @@ package com.myhandjava.momentours.schedule.command.application.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,10 @@ public class ScheduleController {
     }
 
     @PostMapping("/calendar")
-    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO){
-
+    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
+                                                          @RequestAttribute("coupleNo") Claims coupleNo){
+        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        scheduleDTO.setCoupleNo(scheduleCoupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
@@ -31,7 +34,10 @@ public class ScheduleController {
     }
 
     @PutMapping("/calendar")
-    public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO){
+    public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO,
+                                                          @RequestAttribute("coupleNo") Claims coupleNo){
+        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        scheduleDTO.setCoupleNo(scheduleCoupleNo);
         scheduleService.updateSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
@@ -42,7 +48,10 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/calendar")
-    public ResponseEntity<ResponseMessage> deleteSchedule(@RequestBody ScheduleDTO scheduleDTO){
+    public ResponseEntity<ResponseMessage> deleteSchedule(@RequestBody ScheduleDTO scheduleDTO,
+                                                          @RequestAttribute("coupleNo") Claims coupleNo){
+        int scheduleCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        scheduleDTO.setCoupleNo(scheduleCoupleNo);
         scheduleService.deleteSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
