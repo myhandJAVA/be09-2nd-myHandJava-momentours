@@ -70,7 +70,7 @@ public class TodoCourseController {
     // 예정 코스 삭제
     @DeleteMapping("/{todoCourseNo}")
     public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
-                                              @RequestParam int todoCourseCoupleNo) {
+                                              @RequestBody int todoCourseCoupleNo) {
         todoCourseService.removeTodoCourse(todoCourseNo, todoCourseCoupleNo);
 
         return ResponseEntity.noContent().build();
