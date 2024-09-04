@@ -5,6 +5,8 @@ import com.myhandjava.momentours.todocourse.command.application.dto.TodoCourseDT
 import com.myhandjava.momentours.todocourse.command.application.service.TodoCourseService;
 import com.myhandjava.momentours.todocourse.command.domain.vo.RequestModifyTodoCourseVO;
 import com.myhandjava.momentours.todocourse.command.domain.vo.RequestRegistTodoCourseVO;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController("todoCourseCommandController")
 @RequestMapping("/todocourse")
@@ -69,5 +74,40 @@ public class TodoCourseController {
         todoCourseService.removeTodoCourse(todoCourseNo, todoCourseCoupleNo);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // 예정 코스 좋아요
+    @PostMapping("/like/{todoCourseNo}")
+    public ResponseEntity<ResponseMessage> likeTodoCourse(@PathVariable int todoCourseNo,
+                                                          @CookieValue(value = "todoCourseLike", defaultValue = "") String toDoCourseLike,
+                                                          HttpServletResponse response) {
+
+        Set<Integer> todoCourseLikeIds = Arrays.stream(toDoCourseLike.split("-"))
+                .filter(id -> !id.isEmpty())
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+
+        if (!todoCourseLikeIds.contains(todoCourseNo)) {
+            // 좋아요 추가
+            todoCourseService.incrementLike(todoCourseNo);
+            todoCourseLikeIds.add(todoCourseNo);
+        } else {
+            // 좋아요 취소
+            todoCourseService.decrementLike(todoCourseNo);
+            todoCourseLikeIds.remove(todoCourseNo);
+        }
+
+        String modifyTodoCourseLike = todoCourseLikeIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("-"));
+
+        Cookie cookie = new Cookie("todoCourseLike", modifyTodoCourseLike);
+        cookie.setPath("/");
+
+        cookie.setMaxAge(60 * 60 * 24 * 365);
+        response.addCookie(cookie);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 }
