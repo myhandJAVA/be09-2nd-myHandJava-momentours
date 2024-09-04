@@ -55,6 +55,30 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: momentours
+          uri: lb://MOMENTOURS-SERVICE
+          predicates:
+            - Path=/momentours-service/**
+            - Method=POST
+          filters:
+            - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: momentours
+          uri: lb://MOMENTOURS-SERVICE
+          predicates:
+            - Path=/momentours-service/**
+            - Method=DELETE
+          filters:
+            - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: momentours
+          uri: lb://MOMENTOURS-SERVICE
+          predicates:
+            - Path=/momentours-service/**
+            - Method=PUT
+          filters:
+            - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
 
 token:
