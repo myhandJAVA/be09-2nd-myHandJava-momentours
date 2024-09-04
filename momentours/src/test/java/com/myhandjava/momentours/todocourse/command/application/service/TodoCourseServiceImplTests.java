@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -47,6 +50,34 @@ class TodoCourseServiceImplTests {
 
         TodoCourse registedTodoCourse = todoCourseRepository.findById(todoCourse.getToDoCourseNo()).orElseThrow();
         Assertions.assertEquals("속초 당일여행 가보즈아!", registedTodoCourse.getToDoCourseTitle());
+    }
+
+    @DisplayName("예정 코스 수정 확인 테스트")
+    @Test
+    @Transactional
+    void modifyTodoCourse() {
+        List<Integer> todoNos = new ArrayList<>();
+        todoNos.add(1);
+        todoNos.add(2);
+
+        TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
+
+        todoCourseDTO.setToDoCourseTitle("수정수정수정!!!");
+        todoCourseDTO.setToDoCourseSort(MomentCourseSort.oneDay);
+        todoCourseDTO.setToDoCourseStartDate(null);
+        todoCourseDTO.setToDoCourseEndDate(null);
+        todoCourseDTO.setToDoCourseMemo("이렇게 수정하는거 맞나?");
+        todoCourseDTO.setToDoCourseCoupleNo(1);
+        todoCourseDTO.setTodoNos(todoNos);
+
+        Assertions.assertDoesNotThrow(
+                () -> todoCourseService.modifyTodoCourse(1, todoCourseDTO)
+        );
+
+        System.out.println("todoCourseDTO = " + todoCourseDTO);
+
+        TodoCourse todoCourse = todoCourseRepository.findById(1).orElseThrow();
+        Assertions.assertEquals("수정수정수정!!!", todoCourse.getToDoCourseTitle());
     }
 
 }
