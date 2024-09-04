@@ -15,9 +15,8 @@ public class Favorite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int favoNo;
 
-    @ManyToOne
-    @JoinColumn(name = "favo_mom_course_no")
-    private MomentCourse momentCourse;
+    @Column
+    private int favoMomCourseNo;
 
     @Column
     private int favoUserNo;
