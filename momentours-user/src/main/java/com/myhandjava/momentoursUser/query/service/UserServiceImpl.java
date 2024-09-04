@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService{
         userDTO.setNickname(userEntity.getUserNickname());
         userDTO.setPhone(userEntity.getUserPhone());
         userDTO.setUserRole(userEntity.getUserRole());
+        userDTO.setUserPartnerNo(userEntity.getUserPartnerNo());
         return userDTO;
     }
 
@@ -124,6 +125,13 @@ public class UserServiceImpl implements UserService{
         ResponseUserIdVO Result = UserToResponseUserIdVO(user);
 
         return Result;    }
+
+    @Override
+    public UserDTO findByUserNo(int userNo) {
+        UserEntity user = userMapper.findUserByUserNo(userNo);
+        UserDTO userDTO = entityToDTO(user);
+        return userDTO;
+    }
 
     private ResponseUserIdVO UserToResponseUserIdVO(UserEntity user) {
         // getUserIdByPhone() 타입 변환용 메소드

@@ -23,4 +23,6 @@ public interface UserMapper {
     UserEntity getUserPwd(String userEmail);
 
     UserEntity getUserIdWithPhone(String userPhone);
+
+    UserEntity findUserByUserNo(int userNo);
 }
