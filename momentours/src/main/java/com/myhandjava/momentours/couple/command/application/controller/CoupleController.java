@@ -46,15 +46,7 @@ public class CoupleController {
     public ResponseEntity<?> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
                                             @RequestBody CoupleRegistVO coupleInfo) {
         int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
-
-        // 회원 번호 2개를 가져오기
-        String[] userNos = userNumbers.get(0).split(",");
-        if (userNos.length != 2) {
-            return ResponseEntity.badRequest().body("잘못된 형식의 회원 번호.");
-        }
-
-        int userNo1 = Integer.parseInt(userNos[0]);
-        int userNo2 = Integer.parseInt(userNos[1]);
+        
 
         // 입력된 커플 정보를 DTO로 변환
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
