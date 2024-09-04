@@ -50,10 +50,10 @@ spring:
         - id: momentours
           uri: lb://MOMENTOURS-SERVICE
           predicates:
-            - Path=/momentours/**
+            - Path=/momentours-service/**
             - Method=GET
           filters:
-            - RewritePath=/momentours/(?<segment>.*), /$\{segment}
+            - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
 
 
