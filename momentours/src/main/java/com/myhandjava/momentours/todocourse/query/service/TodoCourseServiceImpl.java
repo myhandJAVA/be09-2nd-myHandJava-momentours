@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TodoCourseServiceImpl implements TodoCourseService {
@@ -29,6 +30,14 @@ public class TodoCourseServiceImpl implements TodoCourseService {
     @Override
     public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(TodoCourseDTO todoCourseDTO) {
         List<TodoCourseDTO> result = todoCourseMapper.findTodoCourseByTodoCourseNo(todoCourseDTO);
+
+        return result;
+    }
+
+    // 검색 조회
+    @Override
+    public List<TodoCourseDTO> searchToDoCourse(Map<String, Object> searchMap) {
+        List<TodoCourseDTO> result = todoCourseMapper.searchToDoCourse(searchMap);
 
         return result;
     }

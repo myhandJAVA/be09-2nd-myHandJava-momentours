@@ -11,4 +11,16 @@ public interface UserMapper {
     UserEntity findByUserEmail(String userEmail);
 
     List<UserEntity> findAllUser();
+
+    Integer findUserCoupleNoByUserNo(int userNo);
+
+    UserEntity searchUserWithEmail(String userEmail);
+
+    UserEntity searchUserWithNickname(String userNickname);
+
+    UserEntity getUserInfoWithEmail(String userEmail);
+
+    UserEntity getUserPwd(String userEmail);
+
+    UserEntity getUserIdWithPhone(String userPhone);
 }

@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,6 +40,18 @@ class MomentCourseServiceImplTests {
         assertNotNull(momentCourseList);
 
         momentCourseList.forEach(System.out::println);
+    }
+
+    @DisplayName("추억 코스 검색 조회 테스트")
+    @Test
+    public void testSearchMomentCourse() {
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("searchCondition", "courseName");
+        searchMap.put("keyword", "여행");
+
+        List<MomentCourseDTO> searchList = momentCourseService.searchMomentCourse(searchMap);
+        assertNotNull(searchList);
+        searchList.forEach(System.out::println);
     }
 
 }

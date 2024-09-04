@@ -25,21 +25,21 @@ import java.util.Map;
 @Slf4j
 public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReplyService {
 
-    private final RandomQuestionRepository questionRepository;
     private final RandomReplyRepository replyRepository;
     private final ModelMapper modelMapper;
     private final CoupleServiceImpl coupleService;
     private final OpenAIServiceImpl openAIService;
+    private final RandomQuestionRepository questionRepository;
 
     @Autowired
-    public RandomQuestionAndReplyServiceImpl(ModelMapper modelMapper, RandomQuestionRepository randomQuestionRepository,
+    public RandomQuestionAndReplyServiceImpl(ModelMapper modelMapper, RandomQuestionRepository questionRepository,
                                              RandomReplyRepository replyRepository, CoupleServiceImpl coupleService,
                                              OpenAIServiceImpl openAIService) {
         this.modelMapper = modelMapper;
-        this.questionRepository = randomQuestionRepository;
         this.replyRepository = replyRepository;
         this.coupleService = coupleService;
         this.openAIService = openAIService;
+        this.questionRepository = questionRepository;
     }
 
     @Override

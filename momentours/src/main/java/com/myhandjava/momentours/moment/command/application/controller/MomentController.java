@@ -4,6 +4,7 @@ import com.myhandjava.momentours.moment.command.application.dto.MomentDTO;
 import com.myhandjava.momentours.moment.command.application.service.MomentService;
 import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByCoupleNoVO;
 import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByMomentPublicVO;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -23,9 +24,10 @@ public class MomentController {
     @Autowired
     private MomentService momentService;
 
-    @GetMapping("couple/{momentCoupleNo}")
-    public List<ResponseFindMomentByCoupleNoVO> findMomentByMomentCoupleNo(@PathVariable int momentCoupleNo) {
-        return momentService.findMomentByMomentCoupleNo(momentCoupleNo);
+    @GetMapping("couple")
+    public List<ResponseFindMomentByCoupleNoVO> findMomentByMomentCoupleNo(@RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        return momentService.findMomentByMomentCoupleNo(coupleNo);
     }
 
     @GetMapping("/public/{momentPublic}")
@@ -41,7 +43,10 @@ public class MomentController {
     }
 
     @PutMapping("/updateByUser")
-    public ResponseEntity<String> updateMoment(@RequestBody MomentDTO updatedMomentDTO) throws NotFoundException {
+    public ResponseEntity<String> updateMoment(@RequestBody MomentDTO updatedMomentDTO,
+                                               @RequestAttribute("claims") Claims claims) throws NotFoundException {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        updatedMomentDTO.setMomentCoupleNo(coupleNo);
         momentService.updateMomentByTitleAndCoupleNo(
                 updatedMomentDTO.getMomentNo(),
                 updatedMomentDTO.getMomentCoupleNo(),
@@ -50,10 +55,18 @@ public class MomentController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{momentNo}/{momentCoupleNo}")
+    @DeleteMapping("/{momentNo}")
     public ResponseEntity<String> removeMoment(@PathVariable int momentNo,
-                                               @PathVariable int momentCoupleNo) throws NotFoundException {
-        momentService.removeMoment(momentNo, momentCoupleNo);
+                                               @RequestAttribute("claims") Claims claims) throws NotFoundException {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        momentService.removeMoment(momentNo, coupleNo);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{momentNo}/delete")
+    public ResponseEntity<String> softRemoveMoment(@PathVariable int momentNo) throws NotFoundException {
+        momentService.softRemoveMoment(momentNo);
 
         return ResponseEntity.noContent().build();
     }

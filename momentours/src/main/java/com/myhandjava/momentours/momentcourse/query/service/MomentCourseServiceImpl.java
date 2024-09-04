@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MomentCourseServiceImpl implements MomentCourseService {
@@ -32,4 +33,13 @@ public class MomentCourseServiceImpl implements MomentCourseService {
 
         return result;
     }
+
+    // 검색 조회
+    @Override
+    public List<MomentCourseDTO> searchMomentCourse(Map<String, Object> searchMap) {
+        List<MomentCourseDTO> result = momentCourseMapper.searchMomentCourse(searchMap);
+
+        return result;
+    }
+
 }

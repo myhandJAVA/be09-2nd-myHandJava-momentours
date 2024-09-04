@@ -2,6 +2,7 @@ package com.myhandjava.momentours.moment.query.controller;
 
 import com.myhandjava.momentours.moment.query.dto.MomentDTO;
 import com.myhandjava.momentours.moment.query.service.MomentService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +21,12 @@ public class MomentController {
     }
 
     @GetMapping("/all")
-    public String findMoment(@RequestParam int momentCoupleNo) {
+    public String findMoment(@RequestAttribute("claims") Claims claims) {
 
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentDTO momentDTO = new MomentDTO();
 
-        momentDTO.setMomentCoupleNo(momentCoupleNo);
+        momentDTO.setMomentCoupleNo(coupleNo);
         List<MomentDTO> momentDTOList = momentService.findAllMomentByCoupleNo(momentDTO);
 
         return momentDTOList.toString();

@@ -62,6 +62,7 @@ class MomentServiceImplTests {
 
     @DisplayName("추억 등록 테스트")
     @Test
+    @Transactional
     void registMoment() {
         // given
         MomentDTO newMomentDTO = new MomentDTO();
@@ -92,15 +93,15 @@ class MomentServiceImplTests {
         assertEquals(1, savedMoment.getMomentCoupleNo());
     }
 
-//    @DisplayName("작성자의 추억 수정 테스트")
-//    @Test
-//    void updateMomentByTitleAndCoupleNo() throws Exception {
-//        // given
-//        int momentId = 5;
-//        String originalTitle = "OriginalTitle";
-//        int coupleNo = 1;
-//
-//        // 테스트용 추억 추가
+    @DisplayName("작성자의 추억 수정 테스트")
+    @Test
+    @Transactional
+    void updateMomentByTitleAndCoupleNo() throws Exception {
+        // given
+        int momentNo = 1;
+        int coupleNo = 1;
+
+        // 테스트용 추억 추가
 //        Moment originalMoment = new Moment();
 //        originalMoment.setMomentTitle(originalTitle);
 //        originalMoment.setMomentCategory(MomentCategory.맛집);
@@ -115,23 +116,62 @@ class MomentServiceImplTests {
 //        originalMoment.setMomentLatitude(128.9081);
 //        originalMoment.setMomentAddress("우체국주소");
 //        originalMoment.setMomentLocationName("구내식당");
-//
-//        // 업데이트할 필드
-//        MomentDTO updatedMomentDTO = new MomentDTO();
-//        updatedMomentDTO.setMomentTitle("수정 제목");
-//        updatedMomentDTO.setMomentCategory(MomentCategory.산책);
-//        updatedMomentDTO.setMomentContent("수정됨 ㅋㅋ");
-//        updatedMomentDTO.setMomentUpdateDate(LocalDateTime.now());
-//        updatedMomentDTO.setMomentPublic(1);
-//        updatedMomentDTO.setMomentLongitude(38.00000);
-//        updatedMomentDTO.setMomentAddress("북한 어딘가");
-//        updatedMomentDTO.setMomentLocationName("냉면 맛집");
+
+        // 업데이트할 필드
+        MomentDTO updatedMomentDTO = new MomentDTO();
+        updatedMomentDTO.setMomentTitle("수정 제목");
+        updatedMomentDTO.setMomentCategory(MomentCategory.산책);
+        updatedMomentDTO.setMomentContent("수정됨 ㅋㅋ");
+        updatedMomentDTO.setMomentUpdateDate(LocalDateTime.now());
+        updatedMomentDTO.setMomentPublic(1);
+        updatedMomentDTO.setMomentLongitude(38.00000);
+        updatedMomentDTO.setMomentAddress("북한 어딘가");
+        updatedMomentDTO.setMomentLocationName("냉면 맛집");
+
+        // when
+        momentService.updateMomentByTitleAndCoupleNo(momentNo, coupleNo, updatedMomentDTO);
+
+        // then
+        Moment updatedMoment = momentRepository.findAll().stream()
+                .filter(moment -> moment.getMomentTitle().equals("수정 제목"))
+                .findFirst()
+                .orElse(null);
+
+        assertNotNull(updatedMoment);
+        assertEquals("수정 제목", updatedMoment.getMomentTitle());
+        assertEquals(1, updatedMoment.getMomentPublic());
+    }
+
+//    @DisplayName("추억 삭제 테스트")
+//    @Test
+//    void removeMoment() throws Exception {
+//        // given
+//        int momentNo = 1;
+//        int coupleNo = 1;
 //
 //        // when
-//        momentService.updateMomentByTitleAndCoupleNo(momentId, originalTitle, coupleNo, updatedMomentDTO);
+//        momentService.removeMoment(momentNo, coupleNo);
 //
-//        // then
-//        Moment updatedMoment = momentRepository.findById(momentId).
+//        //then
+//
 //    }
+    @DisplayName("추억 soft delete 테스트")
+    @Test
+    void softRemoveMoment() throws Exception {
+
+        int momentNo = 1;
+
+        momentService.softRemoveMoment(momentNo);
+
+        Moment deletedMoment = momentRepository.findByMomentNo(momentNo)
+                .orElseThrow(() -> new AssertionError("추억을 찾을 수 없습니다."));
+
+        assertNotNull(deletedMoment);
+        assertEquals(1, deletedMoment.getMomentIsDeleted());
+
+
+    }
+
+
 
 }
