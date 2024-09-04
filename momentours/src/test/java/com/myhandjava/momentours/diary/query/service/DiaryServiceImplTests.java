@@ -19,15 +19,25 @@ class DiaryServiceImplTests {
     private DiaryService diaryService;
 
 
-    @DisplayName("일기 조회 확인 테스트")
+    @DisplayName("일기 날짜 조회 확인 테스트")
     @Test
-    void testFindAllDiary() {
+    void testFindDiary() {
         DiaryDTO diaryDTO = new DiaryDTO();
 
-        diaryDTO.setDiaryCreateDate("2024-01-02");
-        diaryDTO.setCoupleNo(2);
+        diaryDTO.setDiaryCreateDate("2024-09-02");
+        diaryDTO.setCoupleNo(1);
 
         List<DiaryDTO> result = diaryService.selectDiary(diaryDTO);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertFalse(result.isEmpty());
+        result.forEach(System.out::println);
+    }
+
+    @DisplayName("일기 전체 조회 확인 테스트")
+    @Test
+    void testFindAllDiary() {
+        List<DiaryDTO> result = diaryService.findAllDiary(2);
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());

@@ -10,4 +10,6 @@ public interface DiaryMapper {
 
     // 일기조회
     List<DiaryDTO> selectDiary(DiaryDTO diaryDTO);
+
+    List<DiaryDTO> selectAllDiary(int coupleNo);
 }

@@ -1,6 +1,6 @@
 package com.myhandjava.momentours.moment.command.application.dto;
 
-import com.myhandjava.momentours.moment.query.dto.MomentCategory;
+import com.myhandjava.momentours.moment.command.domain.aggregate.MomentCategory;
 import lombok.*;
 
 import java.time.LocalDateTime;

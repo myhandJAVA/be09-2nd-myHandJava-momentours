@@ -17,21 +17,21 @@ public class RandomReply {
     @Id
     @Column(name = "random_reply_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int randomreplyno;
+    private int randomReplyNo;
 
     @Column(name = "random_reply_content")
-    private String randomreplycontent;
+    private String randomReplyContent;
 
     @Column(name = "random_reply_user_no")
-    private int randomreplyuserno;
+    private int randomReplyUserNo;
 
-    @Column(name = "random_reply_question_no")
-    private int randomreplyquestionno;
+    @Column(name = "random_question_no")
+    private int randomQuestionNo;
 
     @Column(name = "random_reply_is_deleted")
-    private int randomreplyisdeleted;
+    private int randomReplyIsDeleted;
 
     @Column(name = "random_couple_no")
-    private int randomcoupleno;
+    private int randomCoupleNo;
 
 }
