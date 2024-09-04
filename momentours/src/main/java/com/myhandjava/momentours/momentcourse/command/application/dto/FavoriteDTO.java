@@ -9,5 +9,6 @@ import lombok.ToString;
 @ToString
 public class FavoriteDTO {
     private int favoMomCourseNo;
+    private int favoMomentNo;
     private int favoUserNo;
 }

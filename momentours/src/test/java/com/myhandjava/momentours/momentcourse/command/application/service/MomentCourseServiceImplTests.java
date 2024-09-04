@@ -1,8 +1,11 @@
 package com.myhandjava.momentours.momentcourse.command.application.service;
 
+import com.myhandjava.momentours.momentcourse.command.application.dto.FavoriteDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCourseDTO;
+import com.myhandjava.momentours.momentcourse.command.domain.aggregate.Favorite;
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourse;
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourseSort;
+import com.myhandjava.momentours.momentcourse.command.domain.repository.FavoriteRepository;
 import com.myhandjava.momentours.momentcourse.command.domain.repository.MomentCourseRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +31,7 @@ class MomentCourseServiceImplTests {
     private MomentCourseRepository momentCourseRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private FavoriteRepository favoriteRepository;
 
     @DisplayName("추억 코스 등록 테스트")
     @Test
@@ -98,5 +101,18 @@ class MomentCourseServiceImplTests {
     @Transactional
     void incrementLike() {
         Assertions.assertDoesNotThrow(() -> momentCourseService.incrementLike(1));
+    }
+
+    @DisplayName("추억 코스 즐겨찾기 기능 테스트")
+    @Test
+    @Transactional
+    void favoriteMomentCourse() {
+        FavoriteDTO favorite = new FavoriteDTO();
+        favorite.setFavoUserNo(1);
+        favorite.setFavoMomCourseNo(1);
+        momentCourseService.isFavorite(favorite);
+
+        Optional<Favorite> foundFavorite = favoriteRepository.findByFavoMomCourseNoAndFavoUserNo(1, 1);
+        assertTrue(foundFavorite.isPresent(), "즐겨찾기가 저장되었는지 확인");
     }
 }
