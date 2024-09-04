@@ -37,6 +37,14 @@ public class UserController {
         ResponseMessage responseMessage = new ResponseMessage(200,"전체 회원 조회 성공",responseMap);
         return ResponseEntity.ok().body(responseMessage);
     }
+    @GetMapping("/users/{userNo}")
+    public ResponseEntity<ResponseMessage> findByUserNo(@PathVariable int userNo){
+        UserDTO userDTO = userService.findByUserNo(userNo);
+        Map<String,Object> responseMap = new HashMap<>();
+        responseMap.put("user",userDTO);
+        ResponseMessage responseMessage = new ResponseMessage(200,"회원 조회 성공",responseMap);
+        return ResponseEntity.ok().body(responseMessage);
+    }
 
     @GetMapping("/users/{userNo}/mypage")
     public ResponseEntity<ResponseMessage> viewMyPage(@PathVariable int userNo){
