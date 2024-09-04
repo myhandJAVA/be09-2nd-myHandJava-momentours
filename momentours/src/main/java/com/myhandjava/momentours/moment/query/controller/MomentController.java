@@ -21,12 +21,12 @@ public class MomentController {
     }
 
     @GetMapping("/all")
-    public String findMoment(@RequestAttribute("coupleNo") Claims coupleNo) {
+    public String findMoment(@RequestAttribute("claims") Claims claims) {
 
-        int momentCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentDTO momentDTO = new MomentDTO();
 
-        momentDTO.setMomentCoupleNo(momentCoupleNo);
+        momentDTO.setMomentCoupleNo(coupleNo);
         List<MomentDTO> momentDTOList = momentService.findAllMomentByCoupleNo(momentDTO);
 
         return momentDTOList.toString();

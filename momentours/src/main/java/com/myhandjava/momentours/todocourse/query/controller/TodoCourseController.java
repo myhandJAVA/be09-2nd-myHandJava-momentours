@@ -23,25 +23,25 @@ public class TodoCourseController {
 
     // 해당 커플의 예정 코스 전체 조회
     @GetMapping("/todoCourse")
-    public List<TodoCourseDTO> findAllTodoCourse(@RequestAttribute("claims") Claims userNo) {
+    public List<TodoCourseDTO> findAllTodoCourse(@RequestAttribute("claims") Claims claims) {
 
-        int todoCourseNo = Integer.parseInt(userNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
-        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(todoCourseNo);
+        List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
         return todoCourseList;
     }
 
     // 해당 커플의 예정 코스 상세 조회
     @GetMapping("/todoCourse/{TodoCourseNo}")
-    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestAttribute("claims") Claims userNo,
+    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestAttribute("claims") Claims claims,
                                                             @PathVariable int TodoCourseNo) {
 
-        int todoCourseNo = Integer.parseInt(userNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
 
-        todoCourseDTO.setToDoCourseCoupleNo(todoCourseNo);
+        todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
         todoCourseDTO.setToDoCourseNo(TodoCourseNo);
 
         List<TodoCourseDTO> todoCourseList = todoCourseService.findTodoCourseByTodoCourseNo(todoCourseDTO);

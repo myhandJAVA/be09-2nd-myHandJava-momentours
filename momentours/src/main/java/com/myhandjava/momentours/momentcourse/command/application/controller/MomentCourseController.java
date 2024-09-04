@@ -40,12 +40,12 @@ public class MomentCourseController {
     // 추억 코스 등록
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse,
-                                                              @RequestAttribute("coupleNo") Claims coupleNo) {
-        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+                                                              @RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         MomentCourseDTO momentCourseDTO = modelMapper.map(newMomentCourse, MomentCourseDTO.class);
 
-        momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);
+        momentCourseDTO.setMomCourseCoupleNo(coupleNo);
 
         momentCourseService.registMomentCourse(momentCourseDTO);
 
@@ -62,10 +62,10 @@ public class MomentCourseController {
     // 추억 코스 삭제
     @DeleteMapping("/{momCourseNo}")
     public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
-                                                @RequestAttribute("coupleNo") Claims coupleNo) {
-        int momCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+                                                @RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
-        momentCourseService.removeMomentCourse(momCourseNo, momCourseCoupleNo);
+        momentCourseService.removeMomentCourse(momCourseNo, coupleNo);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -76,10 +76,10 @@ public class MomentCourseController {
     @PutMapping("/{momCourseNo}")
     public ResponseEntity<ResponseMessage> modifyMomentCourse(@PathVariable int momCourseNo,
                                                               @RequestBody RequestModifyMomCourseVO modifyMomentCourse,
-                                                              @RequestAttribute("coupleNo") Claims coupleNo){
-        int momCourseCoupleNo  = Integer.parseInt(coupleNo.getAudience());
+                                                              @RequestAttribute("claims") Claims claims){
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentCourseDTO momentCourseDTO = modelMapper.map(modifyMomentCourse, MomentCourseDTO.class);
-        momentCourseDTO.setMomCourseCoupleNo(momCourseCoupleNo);
+        momentCourseDTO.setMomCourseCoupleNo(coupleNo);
         momentCourseService.modifyMomentCourse(momCourseNo, momentCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -128,9 +128,9 @@ public class MomentCourseController {
 
     @PostMapping("/favorite/{momCourseNo}")
     public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO,
-                                                       @RequestAttribute("userNo") Claims userNo) {
-        int favoUserNo = Integer.parseInt(userNo.getAudience());
-        favoriteDTO.setFavoUserNo(favoUserNo);
+                                                       @RequestAttribute("claims") Claims claims) {
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
+        favoriteDTO.setFavoUserNo(userNo);
         boolean isFavorite = momentCourseService.isFavorite(favoriteDTO);
         if(isFavorite)
             return ResponseEntity.status(HttpStatus.OK).body("추억코스가 즐겨찾기에 추가되었습니다.");

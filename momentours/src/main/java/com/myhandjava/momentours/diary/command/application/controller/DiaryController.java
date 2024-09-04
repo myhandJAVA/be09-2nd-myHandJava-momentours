@@ -39,12 +39,11 @@ public class DiaryController {
     // 일기 등록
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registDiary(@ModelAttribute RequestRegistDiaryVO newDiary,
-                                                       @RequestAttribute("coupleNo") Claims coupleNo,
-                                                       @RequestAttribute("userNo") Claims userNo,
+                                                       @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        int coupleNo1 = Integer.parseInt(coupleNo.getAudience());
-        int diaryUserNo = Integer.parseInt(userNo.getAudience());
+        int coupleNo1 = Integer.parseInt(claims.get("coupleNo", String.class));
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryDTO.setDiaryUserNo(diaryUserNo);
@@ -64,8 +63,8 @@ public class DiaryController {
 
     // 일기 삭제(soft delete)
     @DeleteMapping("/{diaryNo}")
-    public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestAttribute("userNo") Claims userNo) {
-        int diaryUserNo = Integer.parseInt(userNo.getAudience());
+    public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestAttribute("claims") Claims claims) {
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
         diaryService.removeDiary(diaryNo, diaryUserNo);
 
         return ResponseEntity
@@ -77,10 +76,10 @@ public class DiaryController {
     @PutMapping("/{diaryNo}/{userNo}")
     public ResponseEntity<ResponseMessage> modifyDiary(@PathVariable int diaryNo,
                                                        @ModelAttribute RequestModifyDiaryVO modifyDiary,
-                                                       @RequestAttribute("userNo") Claims userNo,
+                                                       @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        int diaryUserNo = Integer.parseInt(userNo.getAudience());
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
 
         modifyDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(modifyDiary, DiaryDTO.class);
@@ -99,11 +98,11 @@ public class DiaryController {
     // 댓글 등록
     @PostMapping("/comment")
     public ResponseEntity<ResponseMessage> registComment(@RequestBody RequestRegistCommentVO newComment,
-                                                         @RequestAttribute("userNo") Claims userNo) {
+                                                         @RequestAttribute("claims") Claims claims) {
 
-        int commentUserNo = Integer.parseInt(userNo.getAudience());
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
         CommentDTO commentDTO = modelMapper.map(newComment, CommentDTO.class);
-        commentDTO.setCommentUserNo(commentUserNo);
+        commentDTO.setCommentUserNo(userNo);
         diaryService.registComment(commentDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -118,8 +117,8 @@ public class DiaryController {
 
     // 댓글 삭제
     @DeleteMapping("/comment/{commentNo}")
-    public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestAttribute("userNo") Claims userNo) {
-        int commentUserNo = Integer.parseInt(userNo.getAudience());
+    public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestAttribute("claims") Claims claims) {
+        int commentUserNo = Integer.parseInt(claims.get("userNo", String.class));
         diaryService.removeComment(commentNo, commentUserNo);
 
         return ResponseEntity
@@ -131,9 +130,9 @@ public class DiaryController {
     @PutMapping("/comment/{commentNo}")
     public ResponseEntity<ResponseMessage> modifyComment(@PathVariable int commentNo,
                                                          @RequestBody RequestModifyCommentVO modifyComment,
-                                                         @RequestAttribute("userNo") Claims userNo) {
+                                                         @RequestAttribute("claims") Claims claims) {
 
-        int commentUserNo = Integer.parseInt(userNo.getAudience());
+        int commentUserNo = Integer.parseInt(claims.get("userNo", String.class));
         CommentDTO commentDTO = modelMapper.map(modifyComment, CommentDTO.class);
         commentDTO.setCommentUserNo(commentUserNo);
         diaryService.modifyComment(commentNo, commentDTO);
@@ -150,12 +149,12 @@ public class DiaryController {
 
     @PostMapping("/temporary")
     public ResponseEntity<ResponseMessage> registTempSave(@ModelAttribute RequestRegistDiaryVO newDiary,
-                                                          @RequestAttribute("userNo") Claims userNo,
+                                                          @RequestAttribute("claims") Claims claims,
                                                           @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        int diaryUserNo = Integer.parseInt(userNo.getAudience());
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
-        diaryDTO.setDiaryUserNo(diaryUserNo);
+        diaryDTO.setDiaryUserNo(userNo);
         diaryService.registTempDiary(diaryDTO);
 
         Map<String, Object> responseMap = new HashMap<>();

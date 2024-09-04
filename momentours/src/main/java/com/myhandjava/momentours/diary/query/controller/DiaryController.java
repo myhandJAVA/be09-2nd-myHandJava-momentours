@@ -25,24 +25,24 @@ public class DiaryController {
 
 
     @GetMapping("")
-    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("coupleNo") Claims coupleNo) {
+    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("claims") Claims claims) {
 
-        int diaryCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         DiaryDTO diaryDTO = new DiaryDTO();
 
         diaryDTO.setDiaryCreateDate(diaryCreateDate);
 
-        diaryDTO.setCoupleNo(diaryCoupleNo);
+        diaryDTO.setCoupleNo(coupleNo);
         List<DiaryDTO> list = diaryService.selectDiary(diaryDTO);
 
         return list;
     }
 
     @GetMapping("/all")
-    public List<DiaryDTO> findAllDiary(@RequestAttribute("coupleNo") Claims coupleNo) {
+    public List<DiaryDTO> findAllDiary(@RequestAttribute("claims") Claims claims) {
 
-        int diaryCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        List<DiaryDTO> list = diaryService.findAllDiary(diaryCoupleNo);
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
 
         return list;
     }

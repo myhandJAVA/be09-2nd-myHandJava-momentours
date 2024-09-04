@@ -38,12 +38,12 @@ public class TodoCourseController {
     // 예정 코스 등록
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registTodoCourse(@ModelAttribute RequestRegistTodoCourseVO newTodoCourse,
-                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
+                                                            @RequestAttribute("claims") Claims claims) {
 
-        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         TodoCourseDTO todoCourseDTO = modelMapper.map(newTodoCourse, TodoCourseDTO.class);
-        todoCourseDTO.setToDoCourseCoupleNo(toDoCourseCoupleNo);
+        todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
         todoCourseService.registTodoCourse(todoCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -58,11 +58,11 @@ public class TodoCourseController {
     @PutMapping("/{todoCourseNo}")
     public ResponseEntity<ResponseMessage> modifyTodoCourse(@PathVariable int todoCourseNo,
                                                             @RequestBody RequestModifyTodoCourseVO modifyTodoCourse,
-                                                            @RequestAttribute("coupleNo") Claims coupleNo) {
+                                                            @RequestAttribute("claims") Claims claims) {
 
-        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         TodoCourseDTO todoCourseDTO = modelMapper.map(modifyTodoCourse, TodoCourseDTO.class);
-        todoCourseDTO.setToDoCourseCoupleNo(toDoCourseCoupleNo);
+        todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
         todoCourseService.modifyTodoCourse(todoCourseNo, todoCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -76,9 +76,9 @@ public class TodoCourseController {
     // 예정 코스 삭제
     @DeleteMapping("/{todoCourseNo}")
     public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
-                                              @RequestAttribute("coupleNo") Claims coupleNo) {
-        int toDoCourseCoupleNo = Integer.parseInt(coupleNo.getAudience());
-        todoCourseService.removeTodoCourse(todoCourseNo, toDoCourseCoupleNo);
+                                              @RequestAttribute("claims") Claims claims) {
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        todoCourseService.removeTodoCourse(todoCourseNo, coupleNo);
 
         return ResponseEntity.noContent().build();
     }
