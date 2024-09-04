@@ -13,4 +13,5 @@ public class CoupleUpdateVO {
     private String coupleName;
     private String couplePhoto;
     private LocalDateTime coupleStartDate;
+    private int coupleNo;
 }

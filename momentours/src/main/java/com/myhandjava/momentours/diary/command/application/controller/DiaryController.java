@@ -47,7 +47,8 @@ public class DiaryController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("newDiary", newDiary);
 
-        ResponseMessage responseMessage = new ResponseMessage(201, "등록성공!", responseMap);
+        ResponseMessage responseMessage = new ResponseMessage
+                (201, "등록성공!", responseMap);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -56,13 +57,12 @@ public class DiaryController {
 
     // 일기 삭제(soft delete)
     @DeleteMapping("/{diaryNo}")
-    public ResponseEntity<?> removeDiary(@PathVariable int diaryNo, @RequestParam int userNo) {
+    public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestBody int userNo) {
 
         diaryService.removeDiary(diaryNo, userNo);
 
-
         return ResponseEntity
-                .noContent()
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
@@ -106,12 +106,12 @@ public class DiaryController {
 
     // 댓글 삭제
     @DeleteMapping("/comment/{commentNo}")
-    public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestParam int commentUserNo) {
+    public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestBody int commentUserNo) {
 
         diaryService.removeComment(commentNo, commentUserNo);
 
         return ResponseEntity
-                .noContent()
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 

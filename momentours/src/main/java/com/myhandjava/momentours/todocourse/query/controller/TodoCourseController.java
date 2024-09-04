@@ -21,16 +21,16 @@ public class TodoCourseController {
     }
 
     // 해당 커플의 예정 코스 전체 조회
-    @GetMapping("/todoCourse/{TodoCourseCoupleNo}")
-    public List<TodoCourseDTO> findAllTodoCourse(@PathVariable int TodoCourseCoupleNo) {
+    @GetMapping("/todoCourse")
+    public List<TodoCourseDTO> findAllTodoCourse(@RequestBody int TodoCourseCoupleNo) {
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(TodoCourseCoupleNo);
 
         return todoCourseList;
     }
 
     // 해당 커플의 예정 코스 상세 조회
-    @GetMapping("/todoCourse/{TodoCourseCoupleNo}/{TodoCourseNo}")
-    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@PathVariable int TodoCourseCoupleNo,
+    @GetMapping("/todoCourse/{TodoCourseNo}")
+    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestBody int TodoCourseCoupleNo,
                                                             @PathVariable int TodoCourseNo) {
 
         TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
