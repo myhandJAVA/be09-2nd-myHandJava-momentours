@@ -3,7 +3,6 @@ package com.myhandjava.momentours.randomquestion.command.application.service;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomQuestion;
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply;
-import com.myhandjava.momentours.randomquestion.command.domain.repository.RandomQuestionRepository;
 import com.myhandjava.momentours.randomquestion.command.domain.repository.RandomReplyRepository;
 import com.myhandjava.momentours.randomquestion.command.domain.vo.RegistRequestReplyVO;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,14 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReplyService {
 
-    private final RandomQuestionRepository questionRepository;
     private final RandomReplyRepository replyRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RandomQuestionAndReplyServiceImpl(ModelMapper modelMapper, RandomQuestionRepository randomQuestionRepository, RandomReplyRepository replyRepository) {
+    public RandomQuestionAndReplyServiceImpl(ModelMapper modelMapper, RandomReplyRepository replyRepository) {
         this.modelMapper = modelMapper;
-        this.questionRepository = randomQuestionRepository;
         this.replyRepository = replyRepository;
     }
 

@@ -12,6 +12,7 @@ import java.util.Date;
 @ToString
 public class MomentDTO {
 
+    private int momentNo;
     private String momentTitle;
     private MomentCategory momentCategory;
     private String momentContent;
