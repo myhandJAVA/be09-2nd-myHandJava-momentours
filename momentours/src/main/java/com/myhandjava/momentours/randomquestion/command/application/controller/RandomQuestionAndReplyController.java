@@ -2,6 +2,7 @@ package com.myhandjava.momentours.randomquestion.command.application.controller;
 
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
+import com.myhandjava.momentours.randomquestion.command.application.service.OpenAIServiceImpl;
 import com.myhandjava.momentours.randomquestion.command.application.service.RandomQuestionAndReplyServiceImpl;
 import com.myhandjava.momentours.randomquestion.command.domain.vo.ModifyReplyVO;
 import com.myhandjava.momentours.randomquestion.command.domain.vo.RegistRequestReplyVO;
@@ -21,11 +22,14 @@ import java.util.Map;
 public class RandomQuestionAndReplyController {
     private final RandomQuestionAndReplyServiceImpl randomQuestionService;
     private final ModelMapper modelMapper;
+    private final OpenAIServiceImpl openAIServiceImpl;
 
     @Autowired
-    public RandomQuestionAndReplyController(RandomQuestionAndReplyServiceImpl randomCommandService, ModelMapper modelMapper) {
+    public RandomQuestionAndReplyController(RandomQuestionAndReplyServiceImpl randomCommandService,
+                                            ModelMapper modelMapper, OpenAIServiceImpl openAIServiceImpl) {
         this.randomQuestionService = randomCommandService;
         this.modelMapper = modelMapper;
+        this.openAIServiceImpl = openAIServiceImpl;
     }
 
     @PutMapping("/randomreply/{randomReplyNo}")
@@ -53,7 +57,8 @@ public class RandomQuestionAndReplyController {
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("modifyRandomReply", modifyRandomReply);
-        ResponseMessage responseMessage = new ResponseMessage(HttpStatus.OK.value(), "답변이 수정되었습니다.", responseMap);
+        ResponseMessage responseMessage =
+                new ResponseMessage(HttpStatus.OK.value(), "답변이 수정되었습니다.", responseMap);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
@@ -69,7 +74,22 @@ public class RandomQuestionAndReplyController {
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("registRandomReply", replyDTO);
-        ResponseMessage responseMessage = new ResponseMessage(HttpStatus.OK.value(), "답변이 등록되었습니다.", responseMap);
+        ResponseMessage responseMessage =
+                new ResponseMessage(HttpStatus.OK.value(), "답변이 등록되었습니다.", responseMap);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
+
+    @PostMapping("/generate/{coupleNo}")
+    public ResponseEntity<ResponseMessage> generateRandomReply(@PathVariable int coupleNo,
+                                                               @RequestBody Map<String, Object> coupleInfo) {
+        // 커플 번호로 랜덤질문 생성할 재료를 구하는 메서드를 여기에 넣어서 map으로 조립을 했어야,.....
+        String randomQuestion = openAIServiceImpl.generateQuestionForCouple(coupleInfo);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("coupleNo", coupleNo);
+        responseMap.put("randomQuestion", randomQuestion);
+        ResponseMessage responseMessage =
+                new ResponseMessage(HttpStatus.OK.value(), "커플별 랜덤질문이 생성되었습니다.", responseMap);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
