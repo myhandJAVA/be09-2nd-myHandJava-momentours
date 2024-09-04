@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8234
 
 spring:
   datasource:
@@ -19,6 +19,8 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: none
+  application:
+    name: momentours-service
 
 logging:
   level:
@@ -33,3 +35,12 @@ openai:
   api:
     key: ${OPENAI_API_KEY}
     url: ${OPENAI_API_URL}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka

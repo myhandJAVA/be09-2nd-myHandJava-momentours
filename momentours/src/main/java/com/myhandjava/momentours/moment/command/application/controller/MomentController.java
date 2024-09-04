@@ -58,6 +58,13 @@ public class MomentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{momentNo}/delete")
+    public ResponseEntity<String> softRemoveMoment(@PathVariable int momentNo) throws NotFoundException {
+        momentService.softRemoveMoment(momentNo);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{momentNo}")
     public ResponseEntity<MomentDTO> getMoment(@PathVariable int momentNo,
                                                @CookieValue(value = "viewedMoments", defaultValue = "")String viewedMoments,
