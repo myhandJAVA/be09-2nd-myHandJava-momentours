@@ -25,7 +25,6 @@ public class CoupleServiceImpl implements CoupleService {
     public void updateCouple(int coupleNo ,CoupleDTO newInfo) {
         Couple couple = coupleRepository.findByCoupleNo(coupleNo);
 
-        // 달라진 값이 있는지 확인
         if(newInfo.getCoupleName() != couple.getCoupleName())
             couple.setCoupleName(newInfo.getCoupleName());
 
