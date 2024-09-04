@@ -3,6 +3,7 @@ package com.myhandjava.momentoursUser.query.service;
 import com.myhandjava.momentoursUser.client.MomentoursClient;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
+import com.myhandjava.momentoursUser.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
@@ -133,6 +134,15 @@ public class UserServiceImpl implements UserService{
         return userDTO;
     }
 
+    @Override
+    public RequestSignCoupleVO findPartnerByUserNo(int userNo) {
+        UserEntity user = userMapper.findUserByUserNo(userNo);
+        RequestSignCoupleVO RequestSignCoupleVO = new RequestSignCoupleVO();
+        RequestSignCoupleVO.setUserNo(userNo);
+        RequestSignCoupleVO.setUserPartnerNo(user.getUserPartnerNo());
+        return RequestSignCoupleVO;
+    }
+
     private ResponseUserIdVO UserToResponseUserIdVO(UserEntity user) {
         // getUserIdByPhone() 타입 변환용 메소드
         ResponseUserIdVO returnValue = new ResponseUserIdVO();
@@ -169,7 +179,6 @@ public class UserServiceImpl implements UserService{
 
         return userInfo;
     }
-
     private UserInfoDTO UserToUserDTO(UserEntity user) {
         /* 매핑용 메소드 */
         UserInfoDTO userInfoDTO = new UserInfoDTO();

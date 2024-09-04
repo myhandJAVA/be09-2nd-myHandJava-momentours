@@ -1,6 +1,7 @@
 package com.myhandjava.momentours.randomquestion.query.controller;
 
 import com.myhandjava.momentours.common.ResponseMessage;
+import com.myhandjava.momentours.couple.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionAndReplyDTO;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionDTO;
 
@@ -37,10 +38,13 @@ public class RandomQuestionAndReplyController {
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
-    @GetMapping("")
-    public ResponseEntity<ResponseMessage> getAllRandomQuestionAndReply(@RequestParam int coupleNo, @RequestParam int userNo) {
+    @GetMapping("{coupleNo}")
+    public ResponseEntity<ResponseMessage> getAllRandomQuestionAndReply(@PathVariable int coupleNo,
+                                                                        @RequestBody RequestSignCoupleVO requestSignCoupleVO) {
+        int userNo = requestSignCoupleVO.getUserNo();
+        int partnerNo = requestSignCoupleVO.getUserPartnerNo();
         List<RandomQuestionAndReplyDTO> result =
-                randomQuestionService.findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(coupleNo, userNo);
+                randomQuestionService.findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(coupleNo, userNo, partnerNo);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("result", result);

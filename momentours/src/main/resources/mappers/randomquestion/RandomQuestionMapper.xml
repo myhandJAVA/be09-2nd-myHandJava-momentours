@@ -6,17 +6,18 @@
 
     <resultMap id="RandomQuestionResultMap" type="com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomQuestion">
         <id property="randQuesNo" column="rand_ques_no"/>
-        <result property="randQuesCreateDate" column="rand_ques_createDate"/>
+        <result property="randQuesCreateDate" column="rand_ques_create_date"/>
         <result property="randQuesContent" column="rand_ques_content"/>
         <result property="randQuesReply" column="rand_ques_reply"/>
         <result property="randQuesIsDeleted" column="rand_ques_is_deleted"/>
         <result property="randQuesCoupleNo" column="rand_ques_couple_no"/>
     </resultMap>
+
     <select id="findCurrentRandomQuestionByCoupleNo" resultMap="RandomQuestionResultMap">
         SELECT
             rq.rand_ques_no,
             rq.rand_ques_content,
-            rq.rand_ques_createDate,
+            rq.rand_ques_create_date,
             rq.rand_ques_reply,
             rq.rand_ques_couple_no,
             rq.rand_ques_is_deleted
@@ -27,43 +28,60 @@
         WHERE
             cl.couple_no = #{coupleNo}
         ORDER BY
-            rq.rand_ques_createDate DESC
+            rq.rand_ques_create_date DESC
             LIMIT 1;
     </select>
 
     <select id="findAllRandomQuestionByCoupleNo" resultMap="RandomQuestionResultMap">
         SELECT
-            rq.rand_ques_no
-             , rq.rand_ques_content
-             , rq.rand_ques_createDate
-             , rq.rand_ques_reply
-             , rq.rand_ques_couple_no
-             , rq.rand_ques_is_deleted
-        FROM tb_randomquestion rq
-                 JOIN tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
-        WHERE cl.couple_no = #{coupleNo}
-        ORDER BY rq.rand_ques_createDate DESC;
+            rq.rand_ques_no,
+            rq.rand_ques_content,
+            rq.rand_ques_create_date,
+            rq.rand_ques_reply,
+            rq.rand_ques_couple_no,
+            rq.rand_ques_is_deleted
+        FROM
+            tb_randomquestion rq
+                JOIN
+            tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
+        WHERE
+            cl.couple_no = #{coupleNo}
+        ORDER BY
+            rq.rand_ques_create_date DESC;
     </select>
 
     <select id="findRandomQuestionByDate" resultMap="RandomQuestionResultMap" parameterType="map">
-        SELECT rq.rand_ques_no, rq.rand_ques_content, rq.rand_ques_createDate,
-               rq.rand_ques_reply, rq.rand_ques_couple_no, rq.rand_ques_is_deleted
-        FROM tb_randomquestion rq
-                 JOIN tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
-        WHERE cl.couple_no = #{coupleNo}
-          AND DATE(rq.rand_ques_createDate) = #{selectedDate}
+        SELECT
+            rq.rand_ques_no,
+            rq.rand_ques_content,
+            rq.rand_ques_create_date,
+            rq.rand_ques_reply,
+            rq.rand_ques_couple_no,
+            rq.rand_ques_is_deleted
+        FROM
+            tb_randomquestion rq
+                JOIN
+            tb_couple cl ON rq.rand_ques_couple_no = cl.couple_no
+        WHERE
+            cl.couple_no = #{coupleNo}
+          AND DATE(rq.rand_ques_create_date) = #{selectedDate};
     </select>
 
     <select id="findRandomQuestionByKeyword" resultMap="RandomQuestionResultMap" parameterType="map">
-        SELECT rq.rand_ques_no,
-               rq.rand_ques_content,
-               rq.rand_ques_createDate,
-               rq.rand_ques_reply,
-               rq.rand_ques_couple_no,
-               rq.rand_ques_is_deleted
-        FROM tb_randomquestion rq
-        WHERE rq.rand_ques_couple_no = #{coupleNo}
-          AND rq.rand_ques_content LIKE CONCAT('%',#{keyword},'%')
-        ORDER BY rq.rand_ques_createDate DESC;
+        SELECT
+            rq.rand_ques_no,
+            rq.rand_ques_content,
+            rq.rand_ques_create_date,
+            rq.rand_ques_reply,
+            rq.rand_ques_couple_no,
+            rq.rand_ques_is_deleted
+        FROM
+            tb_randomquestion rq
+        WHERE
+            rq.rand_ques_couple_no = #{coupleNo}
+          AND rq.rand_ques_content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY
+            rq.rand_ques_create_date DESC;
     </select>
+
 </mapper>

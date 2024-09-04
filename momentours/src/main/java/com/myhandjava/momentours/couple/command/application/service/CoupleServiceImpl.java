@@ -58,4 +58,11 @@ public class CoupleServiceImpl implements CoupleService {
         log.info("삭제된 커플 정보: {}", couple);
         coupleRepository.save(couple);
     }
+
+    @Override
+    public Integer findLastCoupleNo() {
+        Integer lastCoupleNo = coupleRepository.findMaxCoupleNo();
+        log.info("마지막 커플 pk값: {}", lastCoupleNo);
+        return lastCoupleNo + 1;
+    }
 }

@@ -6,4 +6,5 @@ public interface CoupleService {
     void inputCoupleInfo(int userNo1, int userNo2, CoupleDTO couple);
     void updateCouple(int coupleNo, CoupleDTO couple);
     void deleteCouple(int coupleNo);
+    Integer findLastCoupleNo();
 }

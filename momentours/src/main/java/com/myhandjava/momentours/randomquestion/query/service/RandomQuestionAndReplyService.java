@@ -19,5 +19,5 @@ public interface RandomQuestionAndReplyService {
 
     RandomReplyDTO findRandomReplyByQuestionNoAndUserNo(Map<String, Object> map);
 
-    List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo, int userNo);
+    List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo, int userNo, int parentNo);
 }
