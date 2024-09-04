@@ -3,7 +3,6 @@ package com.myhandjava.momentours.couple.command.application.controller;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.application.service.CoupleServiceImpl;
-import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistNumberVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
 import io.jsonwebtoken.Claims;
@@ -32,11 +31,11 @@ public class CoupleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> registNewCouple(@RequestBody CoupleRegistNumberVO userNums) {
-        String userNumber = userNums.getCoupleUserNo1() + "," + userNums.getCoupleUserNo2();
-
+    public ResponseEntity<String> registNewCouple(@RequestAttribute("claims") Claims claims) {
+        int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
+        // 여기서 유저 번호로 유저 서비스에서 유저 테이블에 있는 파트너 번호 속성 조회해야 함
         HttpHeaders headers = new HttpHeaders();
-        headers.add("userNumber", userNumber);
+        headers.add("userNumber", claims.get("userNo", String.class));
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -44,13 +43,9 @@ public class CoupleController {
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<?> fillCoupleInfo(@RequestHeader HttpHeaders headers,
-                                                          @RequestBody CoupleRegistVO coupleInfo) {
-        List<String> userNumbers = headers.get("userNumber");
-
-        if (userNumbers == null || userNumbers.isEmpty()) {
-            return ResponseEntity.badRequest().body("헤더에 저장된 회원 번호가 없습니다.");
-        }
+    public ResponseEntity<?> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
+                                            @RequestBody CoupleRegistVO coupleInfo) {
+        int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
 
         // 회원 번호 2개를 가져오기
         String[] userNos = userNumbers.get(0).split(",");
