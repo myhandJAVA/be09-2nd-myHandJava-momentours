@@ -74,7 +74,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     public void modifyMomentCourse(int momCourseNo, MomentCourseDTO momentCourseDTO) {
 
         momentCourseDTO.setMomCourseUpdateDate(LocalDateTime.now());
-        MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momentCourseDTO.getMomCourseNo())
+        MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momentCourseDTO.getMomCourseCoupleNo())
                 .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
 
         momentCourse.setMomCourseTitle(momentCourseDTO.getMomCourseTitle());
