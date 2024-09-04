@@ -37,11 +37,12 @@ public class CoupleController {
         int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
         // 여기서 유저 번호로 유저 서비스에서 유저 테이블에 있는 파트너 번호 속성 조회해야 함
         ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo1);
-        Map<String, Object> map = response.getBody().getResult();
-
+        Map<String, Object> map = new HashMap<>();
+        Integer lastCoupleNo = coupleService.findLastCoupleNo();
+        map.put("coupleNo", lastCoupleNo);
         return ResponseEntity.ok(
                 new ResponseMessage(
-                        200, "유저 번호 2개 받기 성공", map
+                        200, "커플 번호 반환 성공", map
                 )
         );
     }

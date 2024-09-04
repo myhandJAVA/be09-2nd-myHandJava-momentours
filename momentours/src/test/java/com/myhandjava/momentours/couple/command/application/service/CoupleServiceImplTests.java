@@ -43,4 +43,10 @@ class CoupleServiceImplTests {
 
         assertDoesNotThrow(() -> coupleService.updateCouple(coupleNO, coupleDTO));
     }
+
+    @DisplayName("마지막 pk값 조회")
+    @Test
+    void getLatestNo() {
+        Integer no = coupleService.findLastCoupleNo();
+    }
 }
