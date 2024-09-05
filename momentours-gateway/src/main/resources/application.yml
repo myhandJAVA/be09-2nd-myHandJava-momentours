@@ -16,7 +16,7 @@ spring:
     gateway:
       routes:
 
-        - id: momentours-user
+        - id: momentours-user-get
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
             - Path=/user-service/**
@@ -24,7 +24,7 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours-user
+        - id: momentours-user-put
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
             - Path=/user-service/**
@@ -32,7 +32,7 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours-user
+        - id: momentours-user-delete
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
             - Path=/user-service/**
@@ -40,14 +40,14 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours-user
+        - id: momentours-user-post
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
             - Path=/user-service/**
             - Method=POST
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        - id: momentours
+        - id: momentours-get
           uri: lb://MOMENTOURS-SERVICE
           predicates:
             - Path=/momentours-service/**
@@ -55,7 +55,7 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours
+        - id: momentours-post
           uri: lb://MOMENTOURS-SERVICE
           predicates:
             - Path=/momentours-service/**
@@ -63,7 +63,7 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours
+        - id: momentours-delete
           uri: lb://MOMENTOURS-SERVICE
           predicates:
             - Path=/momentours-service/**
@@ -71,7 +71,7 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: momentours
+        - id: momentours-put
           uri: lb://MOMENTOURS-SERVICE
           predicates:
             - Path=/momentours-service/**
