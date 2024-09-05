@@ -1,6 +1,8 @@
 # "우리의 특별한 순간들" Momentours
 | 커플을 위한 가장 완벽한 기록 서비스
 
+<img width="925" alt="스크린샷 2024-09-05 오전 9 11 58" src="https://github.com/user-attachments/assets/ffd048ab-f1b5-4910-a58a-8a9dc7a28c1d">
+
 #### 🤝TEAM
 [🦖최해관](https://github.com/Haegwan-Choe)&nbsp;&nbsp;&nbsp;&nbsp;[🐰유혜진](https://github.com/yuhyejin)&nbsp;&nbsp;&nbsp;&nbsp;[👀이우진](https://github.com/Vorschlag-bit)&nbsp;&nbsp;&nbsp;&nbsp;[😺김동혁](https://github.com/dongkh9)&nbsp;&nbsp;&nbsp;&nbsp;[🐶김정모](https://github.com/mojeeeeong)&nbsp;&nbsp;&nbsp;&nbsp;[😇장민근](https://github.com/caolian2003)
 
