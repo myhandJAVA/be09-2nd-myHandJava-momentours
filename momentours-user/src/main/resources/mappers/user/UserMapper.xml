@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myhandjava.momentoursUser.query.repository.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity">
+        <id property="userNo" column="USER_NO"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userPwd" column="USER_PWD"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userNickname" column="USER_NICKNAME"/>
+        <result property="userPhone" column="USER_PHONE"/>
+        <result property="userBirth" column="USER_BIRTH"/>
+        <result property="userMbti" column="USER_MBTI"/>
+        <result property="userRole" column="USER_ROLE"/>
+        <result property="accessibleDate" column="ACCESSIBLE_DATE"/>
+        <result property="userGender" column="USER_GENDER"/>
+        <result property="userReportCount" column="USER_REPORT_COUNT"/>
+        <result property="userCreateAt" column="USER_CREATE_AT"/>
+        <result property="userUpdateAt" column="USER_UPDATE_AT"/>
+        <result property="userLastLogin" column="USER_LAST_LOGIN"/>
+        <result property="userPartnerNo" column="USER_PARTNER_NO"/>
+    </resultMap>
+
+
+    <select id="findByUserEmail" resultMap="UserResultMap" parameterType="String">
+        SELECT USER_NO
+             , USER_EMAIL
+             , USER_PWD
+             , USER_NAME
+             , USER_NICKNAME
+             , USER_PHONE
+             , USER_BIRTH
+             , USER_MBTI
+             , USER_ROLE
+             , ACCESSIBLE_DATE
+             , USER_GENDER
+             , USER_REPORT_COUNT
+             , USER_CREATE_AT
+             , USER_UPDATE_AT
+             , USER_LAST_LOGIN
+             , USER_PARTNER_NO
+          FROM TB_USER
+         WHERE USER_EMAIL = '${userEmail}'
+    </select>
+
+    <select id="findAllUser" resultMap="UserResultMap">
+        SELECT USER_NO
+        , USER_EMAIL
+        , USER_PWD
+        , USER_NAME
+        , USER_NICKNAME
+        , USER_PHONE
+        , USER_BIRTH
+        , USER_MBTI
+        , USER_ROLE
+        , ACCESSIBLE_DATE
+        , USER_GENDER
+        , USER_REPORT_COUNT
+        , USER_CREATE_AT
+        , USER_UPDATE_AT
+        , USER_LAST_LOGIN
+        , USER_PARTNER_NO
+        FROM TB_USER
+    </select>
+
+    <select id="findUserCoupleNoByUserNo" resultType="Integer" parameterType="_int">
+        SELECT B.COUPLE_NO
+          FROM TB_USER A
+          JOIN TB_COUPLE B
+            ON A.USER_NO = B.COUPLE_USER_NO1
+         WHERE USER_NO = ${userNo}
+         UNION
+         SELECT D.COUPLE_NO
+           FROM TB_USER C
+           JOIN TB_COUPLE D
+             ON C.USER_NO = D.COUPLE_USER_NO2
+          WHERE USER_NO = ${userNo}
+    </select>
+
+    <select id="searchUserWithEmail" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_NICKNAME
+        , USER_MBTI
+        , USER_GENDER
+        FROM TB_USER
+        WHERE USER_EMAIL = #{ userEmail }
+    </select>
+
+    <select id="searchUserWithNickname" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_NICKNAME
+        , USER_MBTI
+        , USER_GENDER
+        FROM TB_USER
+        WHERE USER_NICKNAME = #{ nickname }
+    </select>
+
+
+    <select id="getUserPwd" resultMap="UserResultMap" parameterType="String">
+
+        SELECT USER_PWD
+        FROM TB_USER
+        WHERE USER_EMAIL = #{ userEmail }
+    </select>
+
+
+    <select id="getUserIdWithPhone" resultMap="UserResultMap" parameterType="String">
+        SELECT USER_EMAIL
+        FROM TB_USER
+        WHERE USER_PHONE = #{ userPhone }
+    </select>
+
+    <select id="findUserByUserNo" resultMap="UserResultMap" parameterType="_int">
+        SELECT USER_NO
+             , USER_EMAIL
+             , USER_PWD
+             , USER_NAME
+             , USER_NICKNAME
+             , USER_PHONE
+             , USER_BIRTH
+             , USER_MBTI
+             , USER_ROLE
+             , ACCESSIBLE_DATE
+             , USER_GENDER
+             , USER_REPORT_COUNT
+             , USER_CREATE_AT
+             , USER_UPDATE_AT
+             , USER_LAST_LOGIN
+             , USER_PARTNER_NO
+          FROM TB_USER
+         WHERE USER_NO = ${userNo}
+    </select>
+
+</mapper>
