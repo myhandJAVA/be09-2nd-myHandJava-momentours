@@ -77,7 +77,7 @@ public class CoupleController {
     }
 
 
-@PatchMapping("")
+    @PatchMapping("")
     public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo,
                                                             @RequestAttribute("claims") Claims coupleNo) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -103,3 +103,4 @@ public class CoupleController {
         return ResponseEntity.noContent().build();
     }
 }
+
