@@ -49,10 +49,8 @@ public class UserController {
 
     @GetMapping("/users/{userNo}/partner")
     public ResponseEntity<ResponseMessage> findPartnerByUserNo(@PathVariable int userNo){
-        RequestSignCoupleVO requestSignCoupleVO =  userService.findPartnerByUserNo(userNo);
-        Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("userNos",requestSignCoupleVO);
-        ResponseMessage responseMessage = new ResponseMessage(200, "파트너 회원 번호 반환", responseMap);
+        Map<String,Object> resultMap =  userService.findPartnerByUserNo(userNo);
+        ResponseMessage responseMessage = new ResponseMessage(200, "파트너 회원 번호 반환", resultMap);
         return ResponseEntity.ok().body(responseMessage);
     }
 

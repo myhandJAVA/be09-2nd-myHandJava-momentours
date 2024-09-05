@@ -8,6 +8,7 @@ import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
 import com.myhandjava.momentours.couple.command.domain.vo.RequestSignCoupleVO;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/couple")
+@Slf4j
 public class CoupleController {
 
     private final ModelMapper modelMapper;
@@ -34,7 +36,10 @@ public class CoupleController {
 
     @PutMapping("")
     public ResponseEntity<?> registNewCouple(@RequestAttribute("claims") Claims claims) {
-        int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
+        log.info("넘어오긴함");
+        int userNo1 = (Integer)claims.get("userNo");
+
+
         // 여기서 유저 번호로 유저 서비스에서 유저 테이블에 있는 파트너 번호 속성 조회해야 함
         ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo1);
         Map<String, Object> map = new HashMap<>();
@@ -50,11 +55,10 @@ public class CoupleController {
     @PostMapping("/profile")
     public ResponseEntity<?> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
                                             @RequestBody CoupleRegistVO coupleInfo) {
-        int userNo1 = Integer.parseInt(claims.get("userNo", String.class));
+        int userNo1 = (Integer)claims.get("userNo");
         ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo1);
         Map<String, Object> map = response.getBody().getResult();
-        RequestSignCoupleVO requestSignCoupleVO = (RequestSignCoupleVO) map.get("userNos");
-        int userNo2 = requestSignCoupleVO.getUserPartnerNo();
+        int userNo2 = (Integer)map.get("partnerNo");
 
         // 입력된 커플 정보를 DTO로 변환
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

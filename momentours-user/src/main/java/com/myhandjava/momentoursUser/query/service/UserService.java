@@ -6,6 +6,7 @@ import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService extends UserDetailsService {
     List<UserDTO> findAllUsers();
@@ -24,5 +25,5 @@ public interface UserService extends UserDetailsService {
 
     UserDTO findByUserNo(int userNo);
 
-    RequestSignCoupleVO findPartnerByUserNo(int userNo);
+    Map<String,Object> findPartnerByUserNo(int userNo);
 }

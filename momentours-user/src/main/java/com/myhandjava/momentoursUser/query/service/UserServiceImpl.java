@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,12 +137,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public RequestSignCoupleVO findPartnerByUserNo(int userNo) {
+    public Map<String,Object> findPartnerByUserNo(int userNo) {
         UserEntity user = userMapper.findUserByUserNo(userNo);
-        RequestSignCoupleVO RequestSignCoupleVO = new RequestSignCoupleVO();
-        RequestSignCoupleVO.setUserNo(userNo);
-        RequestSignCoupleVO.setUserPartnerNo(user.getUserPartnerNo());
-        return RequestSignCoupleVO;
+        Map<String,Object> reusltMap = new HashMap<>();
+        reusltMap.put("userNo",userNo);
+        reusltMap.put("partnerNo",user.getUserPartnerNo());
+
+        return reusltMap;
     }
 
     private ResponseUserIdVO UserToResponseUserIdVO(UserEntity user) {
