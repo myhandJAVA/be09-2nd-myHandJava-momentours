@@ -26,7 +26,7 @@
 
 ## 전체 프로젝트 일정
 <details> 
-<summary>프로젝트 일정 : 2024년 08월 28일 ~ 2024년 09월 05일</summary>
+<summary>프로젝트 일정 : 2024년 08월 26일 ~ 2024년 09월 05일</summary>
   <div align="center">
     <p><img src=""/></p>
   </div>
