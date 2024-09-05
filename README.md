@@ -6,7 +6,7 @@
 ## 🤝TEAM
 | ||||  | |
 | :------------------------------------: | :-------------------------------------: | :-----------------------------------: | :--------------------------------------: | :-----------------------------------: | :------------------------------------------: |
-| [🦖최해관](https://github.com/Haegwan-Choe) | [🐰유혜진](https://github.com/yuhyejin) | [백경석](https://github.com/Hellin22) | [👀이우진](https://github.com/Vorschlag-bit) | [😺김동혁](https://github.com/dongkh9) | [🐶김정모](https://github.com/mojeeeeong) |
+| [🦖최해관](https://github.com/Haegwan-Choe) | [🐰유혜진](https://github.com/yuhyejin) | [😇장민근](https://github.com/Hellin22) | [👀이우진](https://github.com/Vorschlag-bit) | [😺김동혁](https://github.com/dongkh9) | [🐶김정모](https://github.com/mojeeeeong) |
 
 ## 기술스택
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
