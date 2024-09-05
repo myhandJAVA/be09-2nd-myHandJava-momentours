@@ -1,5 +1,6 @@
 package com.myhandjava.momentours.moment.command.application.controller;
 
+import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.moment.command.application.dto.MomentDTO;
 import com.myhandjava.momentours.moment.command.application.service.MomentService;
 import com.myhandjava.momentours.moment.command.domain.vo.ResponseFindMomentByCoupleNoVO;
@@ -9,12 +10,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,7 +26,7 @@ public class MomentController {
 
     @GetMapping("couple")
     public List<ResponseFindMomentByCoupleNoVO> findMomentByMomentCoupleNo(@RequestAttribute("claims") Claims claims) {
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");;
         return momentService.findMomentByMomentCoupleNo(coupleNo);
     }
 
@@ -36,16 +36,26 @@ public class MomentController {
     }
 
     @PostMapping("/regist")
-    public String registMoment(MomentDTO newMoment) {
+    public ResponseEntity<ResponseMessage> registMoment(@RequestBody MomentDTO newMoment, @RequestAttribute("claims") Claims claims) {
+        int coupleNo = (Integer)claims.get("coupleNo");
+        newMoment.setMomentCoupleNo(coupleNo);
         momentService.registMoment(newMoment);
 
-        return "redirect:/moment/couple/{momentCoupleNo}";
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("newMoment", newMoment);
+
+        ResponseMessage responseMessage = new ResponseMessage
+                (201, "등록성공!", responseMap);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(responseMessage);
     }
 
     @PutMapping("/updateByUser")
     public ResponseEntity<String> updateMoment(@RequestBody MomentDTO updatedMomentDTO,
                                                @RequestAttribute("claims") Claims claims) throws NotFoundException {
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
         updatedMomentDTO.setMomentCoupleNo(coupleNo);
         momentService.updateMomentByTitleAndCoupleNo(
                 updatedMomentDTO.getMomentNo(),
@@ -58,7 +68,7 @@ public class MomentController {
     @DeleteMapping("/{momentNo}")
     public ResponseEntity<String> removeMoment(@PathVariable int momentNo,
                                                @RequestAttribute("claims") Claims claims) throws NotFoundException {
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
         momentService.removeMoment(momentNo, coupleNo);
 
         return ResponseEntity.noContent().build();
@@ -136,3 +146,4 @@ public class MomentController {
     }
 
 }
+
