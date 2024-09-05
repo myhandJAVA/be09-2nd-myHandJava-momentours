@@ -3,10 +3,12 @@
 
 <img width="925" alt="스크린샷 2024-09-05 오전 9 11 58" src="https://github.com/user-attachments/assets/ffd048ab-f1b5-4910-a58a-8a9dc7a28c1d">
 
-#### 🤝TEAM
-[🦖최해관](https://github.com/Haegwan-Choe)&nbsp;&nbsp;&nbsp;&nbsp;[🐰유혜진](https://github.com/yuhyejin)&nbsp;&nbsp;&nbsp;&nbsp;[👀이우진](https://github.com/Vorschlag-bit)&nbsp;&nbsp;&nbsp;&nbsp;[😺김동혁](https://github.com/dongkh9)&nbsp;&nbsp;&nbsp;&nbsp;[🐶김정모](https://github.com/mojeeeeong)&nbsp;&nbsp;&nbsp;&nbsp;[😇장민근](https://github.com/caolian2003)
+## 🤝TEAM
+| ||||  | |
+| :------------------------------------: | :-------------------------------------: | :-----------------------------------: | :--------------------------------------: | :-----------------------------------: | :------------------------------------------: |
+| [🦖최해관](https://github.com/Haegwan-Choe) | [🐰유혜진](https://github.com/yuhyejin) | [백경석](https://github.com/Hellin22) | [👀이우진](https://github.com/Vorschlag-bit) | [😺김동혁](https://github.com/dongkh9) | [🐶김정모](https://github.com/mojeeeeong) |
 
-#### 기술스택
+## 기술스택
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
@@ -17,12 +19,12 @@
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
-#### 협업 툴
+## 협업 툴
 ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
-### 전체 프로젝트 일정
+## 전체 프로젝트 일정
 <details> 
 <summary>프로젝트 일정 : 2024년 07월 30일 ~ 2024년 09월 05일</summary>
   <div align="center">
