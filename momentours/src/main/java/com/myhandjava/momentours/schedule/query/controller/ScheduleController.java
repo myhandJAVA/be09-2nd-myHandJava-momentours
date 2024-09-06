@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@RequestMapping("/calendar")
 @RestController
 public class ScheduleController {
     ScheduleService scheduleService;
@@ -27,7 +27,7 @@ public class ScheduleController {
         this.todoCourseService = todoCourseService;
     }
 
-    @GetMapping("/calendar")
+    @GetMapping("")
     public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("claims") Claims claims){
 
         Integer coupleNo = (Integer)claims.get("coupleNo");
@@ -41,5 +41,6 @@ public class ScheduleController {
         ResponseMessage responseMessage = new ResponseMessage(200,"일정 조회 성공",responseMap);
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
+
 
 }
