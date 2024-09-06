@@ -24,19 +24,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         schedule.setScheduleStartDate(scheduleDTO.getScheduleStartDate());
         schedule.setScheduleEndDate(scheduleDTO.getScheduleEndDate());
-        schedule.setScheduleMemo(scheduleDTO.getScheduleMemo());
         schedule.setScheduleTitle(scheduleDTO.getScheduleTitle());
+        schedule.setScheduleMemo(scheduleDTO.getScheduleMemo());
         schedule.setCoupleNo(scheduleDTO.getCoupleNo());
 
         scheduleRepository.save(schedule);
     }
 
     @Transactional
-    public void updateSchedule(ScheduleDTO scheduleDTO){
-//        Schedule schedule = new Schedule();
+    public void modifySchedule(ScheduleDTO scheduleDTO){
         Schedule schedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
-
-//        schedule.setScheduleNo(scheduleDTO.getScheduleNo());
         schedule.setScheduleStartDate(scheduleDTO.getScheduleStartDate());
         schedule.setScheduleEndDate(scheduleDTO.getScheduleEndDate());
         schedule.setScheduleMemo(scheduleDTO.getScheduleMemo());
@@ -47,7 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(ScheduleDTO scheduleDTO){
+    public void removeSchedule(ScheduleDTO scheduleDTO){
         Schedule schedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
 
         schedule.setScheduleIsDeleted(1);
