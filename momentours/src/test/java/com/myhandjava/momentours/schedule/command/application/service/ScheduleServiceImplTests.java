@@ -52,7 +52,7 @@ class ScheduleServiceImplTests {
         String oldTitle = oldSchedule.getScheduleTitle();
         String oldMemo = oldSchedule.getScheduleMemo();
 
-        scheduleService.modifySchedule(scheduleDTO);
+        scheduleService.updateSchedule(scheduleDTO);
         scheduleRepository.flush();
 
         Schedule newSchedule = scheduleRepository.findById(1).orElseThrow();
@@ -73,7 +73,7 @@ class ScheduleServiceImplTests {
         Schedule notDeletedSchedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
         int oldScheduleIsDeleted = notDeletedSchedule.getScheduleIsDeleted();
 
-        scheduleService.removeSchedule(scheduleDTO);
+        scheduleService.deleteSchedule(scheduleDTO);
 
         Schedule deletedSchedule = scheduleRepository.findById(scheduleDTO.getScheduleNo()).orElseThrow();
         int newScheduleIsDeleted = deletedSchedule.getScheduleIsDeleted();
