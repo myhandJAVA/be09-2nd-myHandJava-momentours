@@ -40,16 +40,28 @@ public class CoupleServiceImpl implements CoupleService {
     }
 
     @Override
-    public void inputCoupleInfo(int userNo1, int userNo2, CoupleDTO couple) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        Couple newCouple = modelMapper.map(couple, Couple.class);
+    @Transactional
+    public int registCouple(int userNo1, int userNo2) {
+        Couple newCouple = new Couple();
         newCouple.setCoupleUserNo1(userNo1);
         newCouple.setCoupleUserNo2(userNo2);
-
+        newCouple.setCoupleIsDeleted(0);
         log.info("입력된 커플 정보: {}", newCouple);
         coupleRepository.save(newCouple);
+        return newCouple.getCoupleNo();
     }
 
+    @Transactional
+    @Override
+    public void inputCoupleInfo(int coupleNo, CoupleDTO coupleInfo) {
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        couple.setCoupleName(coupleInfo.getCoupleName());
+        couple.setCouplePhoto(coupleInfo.getCouplePhoto());
+        couple.setCoupleStartDate(coupleInfo.getCoupleStartDate());
+        coupleRepository.save(couple);
+    }
+
+    @Transactional
     @Override
     public void deleteCouple(int coupleNo) {
         Couple couple = coupleRepository.findByCoupleNo(coupleNo);
@@ -57,12 +69,5 @@ public class CoupleServiceImpl implements CoupleService {
 
         log.info("삭제된 커플 정보: {}", couple);
         coupleRepository.save(couple);
-    }
-
-    @Override
-    public Integer findLastCoupleNo() {
-        Integer lastCoupleNo = coupleRepository.findMaxCoupleNo();
-        log.info("마지막 커플 pk값: {}", lastCoupleNo);
-        return lastCoupleNo + 1;
     }
 }

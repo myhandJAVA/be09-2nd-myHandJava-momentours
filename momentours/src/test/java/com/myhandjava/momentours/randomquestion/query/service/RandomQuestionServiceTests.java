@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RandomQuestionServiceTests {
 
     @Autowired
-    private RandomQuestionAndReplyServiceImpl randomQuestionService;
+    private RandomQuestionAndReplyQueryServiceImpl randomQuestionService;
 
     @DisplayName("커플 번호로 가장 최신 랜덤질문 조회")
     @Test

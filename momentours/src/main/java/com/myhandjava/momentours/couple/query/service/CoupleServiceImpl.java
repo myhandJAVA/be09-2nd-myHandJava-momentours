@@ -27,7 +27,6 @@ public class CoupleServiceImpl implements CoupleService {
     @Override
     public CoupleDTO findCoupleByCoupleNo(int coupleNo) {
         CoupleDTO coupleDTO = coupleMapper.findCoupleByCoupleNo(coupleNo);
-
         log.info("조회된 커플 정보: {}" , coupleDTO);
         return coupleDTO;
     }

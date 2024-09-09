@@ -27,7 +27,7 @@ public class DiaryController {
     @GetMapping("")
     public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         DiaryDTO diaryDTO = new DiaryDTO();
 
         diaryDTO.setDiaryCreateDate(diaryCreateDate);
@@ -41,7 +41,7 @@ public class DiaryController {
     @GetMapping("/all")
     public List<DiaryDTO> findAllDiary(@RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
 
         return list;

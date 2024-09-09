@@ -8,7 +8,7 @@ import java.util.List;
 public interface ScheduleService {
     void registSchedule(ScheduleDTO scheduleDTO);
 
-    void modifySchedule(ScheduleDTO scheduleDTO);
+    void updateSchedule(ScheduleDTO scheduleDTO);
 
-    void removeSchedule(ScheduleDTO scheduleDTO);
+    void deleteSchedule(ScheduleDTO scheduleDTO);
 }
