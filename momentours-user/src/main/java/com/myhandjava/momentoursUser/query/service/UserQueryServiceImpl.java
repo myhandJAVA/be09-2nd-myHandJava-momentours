@@ -3,7 +3,6 @@ package com.myhandjava.momentoursUser.query.service;
 import com.myhandjava.momentoursUser.client.MomentoursClient;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
-import com.myhandjava.momentoursUser.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
@@ -22,14 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
-public class UserServiceImpl implements UserService{
+@Service("userQueryService")
+public class UserQueryServiceImpl implements UserQueryService {
     private UserMapper userMapper;
     private MomentoursClient momentoursClient;
 
     @Autowired
-    private UserServiceImpl(UserMapper userMapper,
-                            MomentoursClient momentoursClient) {
+    private UserQueryServiceImpl(UserMapper userMapper,
+                                 MomentoursClient momentoursClient) {
         this.userMapper = userMapper;
         this.momentoursClient =momentoursClient;
     }

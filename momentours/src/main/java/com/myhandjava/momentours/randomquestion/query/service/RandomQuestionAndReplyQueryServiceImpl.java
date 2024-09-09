@@ -1,5 +1,6 @@
 package com.myhandjava.momentours.randomquestion.query.service;
 
+import com.myhandjava.momentours.couple.query.service.CoupleService;
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomQuestion;
 import com.myhandjava.momentours.randomquestion.command.domain.aggregate.RandomReply;
 import com.myhandjava.momentours.randomquestion.query.dto.RandomQuestionAndReplyDTO;
@@ -17,26 +18,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service("RandomQAndRQueryService")
+@Service("RandomQuesQueryService")
 @Slf4j
-public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReplyService {
+public class RandomQuestionAndReplyQueryServiceImpl implements RandomQuestionAndReplyQueryService {
 
     private final RandomQuestionMapper randomQuestionMapper;
     private final RandomReplyMapper randomReplyMapper;
-//    private final CoupleService coupleService;
+    private final CoupleService coupleService;
 
     @Autowired
-    public RandomQuestionAndReplyServiceImpl(RandomQuestionMapper randomQuestionMapper , RandomReplyMapper randomReplyMapper) {
+    public RandomQuestionAndReplyQueryServiceImpl(RandomQuestionMapper randomQuestionMapper,
+                                                  RandomReplyMapper randomReplyMapper,
+                                                  CoupleService coupleService) {
         this.randomQuestionMapper = randomQuestionMapper;
         this.randomReplyMapper = randomReplyMapper;
+        this.coupleService = coupleService;
     }
 
-    // 최신 질문을 조회하기 위해선 회원 테이블 -> 커플 테이블 -> 질문 중 최신 1개의 과정이 요구된다
-    // 커플의 번호를 알기 위해선 Mapper.xml에서 쿼리에서 join을 통해 얻어내는 건지, 아니면 coupleService를 호출해서 얻어내는 건지 선생님께 물어볼 것
     @Override
     public RandomQuestionDTO findCurrentRandomQuestionByCoupleNo(int coupleNo) {
-//        int coupleNo = coupleService.getCoupleByUserNo(userNo);
-        RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByCoupleNo(coupleNo);  // coupleNo가 들어가야 맞지만 오류가 생기지 않도록 userNo 넣어놓음
+        RandomQuestion randomQuestion = randomQuestionMapper.findCurrentRandomQuestionByCoupleNo(coupleNo);
         RandomQuestionDTO randomQuestionDTO = new RandomQuestionDTO(
                 randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(), randomQuestion.getRandQuesContent(),
                 randomQuestion.getRandQuesReply(), randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
@@ -47,7 +48,7 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     public List<RandomQuestionDTO> findAllRandomQuestionByCoupleNo(int coupleNo) {
-        List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByCoupleNo(coupleNo);  // userNo -> coupleNo로 바뀔 예정
+        List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByCoupleNo(coupleNo);
 
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
                 new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
@@ -121,7 +122,6 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
     public List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo , int userNo, int partnerNo) {
         // 회원 번호로 모든 랜덤 질문 가져오기
         List<RandomQuestionDTO> randomQuestionList = findAllRandomQuestionByCoupleNo(coupleNo);
-//        int partnerNo = coupleService.getPartnerNoByUserNo(userNo);
 
         // 질문과 답변 DTO 생성
         List<RandomQuestionAndReplyDTO> result = new ArrayList<>();
@@ -131,22 +131,32 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
             userMap.put("randomQuestionNo", question.getRandQuesNo());
 
             Map<String, Object> partnerMap = new HashMap<>();
-            partnerMap.put("userNo", userNo); // 파트너 회원번호로 변경 필요
+            partnerMap.put("userNo", partnerNo);
             partnerMap.put("randomQuestionNo", question.getRandQuesNo());
 
             RandomReplyDTO userReplyDTO = findRandomReplyByQuestionNoAndUserNo(userMap);
             RandomReplyDTO partnerReplyDTO = findRandomReplyByQuestionNoAndUserNo(partnerMap);
-            boolean canViewPartnerReply = userReplyDTO.getRandomReplyContent() != "텅";
-
+            //둘 다 답장을 안 했으면 볼 수 있다 "텅" "텅"
+            if(userReplyDTO.getRandomReplyContent().equals("텅")
+                    && partnerReplyDTO.getRandomReplyContent().equals("텅")) {
+                RandomQuestionAndReplyDTO noAnswer = new RandomQuestionAndReplyDTO(
+                        question,
+                        userReplyDTO,
+                        partnerReplyDTO,
+                        true
+                );
+                result.add(noAnswer);
+                continue;
+            }
+            boolean canViewPartnerReply = !userReplyDTO.getRandomReplyContent().equals("텅");
             RandomQuestionAndReplyDTO dto = new RandomQuestionAndReplyDTO(
                     question,
                     userReplyDTO,
                     canViewPartnerReply ? partnerReplyDTO : createHiddenReplyDTO(),
-                    canViewPartnerReply
+                    true
             );
             result.add(dto);
         }
-
         return result;
     }
 }

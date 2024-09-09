@@ -40,7 +40,7 @@ public class TodoCourseController {
     public ResponseEntity<ResponseMessage> registTodoCourse(@ModelAttribute RequestRegistTodoCourseVO newTodoCourse,
                                                             @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         TodoCourseDTO todoCourseDTO = modelMapper.map(newTodoCourse, TodoCourseDTO.class);
         todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
@@ -60,7 +60,7 @@ public class TodoCourseController {
                                                             @RequestBody RequestModifyTodoCourseVO modifyTodoCourse,
                                                             @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         TodoCourseDTO todoCourseDTO = modelMapper.map(modifyTodoCourse, TodoCourseDTO.class);
         todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
         todoCourseService.modifyTodoCourse(todoCourseNo, todoCourseDTO);
@@ -77,7 +77,7 @@ public class TodoCourseController {
     @DeleteMapping("/{todoCourseNo}")
     public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
                                               @RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         todoCourseService.removeTodoCourse(todoCourseNo, coupleNo);
 
         return ResponseEntity.noContent().build();

@@ -2,6 +2,7 @@ package com.myhandjava.momentours.couple.query.controller;
 
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.query.dto.CoupleDTO;
+import com.myhandjava.momentours.couple.query.service.CoupleService;
 import com.myhandjava.momentours.couple.query.service.CoupleServiceImpl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import java.util.Map;
 @RequestMapping("/couple")
 public class CoupleController {
 
-    private final CoupleServiceImpl coupleService;
+    private final CoupleService coupleService;
 
     @Autowired
-    public CoupleController(CoupleServiceImpl coupleService) {
+    public CoupleController(CoupleService coupleService) {
         this.coupleService = coupleService;
     }
 

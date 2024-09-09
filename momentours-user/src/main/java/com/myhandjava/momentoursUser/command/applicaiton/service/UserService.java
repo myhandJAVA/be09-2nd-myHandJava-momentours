@@ -1,7 +1,6 @@
 package com.myhandjava.momentoursUser.command.applicaiton.service;
 
 import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
-import com.myhandjava.momentoursUser.command.domain.vo.RequestCoupleVO;
 
 public interface UserService {
     void registUser(UserDTO userDTO);
@@ -10,5 +9,5 @@ public interface UserService {
 
     void deleteUser(int userNo);
 
-    void makeCouple(int userNo, UserDTO userDTO);
+    int makeCouple(int userNo, UserDTO userDTO);
 }

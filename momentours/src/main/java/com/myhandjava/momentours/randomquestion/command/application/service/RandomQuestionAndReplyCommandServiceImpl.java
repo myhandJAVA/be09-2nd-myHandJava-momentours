@@ -10,20 +10,19 @@ import com.myhandjava.momentours.randomquestion.command.domain.repository.Random
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 
-@Service("randomQAndRCommandService")
+@Service("randomQuesCommandService")
 @Slf4j
-public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReplyService {
+public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionAndReplyCommandService {
 
     private final RandomReplyRepository replyRepository;
     private final ModelMapper modelMapper;
@@ -32,9 +31,9 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
     private final RandomQuestionRepository questionRepository;
 
     @Autowired
-    public RandomQuestionAndReplyServiceImpl(ModelMapper modelMapper, RandomQuestionRepository questionRepository,
-                                             RandomReplyRepository replyRepository, CoupleServiceImpl coupleService,
-                                             OpenAIServiceImpl openAIService) {
+    public RandomQuestionAndReplyCommandServiceImpl(ModelMapper modelMapper, RandomQuestionRepository questionRepository,
+                                                    RandomReplyRepository replyRepository, CoupleServiceImpl coupleService,
+                                                    OpenAIServiceImpl openAIService) {
         this.modelMapper = modelMapper;
         this.replyRepository = replyRepository;
         this.coupleService = coupleService;
@@ -44,9 +43,9 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     @Transactional
-    public void removeRandomReply(int randomreplyno) {
+    public void removeRandomReply(int replyNo, int userNo) {
         RandomReply randomReply =
-                replyRepository.findByRandomReplyNo(randomreplyno)
+                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(replyNo, userNo)
                         .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
 
         if (randomReply != null) {
@@ -57,50 +56,68 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     @Transactional
-    public void updateRandomReply(int replyNo, RandomReplyDTO replyDTO) {
+    public void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO replyDTO) {
         RandomReply randomReply =
-                replyRepository.findByRandomReplyNo(replyNo)
+                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(userNo, replyNo)
                         .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
         if (randomReply != null) {
             randomReply.setRandomReplyContent(replyDTO.getRandomReplyContent());
-            log.info("바뀐 답변 내용 확인: {}", randomReply);
             replyRepository.save(randomReply);
         }
     }
 
     @Override
     @Transactional
-    public void registRandomReply(RandomReplyDTO randomReplyDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        RandomReply randomReply =
-                modelMapper.map(randomReplyDTO, RandomReply.class);
-        log.info("replyDTO -> Entity로 전환: {}" + randomReply);
-
-        replyRepository.save(randomReply);
+    public void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) {
+        RandomQuestion randomQuestion =
+                questionRepository.findRandomQuestionByRandQuesNo(questionNo).
+                        orElseThrow(() -> new EntityNotFoundException("질문이 존재하지 않습니다."));
+        List<RandomReply> replies = replyRepository.findRandomReplyByRandomQuestionNo(questionNo);
+        if (replies.size() < 1) {
+            RandomReply randomReply = new RandomReply();
+            randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());
+            randomReply.setRandomReplyUserNo(userNo);
+            randomReply.setRandomQuestionNo(questionNo);
+            randomReply.setRandomCoupleNo(coupleNo);
+            replyRepository.save(randomReply);
+        } else if (replies.size() == 1) {
+            RandomReply randomReply = new RandomReply();
+            randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());
+            randomReply.setRandomReplyUserNo(userNo);
+            randomReply.setRandomQuestionNo(questionNo);
+            randomReply.setRandomCoupleNo(coupleNo);
+            replyRepository.save(randomReply);
+            randomQuestion.setRandQuesReply(1);
+            questionRepository.save(randomQuestion);
+        } else {
+            throw new IllegalStateException("이미 2개의 답변이 존재합니다.");
+        }
     }
 
     @Override
-    public RandomQuestionDTO getCurrentRandomQuestion(int coupleNo) {
-        // 페이지 크기를 1로 설정하여 최신의 질문 1개만 조회
-        Pageable pageable = PageRequest.of(0, 1);
-        List<RandomQuestion> currentQuestion =
-                questionRepository.findLatestUnansweredQuestion(coupleNo, pageable);
-
+    public RandomQuestionDTO findRandomQuestion(int coupleNo) {
+        RandomQuestion currentQ = questionRepository.findLatestUnansweredQuestion(coupleNo).orElse(null);
         // 질문이 없다면 새 질문 생성
-        if (currentQuestion.isEmpty()) {
+        if (currentQ == null) {
             Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
             String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
-
             log.info("새로운 질문 생성:{}", newQuestion);
             RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
             return newQuestionDTO;
         }
-
-        // 아니면 리스트에서 첫 번째 질문을 가져옴
-        RandomQuestion rq = currentQuestion.get(0);
-        // DTO로 변환
-        RandomQuestionDTO randomQuestion = modelMapper.map(rq, RandomQuestionDTO.class);
-        log.info("답변하지 않은 질문 반환:{}", randomQuestion);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String Today = LocalDateTime.now().format(formatter);
+        String questionCreatedDate = currentQ.getRandQuesCreateDate().format(formatter);
+        // 날짜와 답변 여부를 따져서 새 질문 생성
+        if (currentQ.getRandQuesReply() == 1 && !Today.equals(questionCreatedDate)) {
+            Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
+            String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
+            log.info("새로운 질문 생성:{}", newQuestion);
+            RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
+            return newQuestionDTO;
+        }
+        RandomQuestionDTO randomQuestion = modelMapper.map(currentQ, RandomQuestionDTO.class);
+        log.info("답변하지 않거나 하루가 지나지 않은 질문:{}", randomQuestion);
         return randomQuestion;
     }
 

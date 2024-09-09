@@ -3,10 +3,10 @@ package com.myhandjava.momentours.couple.command.application.controller;
 import com.myhandjava.momentours.client.UserClient;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
-import com.myhandjava.momentours.couple.command.application.service.CoupleServiceImpl;
+import com.myhandjava.momentours.couple.command.application.dto.CoupleRegisterDTO;
+import com.myhandjava.momentours.couple.command.application.service.CoupleService;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
-import com.myhandjava.momentours.couple.command.domain.vo.RequestSignCoupleVO;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,83 +24,55 @@ import java.util.Map;
 public class CoupleController {
 
     private final ModelMapper modelMapper;
-    private final CoupleServiceImpl coupleService;
+    private final CoupleService coupleService;
     private final UserClient userClient;
 
     @Autowired
-    public CoupleController(ModelMapper modelMapper, CoupleServiceImpl coupleService, UserClient userClient) {
+    public CoupleController(ModelMapper modelMapper, CoupleService coupleService, UserClient userClient) {
         this.modelMapper = modelMapper;
         this.coupleService = coupleService;
         this.userClient = userClient;
     }
 
-    @PutMapping("")
-    public ResponseEntity<?> registNewCouple(@RequestAttribute("claims") Claims claims) {
-        log.info("넘어오긴함");
-        int userNo1 = (Integer)claims.get("userNo");
-
-
-        // 여기서 유저 번호로 유저 서비스에서 유저 테이블에 있는 파트너 번호 속성 조회해야 함
-        ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo1);
-        Map<String, Object> map = new HashMap<>();
-        Integer lastCoupleNo = coupleService.findLastCoupleNo();
-        map.put("coupleNo", lastCoupleNo);
-        return ResponseEntity.ok(
-                new ResponseMessage(
-                        200, "커플 번호 반환 성공", map
-                )
-        );
+    @PostMapping("")
+    public ResponseEntity<ResponseMessage> registNewCouple(@RequestBody CoupleRegisterDTO coupleRegisterDTO) {
+        int userNo1 = coupleRegisterDTO.getUserNo1();
+        int userNo2 = coupleRegisterDTO.getUserNo2();
+        int coupleNo = coupleService.registCouple(userNo1, userNo2);
+        Map<String, Object> result = new HashMap<>();
+        result.put("coupleNo", coupleNo);
+        return ResponseEntity.ok(new ResponseMessage(200, "커플 객체 생성 성공", result));
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<?> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
+    public ResponseEntity<ResponseMessage> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
                                             @RequestBody CoupleRegistVO coupleInfo) {
-        int userNo1 = (Integer)claims.get("userNo");
-        ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo1);
-        Map<String, Object> map = response.getBody().getResult();
-        int userNo2 = (Integer)map.get("partnerNo");
-
-        // 입력된 커플 정보를 DTO로 변환
+        int coupleNo = (Integer) claims.get("coupleNo");
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         CoupleDTO coupleDTO = modelMapper.map(coupleInfo, CoupleDTO.class);
-
-        // 커플 정보를 저장
-        coupleService.inputCoupleInfo(userNo1, userNo2, coupleDTO);
-
+        coupleService.inputCoupleInfo(coupleNo, coupleDTO);
         Map<String, Object> result = new HashMap<>();
-        map.put("updatedCouple", coupleDTO);
-        return ResponseEntity.ok(
-                new ResponseMessage(
-                        200, "커플 등록이 성공적으로 되었습니다!", result
-                )
-        );
+        result.put("updatedCouple", coupleDTO);
+        return ResponseEntity.ok(new ResponseMessage(200, "커플 정보 입력 성공", result));
     }
 
 
-    @PatchMapping("")
+    @PutMapping("/profile")
     public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo,
-                                                            @RequestAttribute("claims") Claims coupleNo) {
+                                                            @RequestAttribute("claims") Claims claims) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        int updateCoupleNo = Integer.parseInt(coupleNo.get("coupleNo", String.class));
-        updateInfo.setCoupleNo(updateCoupleNo);
+        int coupleNo = (Integer)claims.get("coupleNo");
         CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
-
-        coupleService.updateCouple(updateInfo.getCoupleNo(), updatedCouple);
-
+        coupleService.updateCouple(coupleNo, updatedCouple);
         Map<String, Object> map = new HashMap<>();
         map.put("updatedCouple", updatedCouple);
-        return ResponseEntity.ok(
-                new ResponseMessage(
-                        200, "커플 정보가 수정되었습니다.", map
-                ));
+        return ResponseEntity.ok(new ResponseMessage(200, "커플 정보가 수정되었습니다.", map));
     }
 
-    @DeleteMapping("/{coupleNo}")
-    public ResponseEntity<ResponseMessage> deleteCoupleInfo(@PathVariable int coupleNo) {
+    @DeleteMapping("")
+    public ResponseEntity<ResponseMessage> deleteCoupleInfo(@RequestAttribute("claims") Claims claims) {
+        int coupleNo = (Integer)claims.get("coupleNo");
         coupleService.deleteCouple(coupleNo);
-
         return ResponseEntity.noContent().build();
     }
 }
-

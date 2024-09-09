@@ -1,9 +1,12 @@
 package com.myhandjava.momentoursUser.command.applicaiton.service;
 
+import com.myhandjava.momentoursUser.client.MomentoursClient;
+import com.myhandjava.momentoursUser.command.applicaiton.dto.CoupleRegisterDTO;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
 import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserRole;
 import com.myhandjava.momentoursUser.command.domain.repository.UserRepository;
+import com.myhandjava.momentoursUser.common.ResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,12 +21,15 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MomentoursClient momentoursClient;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder){
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           MomentoursClient momentoursClient){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.momentoursClient = momentoursClient;
     }
 
 
@@ -61,19 +67,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void makeCouple(int userNo,
-                           UserDTO userDTO) {
+    public int makeCouple(int userNo,
+                          UserDTO userDTO) {
         UserEntity you = userRepository.findByUserEmail(userDTO.getEmail());
         UserEntity me = userRepository.findById(userNo).orElseThrow(IllegalArgumentException::new);
 
         me.setUserPartnerNo(you.getUserNo());
-        log.info(you.getUserPartnerNo());
-        log.info(me.getUserPartnerNo());
+        log.info(you.getUserPartnerNo());   //12번 회원의 파트너 번호
+        log.info(me.getUserPartnerNo());  //13번 회원의 파트너 번호
+        int coupleNo = 0;
         if(you.getUserPartnerNo() == me.getUserNo() && me.getUserPartnerNo() == you.getUserNo()){
             me.setUserRole(UserRole.ROLE_COUPLE);
             you.setUserRole(UserRole.ROLE_COUPLE);
+            CoupleRegisterDTO coupleRegisterDTO = new CoupleRegisterDTO();
+            coupleRegisterDTO.setUserNo1(userNo);  // 13;
+            coupleRegisterDTO.setUserNo2(you.getUserNo());  // 12
+            ResponseMessage response = momentoursClient.registerCouple(coupleRegisterDTO).getBody();
+            coupleNo = (Integer) response.getResult().get("coupleNo");
         }
-
+        return coupleNo;
     }
 
     private UserEntity dtoToEntity(UserDTO userDTO) {

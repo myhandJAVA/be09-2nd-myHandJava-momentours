@@ -2,10 +2,9 @@ package com.myhandjava.momentoursUser.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
 import com.myhandjava.momentoursUser.command.domain.aggregate.UserEntity;
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
-import com.myhandjava.momentoursUser.query.service.UserService;
+import com.myhandjava.momentoursUser.query.service.UserQueryService;
 import com.myhandjava.momentoursUser.command.domain.vo.RequestLoginVO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -33,13 +32,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private UserService userSerivce;
+    private UserQueryService userSerivce;
     private Environment env;
-    private UserService userService;
+    private UserQueryService userQueryService;
     private UserMapper userMapper;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
-                                UserService userSerivce,
+                                UserQueryService userSerivce,
                                 Environment env,
                                 UserMapper userMapper) {
         super(authenticationManager);

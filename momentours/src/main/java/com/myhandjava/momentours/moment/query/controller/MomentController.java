@@ -23,7 +23,7 @@ public class MomentController {
     @GetMapping("/all")
     public String findMoment(@RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentDTO momentDTO = new MomentDTO();
 
         momentDTO.setMomentCoupleNo(coupleNo);
@@ -32,4 +32,7 @@ public class MomentController {
         return momentDTOList.toString();
 
     }
+
+
+
 }
