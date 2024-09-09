@@ -1,14 +1,13 @@
 package com.myhandjava.momentoursUser.query.service;
 
 import com.myhandjava.momentoursUser.command.applicaiton.dto.*;
-import com.myhandjava.momentoursUser.command.domain.vo.RequestSignCoupleVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Map;
 
-public interface UserService extends UserDetailsService {
+public interface UserQueryService extends UserDetailsService {
     List<UserDTO> findAllUsers();
     UserDTO findByUserEmail(String email);
 

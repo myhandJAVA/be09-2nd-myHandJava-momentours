@@ -42,8 +42,8 @@ public class DiaryController {
                                                        @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        int coupleNo1 = (Integer)claims.get("coupleNo");
-        int diaryUserNo = (Integer)claims.get("userNo");
+        int coupleNo1 = Integer.parseInt(claims.get("coupleNo", String.class));
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryDTO.setDiaryUserNo(diaryUserNo);
@@ -64,7 +64,7 @@ public class DiaryController {
     // 일기 삭제(soft delete)
     @DeleteMapping("/{diaryNo}")
     public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestAttribute("claims") Claims claims) {
-        int diaryUserNo = (Integer)claims.get("coupleNo");
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
         diaryService.removeDiary(diaryNo, diaryUserNo);
 
         return ResponseEntity
@@ -79,7 +79,7 @@ public class DiaryController {
                                                        @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        int diaryUserNo = (Integer)claims.get("coupleNo");
+        int diaryUserNo = Integer.parseInt(claims.get("userNo", String.class));
 
         modifyDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(modifyDiary, DiaryDTO.class);
@@ -100,7 +100,7 @@ public class DiaryController {
     public ResponseEntity<ResponseMessage> registComment(@RequestBody RequestRegistCommentVO newComment,
                                                          @RequestAttribute("claims") Claims claims) {
 
-        int userNo = (Integer)claims.get("coupleNo");
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
         CommentDTO commentDTO = modelMapper.map(newComment, CommentDTO.class);
         commentDTO.setCommentUserNo(userNo);
         diaryService.registComment(commentDTO);
@@ -118,7 +118,7 @@ public class DiaryController {
     // 댓글 삭제
     @DeleteMapping("/comment/{commentNo}")
     public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestAttribute("claims") Claims claims) {
-        int commentUserNo = (Integer)claims.get("userNo");
+        int commentUserNo = Integer.parseInt(claims.get("userNo", String.class));
         diaryService.removeComment(commentNo, commentUserNo);
 
         return ResponseEntity
@@ -132,7 +132,7 @@ public class DiaryController {
                                                          @RequestBody RequestModifyCommentVO modifyComment,
                                                          @RequestAttribute("claims") Claims claims) {
 
-        int commentUserNo = (Integer)claims.get("userNo");
+        int commentUserNo = Integer.parseInt(claims.get("userNo", String.class));
         CommentDTO commentDTO = modelMapper.map(modifyComment, CommentDTO.class);
         commentDTO.setCommentUserNo(commentUserNo);
         diaryService.modifyComment(commentNo, commentDTO);
@@ -151,7 +151,7 @@ public class DiaryController {
     public ResponseEntity<ResponseMessage> registTempSave(@ModelAttribute RequestRegistDiaryVO newDiary,
                                                           @RequestAttribute("claims") Claims claims,
                                                           @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        int userNo = (Integer)claims.get("userNo");
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryDTO.setDiaryUserNo(userNo);

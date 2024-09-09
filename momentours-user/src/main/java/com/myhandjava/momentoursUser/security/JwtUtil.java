@@ -1,6 +1,6 @@
 package com.myhandjava.momentoursUser.security;
 
-import com.myhandjava.momentoursUser.query.service.UserService;
+import com.myhandjava.momentoursUser.query.service.UserQueryService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,21 +23,21 @@ import java.util.stream.Collectors;
 public class JwtUtil {
 
     private final Key key;
-    private UserService userService;
+    private UserQueryService userQueryService;
 
     public JwtUtil(
             @Value("${token.secret}") String secretKey,
-            UserService userSerivce
+            UserQueryService userSerivce
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.userService = userSerivce;
+        this.userQueryService = userSerivce;
     }
 
     public boolean validateToken(String token) {
-
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token {}", e);
         } catch (ExpiredJwtException e) {
@@ -47,13 +47,12 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT Token claims empty {}", e);
         }
-
-        return true;
+        return false; // 검증 실패 시 false를 반환합니다.
     }
-    
+
     public Authentication getAuthentication(String token) {
 
-        UserDetails userDetails = userService.loadUserByUsername(this.getUserId(token));
+        UserDetails userDetails = userQueryService.loadUserByUsername(this.getUserId(token));
 
         Claims claims = parseClaims(token);
 

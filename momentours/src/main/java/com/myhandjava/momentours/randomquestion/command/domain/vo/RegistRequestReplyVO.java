@@ -9,6 +9,4 @@ import lombok.*;
 @ToString
 public class RegistRequestReplyVO {
     private String randomReplyContent;
-    private int randomReplyUserNo;
-    private int randomCoupleNo;
 }

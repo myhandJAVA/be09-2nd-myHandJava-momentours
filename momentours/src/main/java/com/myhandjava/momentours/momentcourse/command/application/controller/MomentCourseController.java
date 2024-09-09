@@ -41,7 +41,7 @@ public class MomentCourseController {
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse,
                                                               @RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         MomentCourseDTO momentCourseDTO = modelMapper.map(newMomentCourse, MomentCourseDTO.class);
 
@@ -63,7 +63,7 @@ public class MomentCourseController {
     @DeleteMapping("/{momCourseNo}")
     public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
                                                 @RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         momentCourseService.removeMomentCourse(momCourseNo, coupleNo);
 
@@ -77,7 +77,7 @@ public class MomentCourseController {
     public ResponseEntity<ResponseMessage> modifyMomentCourse(@PathVariable int momCourseNo,
                                                               @RequestBody RequestModifyMomCourseVO modifyMomentCourse,
                                                               @RequestAttribute("claims") Claims claims){
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
         MomentCourseDTO momentCourseDTO = modelMapper.map(modifyMomentCourse, MomentCourseDTO.class);
         momentCourseDTO.setMomCourseCoupleNo(coupleNo);
         momentCourseService.modifyMomentCourse(momCourseNo, momentCourseDTO);
@@ -129,7 +129,7 @@ public class MomentCourseController {
     @PostMapping("/favorite/{momCourseNo}")
     public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO,
                                                        @RequestAttribute("claims") Claims claims) {
-        int userNo = (Integer)claims.get("userNo");
+        int userNo = Integer.parseInt(claims.get("userNo", String.class));
         favoriteDTO.setFavoUserNo(userNo);
         boolean isFavorite = momentCourseService.isFavorite(favoriteDTO);
         if(isFavorite)
