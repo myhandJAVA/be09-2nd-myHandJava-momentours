@@ -7,7 +7,7 @@ import com.myhandjava.momentours.randomquestion.query.dto.RandomReplyDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface RandomQuestionAndReplyService {
+public interface RandomQuestionAndReplyQueryService {
 
     RandomQuestionDTO findCurrentRandomQuestionByCoupleNo(int coupleNo);
 

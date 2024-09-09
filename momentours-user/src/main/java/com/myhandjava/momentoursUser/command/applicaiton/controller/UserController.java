@@ -7,11 +7,15 @@ import com.myhandjava.momentoursUser.command.applicaiton.dto.UserDTO;
 import com.myhandjava.momentoursUser.command.applicaiton.service.UserService;
 import com.myhandjava.momentoursUser.command.domain.vo.RequestRegistUserVO;
 import feign.Response;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController(value = "commandUserController")
 public class UserController {
@@ -52,14 +56,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
-    @PutMapping("/users/couple/{userNo}")
-    public ResponseEntity<ResponseMessage> makeCouple(@PathVariable int userNo,
+    @PostMapping("/users/couple")
+    public ResponseEntity<ResponseMessage> makeCouple(@RequestAttribute("claims") Claims claims,
                                                       @RequestBody RequestCoupleVO yourEmail){
+        int userNo = (Integer) claims.get("userNo");
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(yourEmail.getYourEmail());
-        userService.makeCouple(userNo,userDTO);
-        ResponseMessage responseMessage = new ResponseMessage(200,"커플 요청 성공",null);
-
+        int coupleNo = userService.makeCouple(userNo,userDTO);
+        Map<String, Object> result = new HashMap<>();
+        if(coupleNo == 0) result.put("대기", "상대 회원이 아직 이메일을 입력하지 않았습니다.");
+        else result.put("커플이 되었습니다!", "커플 번호: " + coupleNo);
+        ResponseMessage responseMessage = new ResponseMessage(200,"커플 요청 성공",result);
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 

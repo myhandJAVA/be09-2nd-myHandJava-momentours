@@ -25,7 +25,7 @@ public class TodoCourseController {
     @GetMapping("/todoCourse")
     public List<TodoCourseDTO> findAllTodoCourse(@RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
@@ -37,7 +37,7 @@ public class TodoCourseController {
     public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestAttribute("claims") Claims claims,
                                                             @PathVariable int TodoCourseNo) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
 
         TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
 

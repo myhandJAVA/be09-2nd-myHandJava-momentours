@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RandomQuestionRepository extends JpaRepository<RandomQuestion, Long> {
-
     // 답변 상태가 0인 가장 최근의 질문을 내림차순으로 정렬하여 1행만 조회
-    @Query("SELECT rq FROM RandomQuestion rq WHERE rq.randQuesCoupleNo = :coupleNo AND rq.randQuesReply = 0 ORDER BY rq.randQuesCreateDate DESC")
-    List<RandomQuestion> findLatestUnansweredQuestion(@Param("coupleNo") int coupleNo, Pageable pageable);
-
+    @Query("SELECT rq FROM RandomQuestion rq WHERE rq.randQuesCoupleNo = :coupleNo ORDER BY rq.randQuesCreateDate DESC LIMIT 1")
+    Optional<RandomQuestion> findLatestUnansweredQuestion(@Param("coupleNo") int coupleNo);
+    Optional<RandomQuestion> findRandomQuestionByRandQuesNo(int questionNo);
 }

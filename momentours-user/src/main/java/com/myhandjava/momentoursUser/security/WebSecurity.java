@@ -1,7 +1,7 @@
 package com.myhandjava.momentoursUser.security;
 
 import com.myhandjava.momentoursUser.query.repository.UserMapper;
-import com.myhandjava.momentoursUser.query.service.UserService;
+import com.myhandjava.momentoursUser.query.service.UserQueryService;
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,19 +22,19 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurity {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private UserService userService;
+    private UserQueryService userQueryService;
     private Environment env;
     private JwtUtil jwtUtil;
     private UserMapper userMapper;
 
     @Autowired
     public WebSecurity(BCryptPasswordEncoder bCryptPasswordEncoder
-                        , UserService userService
+                        , UserQueryService userQueryService
                         , Environment env
                         , JwtUtil jwtUtil
                         , UserMapper userMapper) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userService = userService;
+        this.userQueryService = userQueryService;
         this.env = env;
         this.jwtUtil = jwtUtil;
         this.userMapper = userMapper;
@@ -47,7 +47,7 @@ public class WebSecurity {
 
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userService)
+        authenticationManagerBuilder.userDetailsService(userQueryService)
                 .passwordEncoder(bCryptPasswordEncoder);
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
@@ -61,13 +61,13 @@ public class WebSecurity {
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilter(getAuthenticationFilter(authenticationManager));
-        http.addFilterBefore(new JwtFilter(userService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtFilter(userQueryService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager, userService, env,userMapper);
+        return new AuthenticationFilter(authenticationManager, userQueryService, env,userMapper);
     }
 
 }
