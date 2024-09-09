@@ -1,15 +1,7 @@
 server:
-  port: 8123
+  port: 0
 
 spring:
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/momentours
-    #    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    #    jdbc-url: jdbc:log4jdbc:mariadb://localhost:3306/momentours
-    username: handjava
-    password: handjava
-
   jpa:
     generate-ddl: false
     show-sql: true
@@ -21,6 +13,10 @@ spring:
       ddl-auto: none
   application:
     name: momentours-user-service
+  config:
+    import:
+      - classpath:/bootstrap.yml
+
 
 logging:
   level:
@@ -31,9 +27,6 @@ logging:
 mybatis:
   mapper-locations: classpath:/mappers/**/*.xml
 
-token:
-  expiration_time: 43200000
-  secret: K0HHLFxls3IXU9tafT999JvEC3c80Dhy7qv41YyY99Pe1agCbJyiv558uBWHTQiYzRDdju9/CLtZltizLjGgSQ==
 
 eureka:
   instance:

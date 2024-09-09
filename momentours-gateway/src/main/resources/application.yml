@@ -8,8 +8,12 @@ eureka:
     server-url:
       defaultZone: http://localhost:8761/eureka
 spring:
+  config:
+    import:
+      - classpath:/bootstrap.yml
   application:
     name: gateway-server
+
 
 
   cloud:
@@ -79,7 +83,3 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-
-
-token:
-  secret: K0HHLFxls3IXU9tafT999JvEC3c80Dhy7qv41YyY99Pe1agCbJyiv558uBWHTQiYzRDdju9/CLtZltizLjGgSQ==
