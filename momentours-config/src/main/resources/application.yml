@@ -1,0 +1,11 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: momentours-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///C:\Users\dong\Documents\back\config # ?? ?? ??
