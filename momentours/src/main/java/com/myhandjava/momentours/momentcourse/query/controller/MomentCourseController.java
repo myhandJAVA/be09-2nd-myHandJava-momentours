@@ -24,7 +24,7 @@ public class MomentCourseController {
     // 커플 번호를 통해 해당 커플의 전체 추억 코스 조회
     @GetMapping("")     // 이렇게 해도 되는건가?
     public List<MomentCourseDTO> findAllMomentCourse(@RequestAttribute("claims") Claims claims) {
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
         List<MomentCourseDTO> momentCourseList = momentCourseService.findAllMomentCourse(coupleNo);
 
         return momentCourseList;
@@ -35,7 +35,7 @@ public class MomentCourseController {
     public List<MomentCourseDTO> findMomentCourseByMomCourseNo(@RequestAttribute("claims") Claims claims,
                                                                @PathVariable int momCourseNo) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
         MomentCourseDTO momentCourseDTO = new MomentCourseDTO();
 
         momentCourseDTO.setMomCourseCoupleNo(coupleNo);

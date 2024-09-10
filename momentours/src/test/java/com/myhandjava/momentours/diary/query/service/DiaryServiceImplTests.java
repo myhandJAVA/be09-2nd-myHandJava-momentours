@@ -27,8 +27,7 @@ class DiaryServiceImplTests {
         diaryDTO.setDiaryCreateDate("2024-09-02");
         diaryDTO.setCoupleNo(1);
 
-        List<DiaryDTO> result = diaryService.selectDiary(diaryDTO);
-
+        List<DiaryDTO> result = diaryService.findDiary(diaryDTO);
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
         result.forEach(System.out::println);

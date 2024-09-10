@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface DiaryService {
 
-    List<DiaryDTO> selectDiary(DiaryDTO diaryDTO);
+    List<DiaryDTO> findDiary(DiaryDTO diaryDTO);
 
     List<DiaryDTO> findAllDiary(int coupleNo);
+
+    int findCountDiary(DiaryDTO diaryDTO);
 }
