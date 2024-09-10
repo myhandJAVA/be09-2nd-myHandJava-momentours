@@ -9,4 +9,5 @@ public interface RandomQuestionAndReplyCommandService {
     void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) throws Exception;
     RandomQuestionDTO findRandomQuestion(int coupleNo);
     RandomQuestionDTO saveNewQuestion(int coupleNo, String content) throws Exception;
+    void removeAllRandomQuestionAndReply(int coupleNo);
 }

@@ -14,16 +14,17 @@
         <!-- 랜덤 질문의 답변은 반드시 질문이 먼저 조회된 후에 질문과 같이 하나의 답변만 보여주는 쿼리만 있으면 된다 -->
     <select id="findRandomReplyByQuestionNoAndUserNo" resultMap="RandomReplyResultMap" parameterType="map">
         SELECT
-            random_reply_no,
-            random_reply_content,
-            random_reply_user_no,
-            random_reply_is_deleted,
-            random_couple_no,
-            random_question_no
-        FROM
-            tb_randomreply
+               random_reply_no,
+               random_reply_content,
+               random_reply_user_no,
+               random_reply_is_deleted,
+               random_couple_no,
+               random_question_no
+         FROM
+               tb_randomreply
         WHERE
-            random_reply_user_no = #{userNo}
+               random_reply_user_no = #{userNo}
           AND random_question_no = #{randomQuestionNo}
+          AND rand_reply_is_deleted = 0;
     </select>
 </mapper>

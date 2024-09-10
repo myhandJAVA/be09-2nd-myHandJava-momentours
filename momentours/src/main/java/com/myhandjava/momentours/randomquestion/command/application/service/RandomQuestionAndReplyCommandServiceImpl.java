@@ -142,4 +142,18 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         questionRepository.save(randomQuestion);
         return newQuestionDTO;
     }
+
+    @Override
+    public void removeAllRandomQuestionAndReply(int coupleNo) {
+        List<RandomQuestion> allQuestions = questionRepository.findAllByRandQuesCoupleNo(coupleNo);
+        List<RandomReply> allReplies = replyRepository.findAllByRandomCoupleNo(coupleNo);
+        for(RandomQuestion q : allQuestions) {
+            q.setRandQuesIsDeleted(1);
+            questionRepository.save(q);
+        }
+        for(RandomReply r : allReplies) {
+            r.setRandomReplyIsDeleted(1);
+            replyRepository.save(r);
+        }
+    }
 }
