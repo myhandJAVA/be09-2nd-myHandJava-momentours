@@ -3,9 +3,10 @@ package com.myhandjava.momentours.couple.command.application.service;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.domain.aggregate.Couple;
 import com.myhandjava.momentours.couple.command.domain.repository.CoupleRepository;
+import com.myhandjava.momentours.randomquestion.command.application.service.RandomQuestionAndReplyCommandService;
+import com.myhandjava.momentours.randomquestion.command.application.service.RandomQuestionAndReplyCommandServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,12 @@ public class CoupleServiceImpl implements CoupleService {
 
     private final ModelMapper modelMapper;
     private final CoupleRepository coupleRepository;
+    private final RandomQuestionAndReplyCommandService randomQuesCommandService;
 
-    public CoupleServiceImpl(ModelMapper modelMapper, CoupleRepository coupleRepository) {
+    public CoupleServiceImpl(ModelMapper modelMapper, CoupleRepository coupleRepository, RandomQuestionAndReplyCommandServiceImpl randomQuesCommandService) {
         this.modelMapper = modelMapper;
         this.coupleRepository = coupleRepository;
+        this.randomQuesCommandService = randomQuesCommandService;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class CoupleServiceImpl implements CoupleService {
     public void deleteCouple(int coupleNo) {
         Couple couple = coupleRepository.findByCoupleNo(coupleNo);
         couple.setCoupleIsDeleted(1);
-
+        randomQuesCommandService.removeAllRandomQuestionAndReply(coupleNo);
         log.info("삭제된 커플 정보: {}", couple);
         coupleRepository.save(couple);
     }
