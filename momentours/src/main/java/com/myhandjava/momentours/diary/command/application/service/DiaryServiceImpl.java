@@ -64,7 +64,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void removeDiary(int diaryNo, int userNo) {
         Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));;
+                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));
 
         diary.setDiaryIsDeleted(true);
 
@@ -132,18 +132,13 @@ public class DiaryServiceImpl implements DiaryService {
         diaryDTO.setDiaryCreateDate(LocalDateTime.now());
         Diary diary = modelMapper.map(diaryDTO, Diary.class);
 
-        log.info("diary: {}", diary.getDiaryNo());
-
         diaryRepository.save(diary);
 
         TemporaryDTO temporaryDTO = new TemporaryDTO();
         temporaryDTO.setDiaryTempSaveDate(LocalDateTime.now());
         temporaryDTO.setDiaryNo(diary.getDiaryNo());
 
-        log.info("temporaryDTO: {}", temporaryDTO);
-
         Temporary temporary = modelMapper.map(temporaryDTO, Temporary.class);
-
 
         temporaryRepository.save(temporary);
     }

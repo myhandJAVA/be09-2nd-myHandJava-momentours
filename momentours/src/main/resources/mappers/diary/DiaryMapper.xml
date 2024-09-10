@@ -70,4 +70,11 @@
         AND b.comment_is_deleted = false
     </select>
 
+    <select id="selectCountDiary" resultType="int" parameterType="com.myhandjava.momentours.diary.query.dto.DiaryDTO">
+        SELECT COUNT(*) AS '일기횟수'
+          FROM tb_diary
+         WHERE diary_user_no = #{ diaryUserNo }
+           AND DATE(diary_create_date) = #{ diaryCreateDate };
+    </select>
+
 </mapper>
