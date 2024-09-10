@@ -12,4 +12,6 @@ public interface DiaryMapper {
     List<DiaryDTO> selectDiary(DiaryDTO diaryDTO);
 
     List<DiaryDTO> selectAllDiary(int coupleNo);
+
+    int selectCountDiary(DiaryDTO diaryDTO);
 }

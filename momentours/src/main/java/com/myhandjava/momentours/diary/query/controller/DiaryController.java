@@ -27,21 +27,22 @@ public class DiaryController {
     @GetMapping("")
     public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
+        int userNo = (Integer)claims.get("userNo");
         DiaryDTO diaryDTO = new DiaryDTO();
 
         diaryDTO.setDiaryCreateDate(diaryCreateDate);
-
         diaryDTO.setCoupleNo(coupleNo);
-        List<DiaryDTO> list = diaryService.selectDiary(diaryDTO);
+        diaryDTO.setDiaryUserNo(userNo);
 
+        List<DiaryDTO> list = diaryService.findDiary(diaryDTO);
         return list;
     }
 
     @GetMapping("/all")
     public List<DiaryDTO> findAllDiary(@RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer)claims.get("coupleNo");
         List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
 
         return list;
