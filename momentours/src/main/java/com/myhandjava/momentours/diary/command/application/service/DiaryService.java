@@ -20,4 +20,6 @@ public interface DiaryService {
     void modifyComment(int commentNo, CommentDTO commentDTO);
 
     void registTempDiary(DiaryDTO diaryDTO);
+
+    void removeAllDiary(int coupleNo);
 }

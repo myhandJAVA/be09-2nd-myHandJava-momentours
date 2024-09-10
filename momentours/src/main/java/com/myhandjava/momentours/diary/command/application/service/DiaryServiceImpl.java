@@ -10,6 +10,7 @@ import com.myhandjava.momentours.diary.command.domain.repository.CommentReposito
 import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
 import com.myhandjava.momentours.diary.command.domain.repository.TemporaryRepository;
 import com.myhandjava.momentours.file.command.application.service.FileService;
+import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service("diaryCommandServiceImpl")
 @Slf4j
@@ -141,5 +144,30 @@ public class DiaryServiceImpl implements DiaryService {
         Temporary temporary = modelMapper.map(temporaryDTO, Temporary.class);
 
         temporaryRepository.save(temporary);
+    }
+
+    // 다이어리, 댓글, 파일 삭제(hard delete)
+    @Override
+    public void removeAllDiary(int coupleNo) {
+        List<Diary> diaryList =
+                diaryRepository.findAllByCoupleNo(coupleNo)
+                        .orElseThrow(() -> new EntityNotFoundException("조회된 일기가 없습니다."));
+
+        for(Diary diary : diaryList) {
+            List<Comment> commentList = commentRepository.findAllByDiaryNo(diary.getDiaryNo())
+                    .orElseThrow(() -> new EntityNotFoundException("조회된 댓글이 없습니다."));
+            for(Comment comment : commentList) {
+                commentRepository.delete(comment);
+            }
+            List<Temporary> temporaryList = temporaryRepository.findAllByDiaryNo(diary.getDiaryNo())
+                    .orElseThrow(() -> new EntityNotFoundException("임시저장된 일기가 없습니다."));
+            for(Temporary temporary : temporaryList) {
+                temporaryRepository.delete(temporary);
+            }
+            List<FileEntity> files = fileRepository.findByDiary(diary);
+            for(FileEntity file : files) {
+                fileRepository.delete(file);
+            }
+        }
     }
 }
