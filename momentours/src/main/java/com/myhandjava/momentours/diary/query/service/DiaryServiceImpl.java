@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.diary.query.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.diary.query.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.query.repository.DiaryMapper;
 import com.myhandjava.momentours.file.query.repository.FileMapper;
@@ -24,6 +26,9 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public List<DiaryDTO> findDiary(DiaryDTO diaryDTO) {
         List<DiaryDTO> result = diaryMapper.selectDiary(diaryDTO);
+        if(result == null || result.isEmpty()) {
+            throw new CommonException(HttpStatusCode.NOT_FOUND_DIARY);
+        }
 
         return result;
     }
@@ -32,6 +37,9 @@ public class DiaryServiceImpl implements DiaryService {
     public List<DiaryDTO> findAllDiary(int coupleNo) {
 
         List<DiaryDTO> result = diaryMapper.selectAllDiary(coupleNo);
+        if(result == null || result.isEmpty()) {
+            throw new CommonException(HttpStatusCode.NOT_FOUND_DIARY);
+        }
 
         return result;
     }
