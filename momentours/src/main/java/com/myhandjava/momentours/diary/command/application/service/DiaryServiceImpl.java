@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.diary.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.command.application.dto.TemporaryDTO;
@@ -67,7 +69,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void removeDiary(int diaryNo, int userNo) {
         Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         diary.setDiaryIsDeleted(true);
 
@@ -80,7 +82,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void modifyDiary(DiaryDTO diaryDTO, int userNo, int diaryNo) throws IOException {
         Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         diary.setDiaryContent(diaryDTO.getDiaryContent());
         diary.setDiaryUpdateDate(diaryDTO.getDiaryUpdateDate());
@@ -108,7 +110,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void removeComment(int commentNo, int commentUserNo) {
         Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentUserNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
 
         comment.setCommentIsDeleted(true);
 
@@ -120,7 +122,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void modifyComment(int commentNo, CommentDTO commentDTO) {
         Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentDTO.getCommentUserNo())
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
 
         comment.setCommentContent(commentDTO.getCommentContent());
         comment.setCommentUpdateDate(LocalDateTime.now());
@@ -151,16 +153,16 @@ public class DiaryServiceImpl implements DiaryService {
     public void removeAllDiary(int coupleNo) {
         List<Diary> diaryList =
                 diaryRepository.findAllByCoupleNo(coupleNo)
-                        .orElseThrow(() -> new EntityNotFoundException("조회된 일기가 없습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         for(Diary diary : diaryList) {
             List<Comment> commentList = commentRepository.findAllByDiaryNo(diary.getDiaryNo())
-                    .orElseThrow(() -> new EntityNotFoundException("조회된 댓글이 없습니다."));
+                    .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
             for(Comment comment : commentList) {
                 commentRepository.delete(comment);
             }
             List<Temporary> temporaryList = temporaryRepository.findAllByDiaryNo(diary.getDiaryNo())
-                    .orElseThrow(() -> new EntityNotFoundException("임시저장된 일기가 없습니다."));
+                    .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_TEMPORARY));
             for(Temporary temporary : temporaryList) {
                 temporaryRepository.delete(temporary);
             }

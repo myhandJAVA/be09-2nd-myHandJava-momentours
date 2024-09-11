@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.file.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
@@ -47,7 +49,7 @@ public class FileServiceImpl implements FileService {
     @Transactional
     public List<FileEntity> saveFileDiary(List<MultipartFile> files, Diary diary) throws IOException {
         if(files.isEmpty()) {
-            throw new IOException("업로드된 파일이 없습니다.");
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
         }
 
         List<FileEntity> savedFiles = new ArrayList<>();
@@ -90,7 +92,7 @@ public class FileServiceImpl implements FileService {
                 .collect(Collectors.toList());
 
         if (fileList.isEmpty()) {
-            throw new EntityNotFoundException("해당 일기와 연관된 파일이 존재하지 않습니다.");
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
         }
 
         for (FileEntity file : fileList) {

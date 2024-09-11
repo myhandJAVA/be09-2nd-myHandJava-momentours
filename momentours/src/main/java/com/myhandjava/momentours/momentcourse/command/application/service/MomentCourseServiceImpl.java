@@ -1,6 +1,8 @@
 package com.myhandjava.momentours.momentcourse.command.application.service;
 
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.momentcourse.command.application.dto.FavoriteDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomcourselocationDTO;
 import com.myhandjava.momentours.momentcourse.command.application.dto.MomentCourseDTO;
@@ -68,7 +70,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     @Transactional
     public void removeMomentCourse(int momCourseNo, int momCourseCoupleNo) {
         MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momCourseCoupleNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 추억코스가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_MOMENTCOURSE));
 
         momentCourse.setMomCourseIsDeleted(true);
         momentCourseRepository.save(momentCourse);
@@ -81,7 +83,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
 
         momentCourseDTO.setMomCourseUpdateDate(LocalDateTime.now());
         MomentCourse momentCourse = momentCourseRepository.findByMomCourseNoAndMomCourseCoupleNo(momCourseNo, momentCourseDTO.getMomCourseCoupleNo())
-                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_MOMENTCOURSE));
 
         momentCourse.setMomCourseTitle(momentCourseDTO.getMomCourseTitle());
         momentCourse.setMomCourseMemo(momentCourseDTO.getMomCourseMemo());
@@ -109,7 +111,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     @Transactional
     public void incrementLike(int momCourseNo) {
         MomentCourse momentCourse = momentCourseRepository.findById(momCourseNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_MOMENTCOURSE));
 
         momentCourse.setMomCourseLike(momentCourse.getMomCourseLike() + 1);
         momentCourseRepository.save(momentCourse);
@@ -120,7 +122,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     @Transactional
     public void decrementLike(int momCourseNo) {
         MomentCourse momentCourse = momentCourseRepository.findById(momCourseNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 추억 코스가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_MOMENTCOURSE));
 
         if(momentCourse.getMomCourseLike() > 0) {
             momentCourse.setMomCourseLike(momentCourse.getMomCourseLike() - 1);
@@ -133,7 +135,7 @@ public class MomentCourseServiceImpl implements MomentCourseService {
     @Transactional
     public boolean isFavorite(FavoriteDTO favoriteDTO) {
         MomentCourse momentCourse = momentCourseRepository.findById(favoriteDTO.getFavoMomCourseNo())
-                .orElseThrow(() -> new EntityNotFoundException("해당 추억코스가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_MOMENTCOURSE));
 
         // 즐겨찾기 있는지 확인
         Optional<Favorite> existingFavorite = favoriteRepository.findByFavoMomCourseNoAndFavoUserNo(favoriteDTO.getFavoMomCourseNo(), favoriteDTO.getFavoUserNo());
