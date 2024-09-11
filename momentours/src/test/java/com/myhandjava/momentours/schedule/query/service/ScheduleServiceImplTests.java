@@ -22,6 +22,7 @@ class ScheduleServiceImplTests {
         int coupleNo = 1;
         List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
         assertNotNull(coupleScheduleList);
+        assertEquals(1,coupleScheduleList.get(0).getCoupleNo());
 
     }
 

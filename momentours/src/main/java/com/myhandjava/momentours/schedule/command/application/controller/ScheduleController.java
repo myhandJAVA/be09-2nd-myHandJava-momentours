@@ -1,5 +1,6 @@
 package com.myhandjava.momentours.schedule.command.application.controller;
 
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @RestController("ScheduleCommandController")
 public class ScheduleController {
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
     private ScheduleController(ScheduleService scheduleService){
         this.scheduleService = scheduleService;
     }
@@ -23,22 +24,22 @@ public class ScheduleController {
     @PostMapping("/calendar")
     public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
                                                           @RequestAttribute("claims") Claims claims){
-        Integer coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = (Integer)claims.get("coupleNo");
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("newSchedule","/calendar/");
+        responseMap.put("url","/calendar");
 
-        ResponseMessage responseMessage = new ResponseMessage(201,"일정 생성 성공", responseMap );
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        ResponseMessage responseMessage = new ResponseMessage(HttpStatusCode.CREATED.getCode(), "일정 생성 성공", responseMap );
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     @PutMapping("/calendar/{scheduleNo}")
     public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO,
                                                           @PathVariable int scheduleNo,
                                                           @RequestAttribute("claims") Claims claims){
-        Integer coupleNo = (Integer)claims.get("coupleNo");
+        int coupleNo = (Integer)claims.get("coupleNo");
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleDTO.setScheduleNo(scheduleNo);
         scheduleService.updateSchedule(scheduleDTO);
@@ -46,7 +47,7 @@ public class ScheduleController {
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("newSchedule","/calendar/");
 
-        ResponseMessage responseMessage = new ResponseMessage(200,"일정 수정 성공", responseMap );
+        ResponseMessage responseMessage = new ResponseMessage(HttpStatusCode.OK.getCode(),"일정 수정 성공", responseMap );
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
@@ -62,7 +63,7 @@ public class ScheduleController {
         Map<String,Object> responseMap = new HashMap<>();
         responseMap.put("deletedSchedule","/calendar/");
 
-        ResponseMessage responseMessage = new ResponseMessage(200,"일정 삭제 성공", responseMap );
+        ResponseMessage responseMessage = new ResponseMessage(HttpStatusCode.OK.getCode(),"일정 삭제 성공", responseMap );
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 }
