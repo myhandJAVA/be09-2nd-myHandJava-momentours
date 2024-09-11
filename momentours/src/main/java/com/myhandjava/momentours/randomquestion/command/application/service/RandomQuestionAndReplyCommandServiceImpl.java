@@ -72,7 +72,9 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         RandomQuestion randomQuestion =
                 questionRepository.findRandomQuestionByRandQuesNo(questionNo).
                         orElseThrow(() -> new EntityNotFoundException("질문이 존재하지 않습니다."));
-        List<RandomReply> replies = replyRepository.findRandomReplyByRandomQuestionNo(questionNo);
+        List<RandomReply> replies =
+                replyRepository.findRandomReplyByRandomQuestionNo(questionNo)
+                        .orElseThrow(() -> new EntityNotFoundException("답변이 존재하지 않습니다."));
         if (replies.size() < 1) {
             RandomReply randomReply = new RandomReply();
             randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());
@@ -145,8 +147,12 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
 
     @Override
     public void removeAllRandomQuestionAndReply(int coupleNo) {
-        List<RandomQuestion> allQuestions = questionRepository.findAllByRandQuesCoupleNo(coupleNo);
-        List<RandomReply> allReplies = replyRepository.findAllByRandomCoupleNo(coupleNo);
+        List<RandomQuestion> allQuestions =
+                questionRepository.findAllByRandQuesCoupleNo(coupleNo)
+                        .orElseThrow(() -> new EntityNotFoundException("조회된 질문이 없습니다."));
+        List<RandomReply> allReplies =
+                replyRepository.findAllByRandomCoupleNo(coupleNo)
+                        .orElseThrow(() -> new EntityNotFoundException("조회된 답변이 없습니다."));
         for(RandomQuestion q : allQuestions) {
             questionRepository.delete(q);
         }

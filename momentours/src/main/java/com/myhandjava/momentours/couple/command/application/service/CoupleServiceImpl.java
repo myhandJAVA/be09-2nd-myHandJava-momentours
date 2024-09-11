@@ -78,6 +78,7 @@ public class CoupleServiceImpl implements CoupleService {
         couple.setCoupleIsDeleted(1);
         // 랜덤질문 모두 삭제
         randomQuesCommandService.removeAllRandomQuestionAndReply(coupleNo);
+        // 일기 모두 삭제
         diaryService.removeAllDiary(coupleNo);
 //        momentService.removeAllMoment(coupleNo);
 //        scheduleService.removeAllSchedule(coupleNo);
