@@ -73,15 +73,13 @@ public class UserServiceImpl implements UserService {
         UserEntity me = userRepository.findById(userNo).orElseThrow(IllegalArgumentException::new);
 
         me.setUserPartnerNo(you.getUserNo());
-        log.info(you.getUserPartnerNo());   //12번 회원의 파트너 번호
-        log.info(me.getUserPartnerNo());  //13번 회원의 파트너 번호
         int coupleNo = 0;
         if(you.getUserPartnerNo() == me.getUserNo() && me.getUserPartnerNo() == you.getUserNo()){
             me.setUserRole(UserRole.ROLE_COUPLE);
             you.setUserRole(UserRole.ROLE_COUPLE);
             CoupleRegisterDTO coupleRegisterDTO = new CoupleRegisterDTO();
-            coupleRegisterDTO.setUserNo1(userNo);  // 13;
-            coupleRegisterDTO.setUserNo2(you.getUserNo());  // 12
+            coupleRegisterDTO.setUserNo1(userNo);
+            coupleRegisterDTO.setUserNo2(you.getUserNo());
             ResponseMessage response = momentoursClient.registerCouple(coupleRegisterDTO).getBody();
             coupleNo = (Integer) response.getResult().get("coupleNo");
         }
