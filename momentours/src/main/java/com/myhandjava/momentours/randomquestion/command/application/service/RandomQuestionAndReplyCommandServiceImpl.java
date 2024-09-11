@@ -148,12 +148,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         List<RandomQuestion> allQuestions = questionRepository.findAllByRandQuesCoupleNo(coupleNo);
         List<RandomReply> allReplies = replyRepository.findAllByRandomCoupleNo(coupleNo);
         for(RandomQuestion q : allQuestions) {
-            q.setRandQuesIsDeleted(1);
-            questionRepository.save(q);
+            questionRepository.delete(q);
         }
         for(RandomReply r : allReplies) {
-            r.setRandomReplyIsDeleted(1);
-            replyRepository.save(r);
+            replyRepository.delete(r);
         }
     }
 }

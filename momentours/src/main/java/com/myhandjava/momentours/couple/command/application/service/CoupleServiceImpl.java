@@ -3,10 +3,11 @@ package com.myhandjava.momentours.couple.command.application.service;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.domain.aggregate.Couple;
 import com.myhandjava.momentours.couple.command.domain.repository.CoupleRepository;
+import com.myhandjava.momentours.diary.command.application.service.DiaryService;
+import com.myhandjava.momentours.moment.command.application.service.MomentService;
 import com.myhandjava.momentours.randomquestion.command.application.service.RandomQuestionAndReplyCommandService;
-import com.myhandjava.momentours.randomquestion.command.application.service.RandomQuestionAndReplyCommandServiceImpl;
+import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,14 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CoupleServiceImpl implements CoupleService {
 
-    private final ModelMapper modelMapper;
     private final CoupleRepository coupleRepository;
     private final RandomQuestionAndReplyCommandService randomQuesCommandService;
+    private final DiaryService diaryService;
+    private final MomentService momentService;
+    private final ScheduleService scheduleService;
 
-    public CoupleServiceImpl(ModelMapper modelMapper, CoupleRepository coupleRepository, RandomQuestionAndReplyCommandServiceImpl randomQuesCommandService) {
-        this.modelMapper = modelMapper;
+    public CoupleServiceImpl(CoupleRepository coupleRepository, MomentService momentService,
+                             RandomQuestionAndReplyCommandService randomQuesCommandService,
+                             DiaryService diaryService, ScheduleService scheduleService) {
         this.coupleRepository = coupleRepository;
         this.randomQuesCommandService = randomQuesCommandService;
+        this.diaryService = diaryService;
+        this.momentService = momentService;
+        this.scheduleService = scheduleService;
     }
 
     @Override
@@ -69,7 +76,12 @@ public class CoupleServiceImpl implements CoupleService {
     public void deleteCouple(int coupleNo) {
         Couple couple = coupleRepository.findByCoupleNo(coupleNo);
         couple.setCoupleIsDeleted(1);
+        // 랜덤질문 모두 삭제
         randomQuesCommandService.removeAllRandomQuestionAndReply(coupleNo);
+        diaryService.removeAllDiary(coupleNo);
+//        momentService.removeAllMoment(coupleNo);
+//        scheduleService.removeAllSchedule(coupleNo);
+
         log.info("삭제된 커플 정보: {}", couple);
         coupleRepository.save(couple);
     }
