@@ -24,7 +24,6 @@ class ScheduleServiceImplTests {
     @Transactional
     void 일정_등록_테스트(){
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setScheduleNo(-1);
         scheduleDTO.setCoupleNo(1);
         scheduleDTO.setScheduleStartDate(LocalDateTime.now());
         scheduleDTO.setScheduleEndDate(LocalDateTime.now());
@@ -32,8 +31,10 @@ class ScheduleServiceImplTests {
         scheduleDTO.setScheduleMemo("테스트 메모");
 
         scheduleService.registSchedule(scheduleDTO);
-
-        Assertions.assertNotNull(scheduleRepository.findById(-1));
+        Schedule testSchedule = scheduleRepository.findByScheduleTitle("테스트 제목").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertNotNull(testSchedule);
+        Assertions.assertEquals(testSchedule.getScheduleTitle(),"테스트 제목");
+        Assertions.assertEquals(testSchedule.getScheduleMemo(),"테스트 메모");
     }
 
     @Test
