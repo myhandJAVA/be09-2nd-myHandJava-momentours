@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface RandomReplyRepository extends JpaRepository<RandomReply, Integer> {
     Optional<RandomReply> findByRandomReplyNoAndRandomReplyUserNo(int randomReplyNo, int userNo);
-    List<RandomReply> findRandomReplyByRandomQuestionNo(int questionNo);
-    List<RandomReply> findAllByRandomCoupleNo(int coupleNo);
+    Optional<List<RandomReply>> findRandomReplyByRandomQuestionNo(int questionNo);
+    Optional<List<RandomReply>> findAllByRandomCoupleNo(int coupleNo);
 }

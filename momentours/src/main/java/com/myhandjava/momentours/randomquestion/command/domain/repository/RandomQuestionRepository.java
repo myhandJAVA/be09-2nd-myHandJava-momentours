@@ -14,5 +14,5 @@ public interface RandomQuestionRepository extends JpaRepository<RandomQuestion, 
     @Query("SELECT rq FROM RandomQuestion rq WHERE rq.randQuesCoupleNo = :coupleNo ORDER BY rq.randQuesCreateDate DESC LIMIT 1")
     Optional<RandomQuestion> findLatestUnansweredQuestion(@Param("coupleNo") int coupleNo);
     Optional<RandomQuestion> findRandomQuestionByRandQuesNo(int questionNo);
-    List<RandomQuestion> findAllByRandQuesCoupleNo(int coupleNo);
+    Optional<List<RandomQuestion>> findAllByRandQuesCoupleNo(int coupleNo);
 }
