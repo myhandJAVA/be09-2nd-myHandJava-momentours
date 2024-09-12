@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.randomquestion.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.couple.query.service.CoupleServiceImpl;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
@@ -46,7 +48,7 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void removeRandomReply(int replyNo, int userNo) {
         RandomReply randomReply =
                 replyRepository.findByRandomReplyNoAndRandomReplyUserNo(replyNo, userNo)
-                        .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
 
         if (randomReply != null) {
             randomReply.setRandomReplyIsDeleted(1);
@@ -59,7 +61,7 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO replyDTO) {
         RandomReply randomReply =
                 replyRepository.findByRandomReplyNoAndRandomReplyUserNo(userNo, replyNo)
-                        .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         if (randomReply != null) {
             randomReply.setRandomReplyContent(replyDTO.getRandomReplyContent());
             replyRepository.save(randomReply);
@@ -71,10 +73,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) {
         RandomQuestion randomQuestion =
                 questionRepository.findRandomQuestionByRandQuesNo(questionNo).
-                        orElseThrow(() -> new EntityNotFoundException("질문이 존재하지 않습니다."));
+                        orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION));
         List<RandomReply> replies =
                 replyRepository.findRandomReplyByRandomQuestionNo(questionNo)
-                        .orElseThrow(() -> new EntityNotFoundException("답변이 존재하지 않습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         if (replies.size() < 1) {
             RandomReply randomReply = new RandomReply();
             randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());

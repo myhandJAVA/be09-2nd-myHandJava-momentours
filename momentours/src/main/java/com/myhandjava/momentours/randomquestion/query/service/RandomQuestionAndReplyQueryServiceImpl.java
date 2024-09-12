@@ -67,7 +67,6 @@ public class RandomQuestionAndReplyQueryServiceImpl implements RandomQuestionAnd
                 randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(), randomQuestion.getRandQuesContent(),
                 randomQuestion.getRandQuesReply(), randomQuestion.getRandQuesIsDeleted(), randomQuestion.getRandQuesCoupleNo()
         );
-
         log.info("반환된 값: {}", randomQuestionDTO);
         return randomQuestionDTO;
     }
