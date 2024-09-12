@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.couple.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.domain.aggregate.Couple;
 import com.myhandjava.momentours.couple.command.domain.repository.CoupleRepository;
@@ -34,18 +36,14 @@ public class CoupleServiceImpl implements CoupleService {
     @Override
     @Transactional
     public void updateCouple(int coupleNo ,CoupleDTO newInfo) {
-        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
-
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo)
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_COUPLE));
         if(newInfo.getCoupleName() != couple.getCoupleName())
             couple.setCoupleName(newInfo.getCoupleName());
-
         if(newInfo.getCouplePhoto() != couple.getCouplePhoto())
             couple.setCouplePhoto(newInfo.getCouplePhoto());
-
         if(newInfo.getCoupleStartDate() != couple.getCoupleStartDate())
             couple.setCoupleStartDate(newInfo.getCoupleStartDate());
-
-        log.info("수정된 커플 정보: {}", couple);
         coupleRepository.save(couple);
     }
 
@@ -56,7 +54,6 @@ public class CoupleServiceImpl implements CoupleService {
         newCouple.setCoupleUserNo1(userNo1);
         newCouple.setCoupleUserNo2(userNo2);
         newCouple.setCoupleIsDeleted(0);
-        log.info("입력된 커플 정보: {}", newCouple);
         coupleRepository.save(newCouple);
         return newCouple.getCoupleNo();
     }
@@ -64,7 +61,8 @@ public class CoupleServiceImpl implements CoupleService {
     @Transactional
     @Override
     public void inputCoupleInfo(int coupleNo, CoupleDTO coupleInfo) {
-        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo)
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_COUPLE));
         couple.setCoupleName(coupleInfo.getCoupleName());
         couple.setCouplePhoto(coupleInfo.getCouplePhoto());
         couple.setCoupleStartDate(coupleInfo.getCoupleStartDate());
@@ -74,7 +72,8 @@ public class CoupleServiceImpl implements CoupleService {
     @Transactional
     @Override
     public void deleteCouple(int coupleNo) {
-        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo)
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_COUPLE));
         couple.setCoupleIsDeleted(1);
         // 랜덤질문 모두 삭제
         randomQuesCommandService.removeAllRandomQuestionAndReply(coupleNo);
@@ -82,8 +81,6 @@ public class CoupleServiceImpl implements CoupleService {
         diaryService.removeAllDiary(coupleNo);
 //        momentService.removeAllMoment(coupleNo);
 //        scheduleService.removeAllSchedule(coupleNo);
-
-        log.info("삭제된 커플 정보: {}", couple);
         coupleRepository.save(couple);
     }
 }
