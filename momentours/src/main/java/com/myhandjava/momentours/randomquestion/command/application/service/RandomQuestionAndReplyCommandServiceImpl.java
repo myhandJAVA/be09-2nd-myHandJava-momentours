@@ -105,7 +105,6 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         if (currentQ == null) {
             Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
             String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
-            log.info("새로운 질문 생성:{}", newQuestion);
             RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
             return newQuestionDTO;
         }
@@ -116,12 +115,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         if (currentQ.getRandQuesReply() == 1 && !Today.equals(questionCreatedDate)) {
             Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
             String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
-            log.info("새로운 질문 생성:{}", newQuestion);
             RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
             return newQuestionDTO;
         }
         RandomQuestionDTO randomQuestion = modelMapper.map(currentQ, RandomQuestionDTO.class);
-        log.info("답변하지 않거나 하루가 지나지 않은 질문:{}", randomQuestion);
         return randomQuestion;
     }
 
@@ -151,10 +148,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void removeAllRandomQuestionAndReply(int coupleNo) {
         List<RandomQuestion> allQuestions =
                 questionRepository.findAllByRandQuesCoupleNo(coupleNo)
-                        .orElseThrow(() -> new EntityNotFoundException("조회된 질문이 없습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION));
         List<RandomReply> allReplies =
                 replyRepository.findAllByRandomCoupleNo(coupleNo)
-                        .orElseThrow(() -> new EntityNotFoundException("조회된 답변이 없습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         for(RandomQuestion q : allQuestions) {
             questionRepository.delete(q);
         }
