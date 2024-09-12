@@ -14,7 +14,6 @@ import com.myhandjava.momentours.diary.command.domain.repository.TemporaryReposi
 import com.myhandjava.momentours.file.command.application.service.FileService;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
