@@ -45,7 +45,12 @@ public enum HttpStatusCode {
 
     INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 예기치 않은 오류가 발생"),
     BAD_GATEWAY(502, HttpStatus.BAD_GATEWAY, "서버가 잘못된 응답을 게이트웨이로부터 수신함"),
-    SERVICE_UNAVAILABLE(503, HttpStatus.SERVICE_UNAVAILABLE, "서버가 일시적으로 요청을 처리할 수 없음");
+    SERVICE_UNAVAILABLE(503, HttpStatus.SERVICE_UNAVAILABLE, "서버가 일시적으로 요청을 처리할 수 없음"),
+
+    // 랜덤질문 관련 오류
+    NOT_FOUND_RANDOMQUESTION(40407, HttpStatus.NOT_FOUND, "해당 랜덤질문이 존재하지 않습니다."),
+    NOT_FOUND_RANDOMQUESTION_REPLY(404071, HttpStatus.NOT_FOUND, "질문에 대한 답변이 존재하지 않습니다.");
+
 
 
     private final Integer code;
