@@ -11,7 +11,7 @@ public interface DiaryService {
 
     void removeDiary(int diaryNo, int userNo);
 
-    void modifyDiary(DiaryDTO diaryDTO, int userNo, int diaryNo) throws IOException;
+    void modifyDiary(DiaryDTO diaryDTO, int userNo) throws IOException;
 
     void registComment(CommentDTO commentDTO);
 
