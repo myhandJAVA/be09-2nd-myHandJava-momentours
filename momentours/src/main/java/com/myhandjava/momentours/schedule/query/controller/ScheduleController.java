@@ -34,9 +34,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestAttribute("claims") Claims claims){
+    public ResponseEntity<ResponseMessage> findAllSchedule(@RequestBody int coupleNo){
 
-        int coupleNo = (Integer)claims.get("coupleNo");
         List<ScheduleDTO> coupleScheduleList = scheduleService.findAllScheduleByCoupleNo(coupleNo);
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
         LocalDateTime metDay = coupleService.findCoupleByCoupleNo(coupleNo).getCoupleStartDate();
