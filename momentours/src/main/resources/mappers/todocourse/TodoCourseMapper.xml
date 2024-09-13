@@ -21,18 +21,19 @@
     <!-- 예정 코스 전체 조회 -->
     <select id="findAllTodoCourse" resultMap="todoCourseResultMap" parameterType="_int">
         SELECT to_do_course_no
-        , to_do_course_title
-        , to_do_course_sort
-        , to_do_course_like
-        , to_do_course_create_date
-        , to_do_course_update_date
-        , to_do_course_start_date
-        , to_do_course_end_date
-        , to_do_course_memo
-        , to_do_course_is_deleted
-        , to_do_course_couple_no
-        FROM tb_todocourse
-        WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
+             , to_do_course_title
+             , to_do_course_sort
+             , to_do_course_like
+             , to_do_course_create_date
+             , to_do_course_update_date
+             , to_do_course_start_date
+             , to_do_course_end_date
+             , to_do_course_memo
+             , to_do_course_is_deleted
+             , to_do_course_couple_no
+          FROM tb_todocourse
+         WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
+           AND to_do_course_is_deleted = 0
     </select>
 
     <!-- 예정 코스 상세 조회 -->
@@ -40,21 +41,23 @@
             resultMap="todoCourseResultMap"
             parameterType="com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO">
         SELECT to_do_course_no
-        , to_do_course_title
-        , to_do_course_sort
-        , to_do_course_like
-        , to_do_course_create_date
-        , to_do_course_update_date
-        , to_do_course_start_date
-        , to_do_course_end_date
-        , to_do_course_memo
-        , to_do_course_is_deleted
-        , to_do_course_couple_no
-        FROM tb_todocourse
-        WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
-        AND to_do_course_no = ${ ToDoCourseNo }
+             , to_do_course_title
+             , to_do_course_sort
+             , to_do_course_like
+             , to_do_course_create_date
+             , to_do_course_update_date
+             , to_do_course_start_date
+             , to_do_course_end_date
+             , to_do_course_memo
+             , to_do_course_is_deleted
+             , to_do_course_couple_no
+          FROM tb_todocourse
+         WHERE to_do_course_couple_no = ${ ToDoCourseCoupleNo }
+           AND to_do_course_no = ${ ToDoCourseNo }
+           AND to_do_course_is_deleted = 0
     </select>
 
+    <!-- 예정 코스 검색 -->
     <select id="searchToDoCourse" parameterType="map" resultMap="todoCourseResultMap">
         SELECT DISTINCT tc.*
           FROM tb_todocourse tc
@@ -62,13 +65,16 @@
           LEFT JOIN tb_location l ON tl.location_no = l.location_no
           <if test="searchCondition == 'courseName' and keyword != null and keyword != ''">
               WHERE tc.to_do_course_title LIKE CONCAT('%', #{keyword}, '%')
+                AND to_do_course_is_deleted = 0
           </if>
           <if test="searchCondition == 'courseMemo' and keyword != null and keyword != ''">
               WHERE tc.to_do_course_memo LIKE CONCAT('%', #{keyword}, '%')
+                AND to_do_course_is_deleted = 0
           </if>
           <if test="searchCondition == 'courseNameAndMemo' and keyword != null and keyword != ''">
               WHERE (tc.to_do_course_title LIKE CONCAT('%'. #{keyword}, '%')
-              OR tc.to_do_cousr_memo Like CONCAT('%', #{keyword}, '%')
+                AND to_do_course_is_deleted = 0
+                 OR tc.to_do_cousr_memo Like CONCAT('%', #{keyword}, '%')
           </if>
     </select>
 

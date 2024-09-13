@@ -4,6 +4,7 @@ import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCou
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,11 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class RequestRegistTodoCourseVO {
-    private String ToDoCourseTiTle;
-    private MomentCourseSort ToDoCourseSort;
-    private LocalDateTime ToDoCourseCreateTime;
-    private LocalDateTime ToDoCourseStartTime;
-    private LocalDateTime ToDoCourseEndTime;
-    private String ToDoCourseMemo;
-    private int ToDoCourseCoupleNo;
+    private String toDoCourseTitle;
+    private MomentCourseSort toDoCourseSort;
+    private LocalDateTime toDoCourseStartDate;
+    private LocalDateTime toDoCourseEndDate;
+    private String toDoCourseMemo;
+    private List<Integer> todoNos;
 }
