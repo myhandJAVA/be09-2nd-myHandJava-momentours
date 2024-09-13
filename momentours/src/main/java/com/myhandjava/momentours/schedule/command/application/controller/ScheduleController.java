@@ -4,8 +4,6 @@ import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
-import io.jsonwebtoken.Claims;
-import jakarta.ws.rs.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +21,7 @@ public class ScheduleController {
 
     @PostMapping("/calendar")
     public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
-                                                          @RequestAttribute("claims") Claims claims){
-        int coupleNo = (Integer)claims.get("coupleNo");
+                                                          @RequestBody int coupleNo){
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.registSchedule(scheduleDTO);
 
@@ -38,8 +35,7 @@ public class ScheduleController {
     @PutMapping("/calendar/{scheduleNo}")
     public ResponseEntity<ResponseMessage> updateSchedule(@RequestBody ScheduleDTO scheduleDTO,
                                                           @PathVariable int scheduleNo,
-                                                          @RequestAttribute("claims") Claims claims){
-        int coupleNo = (Integer)claims.get("coupleNo");
+                                                          @RequestBody int coupleNo){
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleDTO.setScheduleNo(scheduleNo);
         scheduleService.updateSchedule(scheduleDTO);
@@ -53,9 +49,8 @@ public class ScheduleController {
 
     @DeleteMapping("/calendar/{scheduleNo}")
     public ResponseEntity<ResponseMessage> deleteSchedule(@PathVariable int scheduleNo,
-                                                          @RequestAttribute("claims") Claims claims){
+                                                          @RequestBody int coupleNo){
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        Integer coupleNo = (Integer)claims.get("coupleNo");
         scheduleDTO.setScheduleNo(scheduleNo);
         scheduleDTO.setCoupleNo(coupleNo);
         scheduleService.deleteSchedule(scheduleDTO);
