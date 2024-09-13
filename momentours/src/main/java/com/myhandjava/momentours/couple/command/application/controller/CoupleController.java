@@ -1,13 +1,11 @@
 package com.myhandjava.momentours.couple.command.application.controller;
 
-import com.myhandjava.momentours.client.UserClient;
 import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleDTO;
 import com.myhandjava.momentours.couple.command.application.dto.CoupleRegisterDTO;
 import com.myhandjava.momentours.couple.command.application.service.CoupleService;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -25,13 +23,11 @@ public class CoupleController {
 
     private final ModelMapper modelMapper;
     private final CoupleService coupleService;
-    private final UserClient userClient;
 
     @Autowired
-    public CoupleController(ModelMapper modelMapper, CoupleService coupleService, UserClient userClient) {
+    public CoupleController(ModelMapper modelMapper, CoupleService coupleService) {
         this.modelMapper = modelMapper;
         this.coupleService = coupleService;
-        this.userClient = userClient;
     }
 
     @PostMapping("")
@@ -45,10 +41,9 @@ public class CoupleController {
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<ResponseMessage> fillCoupleInfo(@RequestAttribute("claims") Claims claims,
-                                            @RequestBody CoupleRegistVO coupleInfo) {
-        int coupleNo = (Integer) claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> fillCoupleInfo(@RequestBody CoupleRegistVO coupleInfo) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        int coupleNo = coupleInfo.getCoupleNo();
         CoupleDTO coupleDTO = modelMapper.map(coupleInfo, CoupleDTO.class);
         coupleService.inputCoupleInfo(coupleNo, coupleDTO);
         Map<String, Object> result = new HashMap<>();
@@ -58,11 +53,12 @@ public class CoupleController {
 
 
     @PutMapping("/profile")
-    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo,
-                                                            @RequestAttribute("claims") Claims claims) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        int coupleNo = (Integer)claims.get("coupleNo");
-        CoupleDTO updatedCouple = modelMapper.map(updateInfo, CoupleDTO.class);
+    public ResponseEntity<ResponseMessage> updateCoupleInfo(@RequestBody CoupleUpdateVO updateInfo) {
+        int coupleNo = updateInfo.getCoupleNo();
+        CoupleDTO updatedCouple = new CoupleDTO();
+        updatedCouple.setCouplePhoto(updateInfo.getCouplePhoto());
+        updatedCouple.setCoupleName(updateInfo.getCoupleName());
+        updatedCouple.setCoupleStartDate(updateInfo.getCoupleStartDate());
         coupleService.updateCouple(coupleNo, updatedCouple);
         Map<String, Object> map = new HashMap<>();
         map.put("updatedCouple", updatedCouple);
@@ -70,8 +66,7 @@ public class CoupleController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResponseMessage> deleteCoupleInfo(@RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> deleteCoupleInfo(@RequestBody int coupleNo) {
         coupleService.deleteCouple(coupleNo);
         return ResponseEntity.noContent().build();
     }

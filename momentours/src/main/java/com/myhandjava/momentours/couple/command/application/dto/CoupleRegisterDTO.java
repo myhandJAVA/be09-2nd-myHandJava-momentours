@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class CoupleRegisterDTO {
+    private int coupleNo;
     private int userNo1;
     private int userNo2;
 }
