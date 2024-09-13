@@ -28,6 +28,7 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
         - id: momentours-user-put
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
@@ -36,6 +37,7 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
         - id: momentours-user-delete
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
@@ -44,6 +46,7 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
         - id: momentours-user-post
           uri: lb://MOMENTOURS-USER-SERVICE
           predicates:
@@ -51,6 +54,7 @@ spring:
             - Method=POST
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
         - id: momentours-get
           uri: lb://MOMENTOURS-SERVICE
           predicates:
@@ -59,6 +63,9 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+            - name: CheckRoleFilter
+              args:
+                roleList: "ROLE_ADMIN,ROLE_COUPLE,ROLE_BLACKED"
         - id: momentours-post
           uri: lb://MOMENTOURS-SERVICE
           predicates:

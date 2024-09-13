@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.diary.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.command.application.dto.TemporaryDTO;
@@ -10,8 +12,8 @@ import com.myhandjava.momentours.diary.command.domain.repository.CommentReposito
 import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
 import com.myhandjava.momentours.diary.command.domain.repository.TemporaryRepository;
 import com.myhandjava.momentours.file.command.application.service.FileService;
+import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service("diaryCommandServiceImpl")
 @Slf4j
@@ -29,7 +32,6 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService;
-    private final FileRepository fileRepository;
     private final CommentRepository commentRepository;
     private final TemporaryRepository temporaryRepository;
 
@@ -37,11 +39,11 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryServiceImpl(DiaryRepository diaryRepository,
                             ModelMapper modelMapper,
                             FileService fileService,
-                            FileRepository fileRepository, CommentRepository commentRepository, TemporaryRepository temporaryRepository) {
+                            CommentRepository commentRepository,
+                            TemporaryRepository temporaryRepository) {
         this.diaryRepository = diaryRepository;
         this.modelMapper = modelMapper;
         this.fileService = fileService;
-        this.fileRepository = fileRepository;
         this.commentRepository = commentRepository;
         this.temporaryRepository = temporaryRepository;
     }
@@ -64,7 +66,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void removeDiary(int diaryNo, int userNo) {
         Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         diary.setDiaryIsDeleted(true);
 
@@ -75,15 +77,15 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void modifyDiary(DiaryDTO diaryDTO, int userNo, int diaryNo) throws IOException {
-        Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일기가 존재하지 않습니다."));
+    public void modifyDiary(DiaryDTO diaryDTO, int diaryNo) throws IOException {
+        Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, diaryDTO.getDiaryUserNo())
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         diary.setDiaryContent(diaryDTO.getDiaryContent());
-        diary.setDiaryUpdateDate(diaryDTO.getDiaryUpdateDate());
+        diary.setDiaryUpdateDate(LocalDateTime.now());
         
         diaryRepository.save(diary);
-        fileRepository.deleteByDiary(diary);
+        fileService.removeFileByDiaryNo(diary);
 
         if(diaryDTO.getFiles() != null && !diaryDTO.getFiles().isEmpty()) {
             fileService.saveFileDiary(diaryDTO.getFiles(), diary);
@@ -105,7 +107,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void removeComment(int commentNo, int commentUserNo) {
         Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentUserNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
 
         comment.setCommentIsDeleted(true);
 
@@ -117,7 +119,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public void modifyComment(int commentNo, CommentDTO commentDTO) {
         Comment comment = commentRepository.findByCommentNoAndCommentUserNo(commentNo, commentDTO.getCommentUserNo())
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
 
         comment.setCommentContent(commentDTO.getCommentContent());
         comment.setCommentUpdateDate(LocalDateTime.now());
@@ -141,5 +143,27 @@ public class DiaryServiceImpl implements DiaryService {
         Temporary temporary = modelMapper.map(temporaryDTO, Temporary.class);
 
         temporaryRepository.save(temporary);
+    }
+
+    // 다이어리, 댓글, 파일 삭제(hard delete)
+    @Override
+    public void removeAllDiary(int coupleNo) {
+        List<Diary> diaryList =
+                diaryRepository.findAllByCoupleNo(coupleNo)
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
+
+        for(Diary diary : diaryList) {
+            List<Comment> commentList = commentRepository.findAllByDiaryNo(diary.getDiaryNo())
+                    .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_COMMENT));
+            for(Comment comment : commentList) {
+                commentRepository.delete(comment);
+            }
+            List<Temporary> temporaryList = temporaryRepository.findAllByDiaryNo(diary.getDiaryNo())
+                    .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY_TEMPORARY));
+            for(Temporary temporary : temporaryList) {
+                temporaryRepository.delete(temporary);
+            }
+            fileService.removeFileByDiaryNo(diary);
+        }
     }
 }

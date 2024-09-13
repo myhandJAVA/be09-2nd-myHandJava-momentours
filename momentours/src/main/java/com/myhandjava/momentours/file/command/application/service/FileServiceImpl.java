@@ -1,12 +1,13 @@
 package com.myhandjava.momentours.file.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import com.myhandjava.momentours.file.query.dto.FileDTO;
 import com.myhandjava.momentours.file.query.repository.FileMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service("fileCommandServiceImpl")
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
@@ -47,7 +48,7 @@ public class FileServiceImpl implements FileService {
     @Transactional
     public List<FileEntity> saveFileDiary(List<MultipartFile> files, Diary diary) throws IOException {
         if(files.isEmpty()) {
-            throw new IOException("업로드된 파일이 없습니다.");
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
         }
 
         List<FileEntity> savedFiles = new ArrayList<>();
@@ -83,14 +84,10 @@ public class FileServiceImpl implements FileService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public void updateFileDiaryIsDeleted(Diary diary) {
 
-        List<FileDTO> fileDTOList = fileMapper.selectFilesByDiaryNo(diary.getDiaryNo());
-
-        List<FileEntity> fileList = fileDTOList.stream()
-                .map(fileDTO -> modelMapper.map(fileDTO, FileEntity.class))
-                .collect(Collectors.toList());
+        List<FileEntity> fileList = fileRepository.findByDiary(diary);
 
         if (fileList.isEmpty()) {
-            throw new EntityNotFoundException("해당 일기와 연관된 파일이 존재하지 않습니다.");
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
         }
 
         for (FileEntity file : fileList) {
@@ -98,5 +95,18 @@ public class FileServiceImpl implements FileService {
         }
 
         fileRepository.saveAll(fileList);
+    }
+
+    // 파일 삭제
+    @Override
+    @Transactional
+    public void removeFileByDiaryNo(Diary diary) {
+        List<FileEntity> fileList = fileRepository.findByDiary(diary);
+
+        if (fileList.isEmpty()) {
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
+        }
+
+        fileRepository.deleteByDiary(diary);
     }
 }

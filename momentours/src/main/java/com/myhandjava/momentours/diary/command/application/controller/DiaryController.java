@@ -45,6 +45,7 @@ public class DiaryController {
         Integer diaryCoupleNo = (Integer)claims.get("coupleNo");
         Integer diaryUserNo = (Integer)claims.get("userNo");
         newDiary.setFiles(files);
+
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
         diaryDTO.setDiaryUserNo(diaryUserNo);
         diaryDTO.setCoupleNo(diaryCoupleNo);
@@ -83,7 +84,8 @@ public class DiaryController {
 
         modifyDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(modifyDiary, DiaryDTO.class);
-        diaryService.modifyDiary(diaryDTO, diaryUserNo, diaryNo);
+        diaryDTO.setDiaryUserNo(diaryUserNo);
+        diaryService.modifyDiary(diaryDTO, diaryNo);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("modifyDiary", modifyDiary);

@@ -1,5 +1,7 @@
 package com.myhandjava.momentours.randomquestion.command.application.service;
 
+import com.myhandjava.momentours.common.CommonException;
+import com.myhandjava.momentours.common.HttpStatusCode;
 import com.myhandjava.momentours.couple.query.service.CoupleServiceImpl;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
@@ -46,7 +48,7 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void removeRandomReply(int replyNo, int userNo) {
         RandomReply randomReply =
                 replyRepository.findByRandomReplyNoAndRandomReplyUserNo(replyNo, userNo)
-                        .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
 
         if (randomReply != null) {
             randomReply.setRandomReplyIsDeleted(1);
@@ -59,7 +61,7 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO replyDTO) {
         RandomReply randomReply =
                 replyRepository.findByRandomReplyNoAndRandomReplyUserNo(userNo, replyNo)
-                        .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         if (randomReply != null) {
             randomReply.setRandomReplyContent(replyDTO.getRandomReplyContent());
             replyRepository.save(randomReply);
@@ -71,8 +73,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
     public void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) {
         RandomQuestion randomQuestion =
                 questionRepository.findRandomQuestionByRandQuesNo(questionNo).
-                        orElseThrow(() -> new EntityNotFoundException("질문이 존재하지 않습니다."));
-        List<RandomReply> replies = replyRepository.findRandomReplyByRandomQuestionNo(questionNo);
+                        orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION));
+        List<RandomReply> replies =
+                replyRepository.findRandomReplyByRandomQuestionNo(questionNo)
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         if (replies.size() < 1) {
             RandomReply randomReply = new RandomReply();
             randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());
@@ -101,7 +105,6 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         if (currentQ == null) {
             Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
             String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
-            log.info("새로운 질문 생성:{}", newQuestion);
             RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
             return newQuestionDTO;
         }
@@ -112,12 +115,10 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
         if (currentQ.getRandQuesReply() == 1 && !Today.equals(questionCreatedDate)) {
             Map<String, Object> coupleInfo = coupleService.getCoupleInfo(coupleNo);
             String newQuestion = openAIService.generateQuestionForCouple(coupleInfo);
-            log.info("새로운 질문 생성:{}", newQuestion);
             RandomQuestionDTO newQuestionDTO = saveNewQuestion(coupleNo, newQuestion);
             return newQuestionDTO;
         }
         RandomQuestionDTO randomQuestion = modelMapper.map(currentQ, RandomQuestionDTO.class);
-        log.info("답변하지 않거나 하루가 지나지 않은 질문:{}", randomQuestion);
         return randomQuestion;
     }
 
@@ -145,15 +146,17 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
 
     @Override
     public void removeAllRandomQuestionAndReply(int coupleNo) {
-        List<RandomQuestion> allQuestions = questionRepository.findAllByRandQuesCoupleNo(coupleNo);
-        List<RandomReply> allReplies = replyRepository.findAllByRandomCoupleNo(coupleNo);
+        List<RandomQuestion> allQuestions =
+                questionRepository.findAllByRandQuesCoupleNo(coupleNo)
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION));
+        List<RandomReply> allReplies =
+                replyRepository.findAllByRandomCoupleNo(coupleNo)
+                        .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         for(RandomQuestion q : allQuestions) {
-            q.setRandQuesIsDeleted(1);
-            questionRepository.save(q);
+            questionRepository.delete(q);
         }
         for(RandomReply r : allReplies) {
-            r.setRandomReplyIsDeleted(1);
-            replyRepository.save(r);
+            replyRepository.delete(r);
         }
     }
 }

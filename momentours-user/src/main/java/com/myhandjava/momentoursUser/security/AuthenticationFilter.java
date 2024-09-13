@@ -71,20 +71,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String userName = ((User)authResult.getPrincipal()).getUsername();
         UserEntity userEntity = userMapper.findByUserEmail(userName);
-        int userNo = userEntity.getUserNo();
-        Integer coupleNo = userMapper.findUserCoupleNoByUserNo(userNo);
-
-
+        Integer userNo = userEntity.getUserNo();
 
         List<String> roles = authResult.getAuthorities().stream()
                             .map(role -> role.getAuthority())
                             .collect(Collectors.toList());
         
-        Claims claims = Jwts.claims().setSubject(userName);
+        Claims claims = Jwts.claims().setSubject(userNo.toString());
         claims.put("auth", roles);
-        claims.put("userNo",userNo);
-        claims.put("coupleNo",coupleNo);
-
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis()

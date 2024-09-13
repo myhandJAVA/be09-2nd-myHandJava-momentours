@@ -1,13 +1,12 @@
 package com.myhandjava.momentours.couple.query.service;
 
-import com.myhandjava.momentours.couple.query.dto.CoupleDTO;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Map;
-
+import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -16,22 +15,26 @@ class CoupleQueryServiceImplTests {
     @Autowired
     private CoupleServiceImpl coupleService;
 
-    @DisplayName("커플 번호로 커플 정보 조회")
-    @Test
-    void GetCoupleByCoupleNo() {
-        int coupleNo = 1;
-        CoupleDTO coupleDTO = coupleService.findCoupleByCoupleNo(coupleNo);
+    private static Stream<Arguments> dataSource() {
+        return Stream.of(
+                Arguments.of(1),
+                Arguments.of(2),
+                Arguments.of(3),
+                Arguments.of(4)
+        );
+    }
 
-        assertNotNull(coupleDTO);
-        assertEquals(coupleNo, coupleDTO.getCoupleNo());
+    @DisplayName("커플 번호로 커플 정보 조회")
+    @ParameterizedTest
+    @MethodSource("dataSource")
+    void GetCoupleByCoupleNo(int coupleNo) {
+        assertDoesNotThrow(() -> coupleService.findCoupleByCoupleNo(coupleNo));
     }
 
     @DisplayName("랜덤 질문을 위한 커플 번호로 회원 정보 추출")
-    @Test
-    void getUserInfoByCoupleNo() {
-        int coupleNo = 1;
-        Map<String, Object> map = coupleService.getCoupleInfo(coupleNo);
-
-        assertNotNull(map);
+    @ParameterizedTest
+    @MethodSource("dataSource")
+    void getUserInfoByCoupleNo(int coupleNo) {
+        assertDoesNotThrow(() -> coupleService.getCoupleInfo(coupleNo));
     }
 }

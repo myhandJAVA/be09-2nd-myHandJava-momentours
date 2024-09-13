@@ -12,9 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 public class RequestRegistDiaryVO {
-    private int diaryNo;
     private String diaryContent;
-    private LocalDateTime diaryCreateDate;
 
     List<MultipartFile> files;
 }
