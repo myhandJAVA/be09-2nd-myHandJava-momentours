@@ -40,7 +40,6 @@ public class DiaryServiceImpl implements DiaryService {
         if(result == null || result.isEmpty()) {
             throw new CommonException(HttpStatusCode.NOT_FOUND_DIARY);
         }
-
         return result;
     }
 

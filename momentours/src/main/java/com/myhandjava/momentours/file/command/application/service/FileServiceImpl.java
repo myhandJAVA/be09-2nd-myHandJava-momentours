@@ -8,7 +8,6 @@ import com.myhandjava.momentours.file.command.domain.aggregate.FileEntity;
 import com.myhandjava.momentours.file.command.domain.repository.FileRepository;
 import com.myhandjava.momentours.file.query.dto.FileDTO;
 import com.myhandjava.momentours.file.query.repository.FileMapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service("fileCommandServiceImpl")
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
@@ -85,11 +84,7 @@ public class FileServiceImpl implements FileService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public void updateFileDiaryIsDeleted(Diary diary) {
 
-        List<FileDTO> fileDTOList = fileMapper.selectFilesByDiaryNo(diary.getDiaryNo());
-
-        List<FileEntity> fileList = fileDTOList.stream()
-                .map(fileDTO -> modelMapper.map(fileDTO, FileEntity.class))
-                .collect(Collectors.toList());
+        List<FileEntity> fileList = fileRepository.findByDiary(diary);
 
         if (fileList.isEmpty()) {
             throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
@@ -100,5 +95,18 @@ public class FileServiceImpl implements FileService {
         }
 
         fileRepository.saveAll(fileList);
+    }
+
+    // 파일 삭제
+    @Override
+    @Transactional
+    public void removeFileByDiaryNo(Diary diary) {
+        List<FileEntity> fileList = fileRepository.findByDiary(diary);
+
+        if (fileList.isEmpty()) {
+            throw new CommonException(HttpStatusCode.NOT_FOUND_FILE);
+        }
+
+        fileRepository.deleteByDiary(diary);
     }
 }
