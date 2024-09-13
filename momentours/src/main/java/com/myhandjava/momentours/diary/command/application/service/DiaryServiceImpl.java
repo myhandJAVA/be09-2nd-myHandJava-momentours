@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service("diaryCommandServiceImpl")
 @Slf4j
@@ -33,7 +32,6 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService;
-    private final FileRepository fileRepository;
     private final CommentRepository commentRepository;
     private final TemporaryRepository temporaryRepository;
 
@@ -41,11 +39,11 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryServiceImpl(DiaryRepository diaryRepository,
                             ModelMapper modelMapper,
                             FileService fileService,
-                            FileRepository fileRepository, CommentRepository commentRepository, TemporaryRepository temporaryRepository) {
+                            CommentRepository commentRepository,
+                            TemporaryRepository temporaryRepository) {
         this.diaryRepository = diaryRepository;
         this.modelMapper = modelMapper;
         this.fileService = fileService;
-        this.fileRepository = fileRepository;
         this.commentRepository = commentRepository;
         this.temporaryRepository = temporaryRepository;
     }
@@ -79,15 +77,15 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void modifyDiary(DiaryDTO diaryDTO, int userNo, int diaryNo) throws IOException {
-        Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, userNo)
+    public void modifyDiary(DiaryDTO diaryDTO, int diaryNo) throws IOException {
+        Diary diary = diaryRepository.findByDiaryNoAndDiaryUserNo(diaryNo, diaryDTO.getDiaryUserNo())
                 .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_DIARY));
 
         diary.setDiaryContent(diaryDTO.getDiaryContent());
-        diary.setDiaryUpdateDate(diaryDTO.getDiaryUpdateDate());
+        diary.setDiaryUpdateDate(LocalDateTime.now());
         
         diaryRepository.save(diary);
-        fileRepository.deleteByDiary(diary);
+        fileService.removeFileByDiaryNo(diary);
 
         if(diaryDTO.getFiles() != null && !diaryDTO.getFiles().isEmpty()) {
             fileService.saveFileDiary(diaryDTO.getFiles(), diary);
@@ -165,10 +163,7 @@ public class DiaryServiceImpl implements DiaryService {
             for(Temporary temporary : temporaryList) {
                 temporaryRepository.delete(temporary);
             }
-            List<FileEntity> files = fileRepository.findByDiary(diary);
-            for(FileEntity file : files) {
-                fileRepository.delete(file);
-            }
+            fileService.removeFileByDiaryNo(diary);
         }
     }
 }

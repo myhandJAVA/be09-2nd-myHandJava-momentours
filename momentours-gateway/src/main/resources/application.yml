@@ -65,7 +65,7 @@ spring:
             - AuthorizationHeaderFilter
             - name: CheckRoleFilter
               args:
-                roleList: "ROLE_ADMIN"
+                roleList: "ROLE_ADMIN,ROLE_COUPLE,ROLE_BLACKED"
         - id: momentours-post
           uri: lb://MOMENTOURS-SERVICE
           predicates:

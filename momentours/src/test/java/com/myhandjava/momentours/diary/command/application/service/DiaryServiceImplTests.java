@@ -2,7 +2,6 @@ package com.myhandjava.momentours.diary.command.application.service;
 
 import com.myhandjava.momentours.diary.command.application.dto.CommentDTO;
 import com.myhandjava.momentours.diary.command.application.dto.DiaryDTO;
-import com.myhandjava.momentours.diary.command.domain.aggregate.Comment;
 import com.myhandjava.momentours.diary.command.domain.aggregate.Diary;
 import com.myhandjava.momentours.diary.command.domain.repository.DiaryRepository;
 import com.myhandjava.momentours.file.command.domain.aggregate.FileBoardSort;
@@ -21,8 +20,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class DiaryServiceImplTests {
@@ -120,7 +117,7 @@ class DiaryServiceImplTests {
         diaryDTO.setDiaryUpdateDate(LocalDateTime.now());
 
         // 수정 호출
-        Assertions.assertDoesNotThrow(() -> diaryService.modifyDiary(diaryDTO, 7, diary.getDiaryNo()));
+        Assertions.assertDoesNotThrow(() -> diaryService.modifyDiary(diaryDTO, 7));
 
         // 수정된 일기 확인
         Diary modifiedDiary = diaryRepository.findById(diary.getDiaryNo()).orElseThrow();

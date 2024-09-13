@@ -13,7 +13,6 @@ import java.util.List;
 @ToString
 public class RequestModifyDiaryVO {
     private String diaryContent;
-    private LocalDateTime diaryUpdateDate;
 
     List<MultipartFile> files;
 }
