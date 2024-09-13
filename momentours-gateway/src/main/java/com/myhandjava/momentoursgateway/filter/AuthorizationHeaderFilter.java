@@ -1,10 +1,13 @@
 package com.myhandjava.momentoursgateway.filter;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 @Component
@@ -39,12 +43,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             }
 
             HttpHeaders headers = request.getHeaders();
-            log.info("headers: {}",headers);
 
 
-            String BearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            String BearerToken = headers.get(HttpHeaders.AUTHORIZATION).get(0);
             String jwt = BearerToken.replace("Bearer ", "");
-            log.info("jwt: {}",jwt);
 
             if(!isJwtValid(jwt)) {
                 return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
@@ -57,8 +59,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     private Mono<Void> onError(ServerWebExchange exchange, String errorMessage, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
+        response.getHeaders().add("Content-Type","application/json");
+        DataBufferFactory dataBufferFactory = response.bufferFactory();
+        DataBuffer dataBuffer = dataBufferFactory.wrap(errorMessage.getBytes(StandardCharsets.UTF_8));
 
-        return response.setComplete();
+        return response.writeWith(Mono.just(dataBuffer));
     }
 
     private boolean isJwtValid(String jwt) {

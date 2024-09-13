@@ -1,5 +1,7 @@
 package com.myhandjava.momentoursgateway.filter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -48,7 +50,13 @@ public class CheckRoleFilter extends AbstractGatewayFilterFactory<CheckRoleFilte
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             HttpHeaders headers = request.getHeaders();
-            String role = headers.get(HttpHeaders.AUTHORIZATION).get(0);
+            String token = headers.get(HttpHeaders.AUTHORIZATION).get(0)
+                    .replace("Bearer ", "");
+            Claims claims = Jwts.parser()
+                    .setSigningKey(env.getProperty("token.secret"))
+                    .parseClaimsJws(token)
+                    .getBody();
+            String role = (String)claims.get("auth",List.class).get(0);
             List<String> requiredRoles = config.getRoleList();
 
             if(!requiredRoles.contains(role)){
