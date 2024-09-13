@@ -2,6 +2,7 @@ package com.myhandjava.momentours.todocourse.command.application.service;
 
 import com.myhandjava.momentours.momentcourse.command.domain.aggregate.MomentCourseSort;
 import com.myhandjava.momentours.todocourse.command.application.dto.TodoCourseDTO;
+import com.myhandjava.momentours.todocourse.command.application.dto.TodocourselocationDTO;
 import com.myhandjava.momentours.todocourse.command.domain.aggregate.TodoCourse;
 import com.myhandjava.momentours.todocourse.command.domain.aggregate.Todocourselocation;
 import com.myhandjava.momentours.todocourse.command.domain.repository.TodoCourseRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service("todoCourseCommandServiceImpl")
 @Slf4j
@@ -36,12 +38,34 @@ public class TodoCourseServiceImpl implements TodoCourseService {
     // 예정 코스 등록
     @Override
     @Transactional
-    public void registTodoCourse(TodoCourseDTO newTodoCourse) {
+    public void registTodoCourse(TodoCourseDTO todoCourseDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        newTodoCourse.setToDoCourseCreateDate(LocalDateTime.now());
-        TodoCourse todoCourse = modelMapper.map(newTodoCourse, TodoCourse.class);
+
+        todoCourseDTO.setToDoCourseCreateDate(LocalDateTime.now());
+        todoCourseDTO.setToDoCourseLike(0);
+        todoCourseDTO.setToDoCourseIsDeleted(false);
+        if(todoCourseDTO.getToDoCourseSort().equals(MomentCourseSort.fewDay))
+            todoCourseDTO.setToDoCourseSort(MomentCourseSort.fewDay);
+        else todoCourseDTO.setToDoCourseSort(MomentCourseSort.oneDay);
+
+        TodoCourse todoCourse = new TodoCourse();
+        todoCourse.setToDoCourseCoupleNo(todoCourseDTO.getToDoCourseCoupleNo());
+        todoCourse.setToDoCourseTitle(todoCourseDTO.getToDoCourseTitle());
+        todoCourse.setToDoCourseSort(todoCourseDTO.getToDoCourseSort());
+        todoCourse.setToDoCourseStartDate(todoCourseDTO.getToDoCourseStartDate());
+        todoCourse.setToDoCourseEndDate(todoCourseDTO.getToDoCourseEndDate());
+        todoCourse.setToDoCourseMemo(todoCourseDTO.getToDoCourseMemo());
+        todoCourse.setToDoCourseCreateDate(todoCourseDTO.getToDoCourseCreateDate());
 
         todoCourseRepository.save(todoCourse);
+
+        for (Integer todoNo : todoCourseDTO.getTodoNos()) {
+            Todocourselocation todocourselocation = new Todocourselocation();
+            todocourselocation.setToDoCourseNo(todoCourse.getToDoCourseNo());
+            todocourselocation.setLocationNo(todoNo);
+
+            todoCourselocationRepository.save(todocourselocation);
+        }
     }
 
     // 예정 코스 수정
@@ -73,8 +97,6 @@ public class TodoCourseServiceImpl implements TodoCourseService {
 
             todoCourselocationRepository.save(todocourselocation);
         }
-
-
     }
 
     // 예정 코스 삭제
@@ -86,30 +108,5 @@ public class TodoCourseServiceImpl implements TodoCourseService {
 
         todoCourse.setToDoCourseIsDeleted(true);
         todoCourseRepository.save(todoCourse);
-
-    }
-
-    // 예정 코스 좋아요
-    @Override
-    @Transactional
-    public void incrementLike(int todoCourseNo) {
-        TodoCourse todoCourse = todoCourseRepository.findById(todoCourseNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 예정 코스가 존재하지 않습니다."));
-
-        todoCourse.setToDoCourseLike(todoCourse.getToDoCourseLike() + 1);
-        todoCourseRepository.save(todoCourse);
-    }
-
-    // 예정 코스 좋아요 취소
-    @Override
-    public void decrementLike(int todoCourseNo) {
-        TodoCourse todoCourse = todoCourseRepository.findById(todoCourseNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 예정 코스가 좋재하지 않습니다."));
-
-        if (todoCourse.getToDoCourseLike() > 0) {
-            todoCourse.setToDoCourseLike(todoCourse.getToDoCourseLike() - 1);
-            todoCourseRepository.save(todoCourse);
-        }
-
     }
 }
