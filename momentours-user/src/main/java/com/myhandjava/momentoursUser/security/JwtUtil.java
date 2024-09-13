@@ -47,7 +47,7 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT Token claims empty {}", e);
         }
-        return false; // 검증 실패 시 false를 반환합니다.
+        return false;
     }
 
     public Authentication getAuthentication(String token) {

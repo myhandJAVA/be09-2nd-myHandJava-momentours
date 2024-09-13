@@ -1,7 +1,6 @@
 package com.myhandjava.momentoursUser.security;
 
 import com.myhandjava.momentoursUser.query.service.UserQueryService;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,9 +36,6 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                // Claims를 요청 속성에 추가
-                Claims claims = jwtUtil.parseClaims(token);
-                request.setAttribute("claims", claims);
             }
         }
 
