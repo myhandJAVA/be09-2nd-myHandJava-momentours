@@ -37,10 +37,10 @@ public class TodoCourseController {
 
     // 예정 코스 등록
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registTodoCourse(@ModelAttribute RequestRegistTodoCourseVO newTodoCourse,
+    public ResponseEntity<ResponseMessage> registTodoCourse(@RequestBody RequestRegistTodoCourseVO newTodoCourse,
                                                             @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer) claims.get("coupleNo");
 
         TodoCourseDTO todoCourseDTO = modelMapper.map(newTodoCourse, TodoCourseDTO.class);
         todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
@@ -60,7 +60,8 @@ public class TodoCourseController {
                                                             @RequestBody RequestModifyTodoCourseVO modifyTodoCourse,
                                                             @RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer) claims.get("coupleNo");
+
         TodoCourseDTO todoCourseDTO = modelMapper.map(modifyTodoCourse, TodoCourseDTO.class);
         todoCourseDTO.setToDoCourseCoupleNo(coupleNo);
         todoCourseService.modifyTodoCourse(todoCourseNo, todoCourseDTO);
@@ -77,44 +78,9 @@ public class TodoCourseController {
     @DeleteMapping("/{todoCourseNo}")
     public ResponseEntity<?> removeTodoCourse(@PathVariable int todoCourseNo,
                                               @RequestAttribute("claims") Claims claims) {
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer) claims.get("coupleNo");
         todoCourseService.removeTodoCourse(todoCourseNo, coupleNo);
 
         return ResponseEntity.noContent().build();
-    }
-
-    // 예정 코스 좋아요
-    @PostMapping("/like/{todoCourseNo}")
-    public ResponseEntity<ResponseMessage> likeTodoCourse(@PathVariable int todoCourseNo,
-                                                          @CookieValue(value = "todoCourseLike", defaultValue = "") String toDoCourseLike,
-                                                          HttpServletResponse response) {
-
-        Set<Integer> todoCourseLikeIds = Arrays.stream(toDoCourseLike.split("-"))
-                .filter(id -> !id.isEmpty())
-                .map(Integer::parseInt)
-                .collect(Collectors.toSet());
-
-        if (!todoCourseLikeIds.contains(todoCourseNo)) {
-            // 좋아요 추가
-            todoCourseService.incrementLike(todoCourseNo);
-            todoCourseLikeIds.add(todoCourseNo);
-        } else {
-            // 좋아요 취소
-            todoCourseService.decrementLike(todoCourseNo);
-            todoCourseLikeIds.remove(todoCourseNo);
-        }
-
-        String modifyTodoCourseLike = todoCourseLikeIds.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining("-"));
-
-        Cookie cookie = new Cookie("todoCourseLike", modifyTodoCourseLike);
-        cookie.setPath("/");
-
-        cookie.setMaxAge(60 * 60 * 24 * 365);
-        response.addCookie(cookie);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-
     }
 }

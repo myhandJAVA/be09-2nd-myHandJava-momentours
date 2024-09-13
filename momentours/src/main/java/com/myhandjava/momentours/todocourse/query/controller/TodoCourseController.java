@@ -25,7 +25,7 @@ public class TodoCourseController {
     @GetMapping("/todoCourse")
     public List<TodoCourseDTO> findAllTodoCourse(@RequestAttribute("claims") Claims claims) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer) claims.get("coupleNo");
 
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
@@ -37,7 +37,7 @@ public class TodoCourseController {
     public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestAttribute("claims") Claims claims,
                                                             @PathVariable int TodoCourseNo) {
 
-        int coupleNo = Integer.parseInt(claims.get("coupleNo", String.class));
+        int coupleNo = (Integer) claims.get("coupleNo");
 
         TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
 
@@ -49,6 +49,7 @@ public class TodoCourseController {
         return todoCourseList;
     }
 
+    // 예정 코스 검색
     @GetMapping("/search")
     public List<TodoCourseDTO> searchTodoCourse(@RequestParam(required = false) String searchCondition,
                                                 @RequestParam(required = false) String keyword) {
