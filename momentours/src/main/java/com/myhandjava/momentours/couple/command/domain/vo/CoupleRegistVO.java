@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoupleRegistVO {
+    private int coupleNo;
     private String coupleName;
     private String couplePhoto;
     private LocalDateTime coupleStartDate;
