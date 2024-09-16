@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service("scheduleCommandServiceImpl")
 public class ScheduleServiceImpl implements ScheduleService {
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
     ScheduleServiceImpl(ScheduleRepository scheduleRepository){

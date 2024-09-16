@@ -25,4 +25,6 @@ public interface UserQueryService extends UserDetailsService {
     UserDTO findByUserNo(int userNo);
 
     Map<String,Object> findPartnerByUserNo(int userNo);
+
+    int findCoupleNoByUserNo(int userNo);
 }
