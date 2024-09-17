@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @ToString
 public class RequestModifyMomCourseVO {
+    private int coupleNo;
     private String momCourseTitle;
     private MomentCourseSort momCourseSort;
     private String momCourseMemo;

@@ -7,6 +7,12 @@ import com.myhandjava.momentours.momentcourse.command.application.service.Moment
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestModifyMomCourseVO;
 import com.myhandjava.momentours.momentcourse.command.domain.vo.RequestRegistMomCourseVO;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -38,15 +44,15 @@ public class MomentCourseController {
 
 
     // 추억 코스 등록
+    @Operation(summary = "Post momentcourse", description = "추억코스를 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "추억코스 등록 성공!",
+                    content = {@Content(schema = @Schema(implementation = ResponseMessage.class))})
+    })
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse,
-                                                              @RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> registMomentCourse(@RequestBody RequestRegistMomCourseVO newMomentCourse) {
 
         MomentCourseDTO momentCourseDTO = modelMapper.map(newMomentCourse, MomentCourseDTO.class);
-
-        momentCourseDTO.setMomCourseCoupleNo(coupleNo);
-
         momentCourseService.registMomentCourse(momentCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -60,10 +66,14 @@ public class MomentCourseController {
     }
 
     // 추억 코스 삭제
+    @Operation(summary = "Delete momentcourse", description = "추억코스를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "추억코스 삭제 성공!"),
+            @ApiResponse(responseCode = "40405", description = "해당 추억코스가 존재하지 않습니다.")
+    })
     @DeleteMapping("/{momCourseNo}")
-    public ResponseEntity<?> removeMomentCourse(@PathVariable int momCourseNo,
-                                                @RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer)claims.get("coupleNo");
+    public ResponseEntity<?> removeMomentCourse(@Parameter(description = "삭제 할 추억코스 번호", required = true, example = "1") @PathVariable int momCourseNo,
+                                                @RequestBody int coupleNo) {
 
         momentCourseService.removeMomentCourse(momCourseNo, coupleNo);
 
@@ -73,13 +83,15 @@ public class MomentCourseController {
     }
 
     // 추억 코스 수정
+    @Operation(summary = "Put momentcourse", description = "추억코스를 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "추억코스 수정 성공!"),
+            @ApiResponse(responseCode = "40405", description = "해당 추억코스가 존재하지 않습니다.")
+    })
     @PutMapping("/{momCourseNo}")
-    public ResponseEntity<ResponseMessage> modifyMomentCourse(@PathVariable int momCourseNo,
-                                                              @RequestBody RequestModifyMomCourseVO modifyMomentCourse,
-                                                              @RequestAttribute("claims") Claims claims){
-        int coupleNo = (Integer)claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> modifyMomentCourse(@Parameter(description = "수정 할 추억코스 번호", required = true, example = "1") @PathVariable int momCourseNo,
+                                                              @RequestBody RequestModifyMomCourseVO modifyMomentCourse){
         MomentCourseDTO momentCourseDTO = modelMapper.map(modifyMomentCourse, MomentCourseDTO.class);
-        momentCourseDTO.setMomCourseCoupleNo(coupleNo);
         momentCourseService.modifyMomentCourse(momCourseNo, momentCourseDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -93,8 +105,13 @@ public class MomentCourseController {
     }
 
     // 추억 코스 좋아요
+    @Operation(summary = "Post momentcourse", description = "추억코스를 좋아요합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "추억코스 좋아요 성공!"),
+            @ApiResponse(responseCode = "40405", description = "해당 추억코스가 존재하지 않습니다.")
+    })
     @PostMapping("/like/{momCourseNo}")
-    public ResponseEntity<ResponseMessage> likeMomentCourse(@PathVariable int momCourseNo,
+    public ResponseEntity<ResponseMessage> likeMomentCourse(@Parameter(description = "좋아요 할 추억코스 번호", required = true, example = "1") @PathVariable int momCourseNo,
                                                             @CookieValue(value = "momCourseLike", defaultValue = "") String momCourseLike,
                                                             HttpServletResponse reponse) {
 
@@ -126,11 +143,16 @@ public class MomentCourseController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 추억코스 즐겨찾기
+    @Operation(summary = "Post favorite momentcourse", description = "추억코스를 즐겨찾기합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "추억코스 즐겨찾기 성공!"),
+            @ApiResponse(responseCode = "40405", description = "해당 추억코스가 존재하지 않습니다.")
+    })
     @PostMapping("/favorite/{momCourseNo}")
-    public ResponseEntity<String> FavoriteMomentCourse(@RequestBody FavoriteDTO favoriteDTO,
-                                                       @RequestAttribute("claims") Claims claims) {
-        int userNo = (Integer)claims.get("userNo");
-        favoriteDTO.setFavoUserNo(userNo);
+    public ResponseEntity<String> FavoriteMomentCourse(@Parameter(description = "즐겨찾기 할 추억코스 번호", required = true, example = "1") @PathVariable int momCourseNo,
+                                                       @RequestBody FavoriteDTO favoriteDTO) {
+        favoriteDTO.setFavoMomCourseNo(momCourseNo);
         boolean isFavorite = momentCourseService.isFavorite(favoriteDTO);
         if(isFavorite)
             return ResponseEntity.status(HttpStatus.OK).body("추억코스가 즐겨찾기에 추가되었습니다.");
