@@ -74,6 +74,7 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
         - id: momentours-delete
           uri: lb://MOMENTOURS-SERVICE
           predicates:
