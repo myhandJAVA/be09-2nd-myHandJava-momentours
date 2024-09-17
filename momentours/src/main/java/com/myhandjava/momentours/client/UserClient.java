@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserClient {
     @GetMapping("/users/{userNo}/partner")
     ResponseEntity<ResponseMessage> findPartnerByUserNo(@PathVariable int userNo);
+
+    @GetMapping("/users/{userNo}/coupleNo")
+    ResponseEntity<ResponseMessage> findCoupleNoByUserNo(@PathVariable int userNo);
 }

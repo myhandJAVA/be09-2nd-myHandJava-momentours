@@ -20,9 +20,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/calendar")
-    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO,
-                                                          @RequestBody int coupleNo){
-        scheduleDTO.setCoupleNo(coupleNo);
+    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO){
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
