@@ -9,6 +9,12 @@ import com.myhandjava.momentours.diary.command.domain.vo.RequestModifyDiaryVO;
 import com.myhandjava.momentours.diary.command.domain.vo.RequestRegistCommentVO;
 import com.myhandjava.momentours.diary.command.domain.vo.RequestRegistDiaryVO;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,25 +43,25 @@ public class DiaryController {
     }
 
     // 일기 등록
+    @Operation(summary = "Post diary", description = "일기를 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "일기 등록 성공!",
+                content = {@Content(schema = @Schema(implementation = ResponseMessage.class))})
+    })
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registDiary(@ModelAttribute RequestRegistDiaryVO newDiary,
-                                                       @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
-        Integer diaryCoupleNo = (Integer)claims.get("coupleNo");
-        Integer diaryUserNo = (Integer)claims.get("userNo");
         newDiary.setFiles(files);
 
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
-        diaryDTO.setDiaryUserNo(diaryUserNo);
-        diaryDTO.setCoupleNo(diaryCoupleNo);
         diaryService.registDiary(diaryDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("newDiary", newDiary);
 
         ResponseMessage responseMessage = new ResponseMessage
-                (201, "등록성공!", responseMap);
+                (201, "일기 등록 성공!", responseMap);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -63,9 +69,14 @@ public class DiaryController {
     }
 
     // 일기 삭제(soft delete)
+    @Operation(summary = "Delete diary", description = "일기를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "일기 삭제 성공!"),
+            @ApiResponse(responseCode = "40402", description = "해당 일기가 존재하지 않습니다.")
+    })
     @DeleteMapping("/{diaryNo}")
-    public ResponseEntity<ResponseMessage> removeDiary(@PathVariable int diaryNo, @RequestAttribute("claims") Claims claims) {
-        int diaryUserNo = (Integer)claims.get("userNo");
+    public ResponseEntity<ResponseMessage> removeDiary(@Parameter(description = "삭제할 일기 번호", required = true, example = "1") @PathVariable int diaryNo,
+                                                       @RequestBody int diaryUserNo) {
         diaryService.removeDiary(diaryNo, diaryUserNo);
 
         return ResponseEntity
@@ -74,23 +85,25 @@ public class DiaryController {
     }
 
     // 일기 수정
+    @Operation(summary = "Put diary", description = "일기를 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "일기 수정 성공!",
+                    content = {@Content(schema = @Schema(implementation = ResponseMessage.class))}),
+            @ApiResponse(responseCode = "40402", description = "해당 일기가 존재하지 않습니다.")
+    })
     @PutMapping("/{diaryNo}")
-    public ResponseEntity<ResponseMessage> modifyDiary(@PathVariable int diaryNo,
+    public ResponseEntity<ResponseMessage> modifyDiary(@Parameter(description = "수정할 일기 번호", required = true, example = "1") @PathVariable int diaryNo,
                                                        @ModelAttribute RequestModifyDiaryVO modifyDiary,
-                                                       @RequestAttribute("claims") Claims claims,
                                                        @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
-
-        int diaryUserNo = (Integer)claims.get("userNo");
 
         modifyDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(modifyDiary, DiaryDTO.class);
-        diaryDTO.setDiaryUserNo(diaryUserNo);
         diaryService.modifyDiary(diaryDTO, diaryNo);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("modifyDiary", modifyDiary);
 
-        ResponseMessage responseMessage = new ResponseMessage(201, "수정 성공!", responseMap);
+        ResponseMessage responseMessage = new ResponseMessage(200, "일기 수정 성공!", responseMap);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -98,19 +111,21 @@ public class DiaryController {
     }
 
     // 댓글 등록
+    @Operation(summary = "Post comment", description = "일기에 댓글을 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "댓글 등록 성공!",
+                    content = {@Content(schema = @Schema(implementation = ResponseMessage.class))})
+    })
     @PostMapping("/comment")
-    public ResponseEntity<ResponseMessage> registComment(@RequestBody RequestRegistCommentVO newComment,
-                                                         @RequestAttribute("claims") Claims claims) {
+    public ResponseEntity<ResponseMessage> registComment(@RequestBody RequestRegistCommentVO newComment) {
 
-        int userNo = (Integer)claims.get("userNo");
         CommentDTO commentDTO = modelMapper.map(newComment, CommentDTO.class);
-        commentDTO.setCommentUserNo(userNo);
         diaryService.registComment(commentDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("newComment", newComment);
 
-        ResponseMessage responseMessage = new ResponseMessage(201, "댓글등록성공!", responseMap);
+        ResponseMessage responseMessage = new ResponseMessage(201, "댓글 등록 성공!", responseMap);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -118,9 +133,14 @@ public class DiaryController {
     }
 
     // 댓글 삭제
+    @Operation(summary = "Delete comment", description = "일기에 댓글을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "댓글 삭제 성공!"),
+            @ApiResponse(responseCode = "404021", description = "해당 댓글이 존재하지 않습니다.")
+    })
     @DeleteMapping("/comment/{commentNo}")
-    public ResponseEntity<ResponseMessage> removeComment(@PathVariable int commentNo, @RequestAttribute("claims") Claims claims) {
-        int commentUserNo = (Integer)claims.get("userNo");
+    public ResponseEntity<ResponseMessage> removeComment(@Parameter(description = "삭제할 댓글 번호", required = true, example = "1") @PathVariable int commentNo,
+                                                         @RequestBody int commentUserNo) {
         diaryService.removeComment(commentNo, commentUserNo);
 
         return ResponseEntity
@@ -129,34 +149,41 @@ public class DiaryController {
     }
 
     // 댓글 수정
+    @Operation(summary = "Put comment", description = "일기에 댓글을 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공!",
+                    content = {@Content(schema = @Schema(implementation = ResponseMessage.class))}),
+            @ApiResponse(responseCode = "404021", description = "해당 댓글이 존재하지 않습니다.")
+    })
     @PutMapping("/comment/{commentNo}")
-    public ResponseEntity<ResponseMessage> modifyComment(@PathVariable int commentNo,
-                                                         @RequestBody RequestModifyCommentVO modifyComment,
-                                                         @RequestAttribute("claims") Claims claims) {
+    public ResponseEntity<ResponseMessage> modifyComment(@Parameter(description = "수정할 댓글 번호", required = true, example = "1") @PathVariable int commentNo,
+                                                         @RequestBody RequestModifyCommentVO modifyComment) {
 
-        int commentUserNo = (Integer)claims.get("userNo");
         CommentDTO commentDTO = modelMapper.map(modifyComment, CommentDTO.class);
-        commentDTO.setCommentUserNo(commentUserNo);
         diaryService.modifyComment(commentNo, commentDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("modifyComment", modifyComment);
 
-        ResponseMessage responseMessage = new ResponseMessage(201, "댓글 수정 성공!", responseMap);
+        ResponseMessage responseMessage = new ResponseMessage(200, "댓글 수정 성공!", responseMap);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responseMessage);
     }
 
+    // 일기 임시저장
+    @Operation(summary = "Post temporary", description = "일기를 임시저장합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "임시저장 성공!",
+                    content = {@Content(schema = @Schema(implementation = ResponseMessage.class))})
+    })
     @PostMapping("/temporary")
     public ResponseEntity<ResponseMessage> registTempSave(@ModelAttribute RequestRegistDiaryVO newDiary,
-                                                          @RequestAttribute("claims") Claims claims,
                                                           @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        int userNo = (Integer)claims.get("userNo");
+
         newDiary.setFiles(files);
         DiaryDTO diaryDTO = modelMapper.map(newDiary, DiaryDTO.class);
-        diaryDTO.setDiaryUserNo(userNo);
         diaryService.registTempDiary(diaryDTO);
 
         Map<String, Object> responseMap = new HashMap<>();
