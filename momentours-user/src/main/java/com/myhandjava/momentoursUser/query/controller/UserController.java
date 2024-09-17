@@ -6,6 +6,8 @@ import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserIdVO;
 import com.myhandjava.momentoursUser.command.domain.vo.ResponseUserPwdVO;
 import com.myhandjava.momentoursUser.common.ResponseMessage;
 import com.myhandjava.momentoursUser.query.service.UserQueryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,6 +105,15 @@ public class UserController {
         ResponseUserIdVO responseUserIdVO = userQueryService.getUserIdByPhone(userPhone);
 
         return responseUserIdVO;
+    }
+
+    @GetMapping("users/{userNo}/coupleNo")
+    public ResponseEntity<ResponseMessage> findCoupleNoByUserNo(@PathVariable int userNo){
+        Integer coupleNo = userQueryService.findCoupleNoByUserNo(userNo);
+        Map<String,Object> responseMap = new HashMap<>();
+        responseMap.put("coupleNo",coupleNo);
+        ResponseMessage responseMessage = new ResponseMessage(200,"커플번호 조회 성공",responseMap);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
 
