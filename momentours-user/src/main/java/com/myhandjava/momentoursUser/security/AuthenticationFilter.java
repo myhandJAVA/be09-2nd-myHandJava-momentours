@@ -77,8 +77,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             .map(role -> role.getAuthority())
                             .collect(Collectors.toList());
         
-        Claims claims = Jwts.claims().setSubject(userNo.toString());
+        Claims claims = Jwts.claims().setSubject(userName);
         claims.put("auth", roles);
+        claims.put("userNo",userNo);
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis()

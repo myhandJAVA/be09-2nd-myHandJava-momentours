@@ -191,4 +191,8 @@ public class UserQueryServiceImpl implements UserQueryService {
 
         return userInfoDTO;
     }
+    @Override
+    public int findCoupleNoByUserNo(int userNo){
+        return userMapper.findUserCoupleNoByUserNo(userNo);
+    }
 }

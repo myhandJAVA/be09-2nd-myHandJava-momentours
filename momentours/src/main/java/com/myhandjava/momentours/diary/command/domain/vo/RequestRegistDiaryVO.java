@@ -12,6 +12,8 @@ import java.util.List;
 @Setter
 @ToString
 public class RequestRegistDiaryVO {
+    private int diaryCoupleNo;
+    private int diaryUserNo;
     private String diaryContent;
 
     List<MultipartFile> files;

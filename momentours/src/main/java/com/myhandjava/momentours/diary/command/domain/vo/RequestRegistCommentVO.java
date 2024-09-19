@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class RequestRegistCommentVO {
+    private int commentUserNo;
     private String commentContent;
     private int diaryNo;
 }

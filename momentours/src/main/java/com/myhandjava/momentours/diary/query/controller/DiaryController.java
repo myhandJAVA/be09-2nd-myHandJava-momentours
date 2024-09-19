@@ -3,6 +3,10 @@ package com.myhandjava.momentours.diary.query.controller;
 import com.myhandjava.momentours.diary.query.dto.DiaryDTO;
 import com.myhandjava.momentours.diary.query.service.DiaryService;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,13 +28,19 @@ public class DiaryController {
     }
 
 
+    @Operation(summary = "Get diary", description = "해당 날짜에 맞는 일기를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
     @GetMapping("")
-    public List<DiaryDTO> findDiary(@RequestParam String diaryCreateDate, @RequestAttribute("claims") Claims claims) {
+    public List<DiaryDTO> findDiary(@Parameter(description = "날짜", required = true, example = "2024-09-05") @RequestParam String diaryCreateDate,
+                                    @Parameter(description = "커플번호", required = true, example = "1") @RequestParam int coupleNo,
+                                    @Parameter(description = "회원번호", required = true, example = "1") @RequestParam int  userNo) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
-        int userNo = (Integer)claims.get("userNo");
         DiaryDTO diaryDTO = new DiaryDTO();
-
         diaryDTO.setDiaryCreateDate(diaryCreateDate);
         diaryDTO.setCoupleNo(coupleNo);
         diaryDTO.setDiaryUserNo(userNo);
@@ -39,10 +49,16 @@ public class DiaryController {
         return list;
     }
 
+    @Operation(summary = "Get diary All", description = "일기를 전체 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
     @GetMapping("/all")
-    public List<DiaryDTO> findAllDiary(@RequestAttribute("claims") Claims claims) {
+    public List<DiaryDTO> findAllDiary(@Parameter(description = "커플번호", required = true, example = "1") @RequestParam int coupleNo) {
 
-        int coupleNo = (Integer)claims.get("coupleNo");
         List<DiaryDTO> list = diaryService.findAllDiary(coupleNo);
 
         return list;

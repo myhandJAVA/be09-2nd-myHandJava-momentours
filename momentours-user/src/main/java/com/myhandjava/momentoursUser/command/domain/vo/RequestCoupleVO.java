@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class RequestCoupleVO {
+    private int userNo;
     private String yourEmail;
 }

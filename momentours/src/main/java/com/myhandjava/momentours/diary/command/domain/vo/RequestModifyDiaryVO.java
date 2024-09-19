@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 public class RequestModifyDiaryVO {
+    private int diaryUserNo;
     private String diaryContent;
 
     List<MultipartFile> files;
