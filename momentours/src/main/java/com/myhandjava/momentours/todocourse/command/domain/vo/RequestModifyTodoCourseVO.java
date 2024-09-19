@@ -17,6 +17,7 @@ public class RequestModifyTodoCourseVO {
     private LocalDateTime toDoCourseStartDate;
     private LocalDateTime toDoCourseEndDate;
     private String toDoCourseMemo;
+    private int toDoCourseCoupleNo;
 
     private List<Integer> todoNos;
 }
