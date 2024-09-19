@@ -57,11 +57,10 @@ public class UserController {
     }
 
     @PostMapping("/users/couple")
-    public ResponseEntity<ResponseMessage> makeCouple(@RequestAttribute("claims") Claims claims,
-                                                      @RequestBody RequestCoupleVO yourEmail){
-        int userNo = (Integer) claims.get("userNo");
+    public ResponseEntity<ResponseMessage> makeCouple(@RequestBody RequestCoupleVO requestCoupleVO){
+        int userNo =  requestCoupleVO.getUserNo();
         UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(yourEmail.getYourEmail());
+        userDTO.setEmail(requestCoupleVO.getYourEmail());
         int coupleNo = userService.makeCouple(userNo,userDTO);
         Map<String, Object> result = new HashMap<>();
         if(coupleNo == 0) result.put("대기", "상대 회원이 아직 이메일을 입력하지 않았습니다.");
