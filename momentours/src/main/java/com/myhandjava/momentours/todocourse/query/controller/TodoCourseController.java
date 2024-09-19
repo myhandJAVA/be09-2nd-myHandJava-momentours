@@ -3,6 +3,7 @@ package com.myhandjava.momentours.todocourse.query.controller;
 import com.myhandjava.momentours.todocourse.query.dto.TodoCourseDTO;
 import com.myhandjava.momentours.todocourse.query.service.TodoCourseService;
 import io.jsonwebtoken.Claims;
+import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,8 @@ public class TodoCourseController {
     }
 
     // 해당 커플의 예정 코스 전체 조회
-    @GetMapping("/todoCourse")
-    public List<TodoCourseDTO> findAllTodoCourse(@RequestAttribute("claims") Claims claims) {
-
-        int coupleNo = (Integer) claims.get("coupleNo");
+    @GetMapping("")
+    public List<TodoCourseDTO> findAllTodoCourse(@RequestParam int coupleNo) {
 
         List<TodoCourseDTO> todoCourseList = todoCourseService.findAllTodoCourse(coupleNo);
 
@@ -33,11 +32,9 @@ public class TodoCourseController {
     }
 
     // 해당 커플의 예정 코스 상세 조회
-    @GetMapping("/todoCourse/{TodoCourseNo}")
-    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@RequestAttribute("claims") Claims claims,
+    @GetMapping("/{coupleNo}/{TodoCourseNo}")
+    public List<TodoCourseDTO> findTodoCourseByTodoCourseNo(@PathVariable int coupleNo,
                                                             @PathVariable int TodoCourseNo) {
-
-        int coupleNo = (Integer) claims.get("coupleNo");
 
         TodoCourseDTO todoCourseDTO = new TodoCourseDTO();
 
@@ -50,12 +47,14 @@ public class TodoCourseController {
     }
 
     // 예정 코스 검색
-    @GetMapping("/search")
+    @GetMapping("/search/{coupleNo}")
     public List<TodoCourseDTO> searchTodoCourse(@RequestParam(required = false) String searchCondition,
-                                                @RequestParam(required = false) String keyword) {
+                                                @RequestParam(required = false) String keyword,
+                                                @PathVariable int coupleNo) {
         Map<String, Object> searchMap = new HashMap<>();
         searchMap.put("searchCondition", searchCondition);
         searchMap.put("keyword", keyword);
+        searchMap.put("coupleNo", coupleNo);
 
         List<TodoCourseDTO> searchList = todoCourseService.searchToDoCourse(searchMap);
 
