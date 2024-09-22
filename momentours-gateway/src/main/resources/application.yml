@@ -19,6 +19,13 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: momentours-user-kakao
+          uri: lb://MOMENTOURS-USER-SERVICE
+          predicates:
+            - Path=/user-service/kakao/**
+            - Method=GET
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
         - id: momentours-user-get
           uri: lb://MOMENTOURS-USER-SERVICE
