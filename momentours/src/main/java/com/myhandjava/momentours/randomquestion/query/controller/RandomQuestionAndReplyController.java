@@ -32,23 +32,17 @@ public class RandomQuestionAndReplyController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> findAllRandomQuestion(@RequestAttribute("claims") Claims claims) {
-        int coupleNo = (Integer) claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> findAllRandomQuestion(@RequestBody int coupleNo) {
         List<RandomQuestionDTO> result =
                 randomQuestionService.findAllRandomQuestionByCoupleNo(coupleNo);
-
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("result", result);
         ResponseMessage responseMessage = new ResponseMessage(HttpStatus.OK.value(), "조회 성공.", responseMap);
-
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ResponseMessage> findAllRandomQuestionAndReply(@RequestAttribute("claims") Claims claims) {
-
-        int userNo = (Integer) claims.get("userNo");
-        int coupleNo = (Integer) claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> findAllRandomQuestionAndReply(@RequestBody int coupleNo, @RequestBody int userNo) {
         ResponseEntity<ResponseMessage> response = userClient.findPartnerByUserNo(userNo);
         Map<String, Object> responseMap = response.getBody().getResult();
         int partnerNo = (Integer) responseMap.get("partnerNo");

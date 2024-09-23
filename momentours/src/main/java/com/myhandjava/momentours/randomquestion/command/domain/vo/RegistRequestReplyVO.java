@@ -8,5 +8,7 @@ import lombok.*;
 @Getter
 @ToString
 public class RegistRequestReplyVO {
+    private int coupleNo;
+    private int userNo;
     private String randomReplyContent;
 }
