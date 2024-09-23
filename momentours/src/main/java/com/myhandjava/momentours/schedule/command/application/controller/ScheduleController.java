@@ -5,6 +5,7 @@ import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.schedule.command.application.service.ScheduleService;
 import com.myhandjava.momentours.schedule.command.domain.service.ScheduleValidService;
 import com.myhandjava.momentours.schedule.command.domain.vo.PutScheduleVO;
+import com.myhandjava.momentours.schedule.command.domain.vo.RegistScheduleVO;
 import com.myhandjava.momentours.schedule.command.domain.vo.UserCoupleNoVO;
 import com.myhandjava.momentours.schedule.query.dto.ScheduleDTO;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,21 @@ public class ScheduleController {
     }
 
     @PostMapping("/calendar")
-    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody ScheduleDTO scheduleDTO){
+    public ResponseEntity<ResponseMessage> registSchedule(@RequestBody RegistScheduleVO registScheduleVO,
+                                                          @RequestHeader("Authorization") String token){
+        boolean isValidRequest = scheduleValidService.isValidUserNoAndCoupleNo(
+                registScheduleVO.getUserNo(), registScheduleVO.getCoupleNo(),token);
+        if(!isValidRequest){
+            ResponseMessage unValidaMessage =
+                    new ResponseMessage(HttpStatusCode.FORBIDDEN.getCode(), "해당 정보를 등록할 권한이 없습니다.",null);
+            return ResponseEntity.status(HttpStatus.OK).body(unValidaMessage);
+        }
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        scheduleDTO.setCoupleNo(registScheduleVO.getCoupleNo());
+        scheduleDTO.setScheduleTitle(registScheduleVO.getScheduleTitle());
+        scheduleDTO.setScheduleMemo(registScheduleVO.getScheduleMemo());
+        scheduleDTO.setScheduleStartDate(registScheduleVO.getScheduleStartDate());
+        scheduleDTO.setScheduleEndDate(registScheduleVO.getScheduleEndDate());
         scheduleService.registSchedule(scheduleDTO);
 
         Map<String,Object> responseMap = new HashMap<>();
