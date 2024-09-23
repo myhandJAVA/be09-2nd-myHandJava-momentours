@@ -26,4 +26,17 @@
          WHERE COUPLE_NO = #{ coupleNo }
            AND SCHEDULE_IS_DELETED = 0
     </select>
+
+    <select id="findSchedule" resultMap="scheduleResultMap" parameterType="com.myhandjava.momentours.schedule.query.dto.FindScheduleDTO">
+        SELECT SCHEDULE_NO
+        , SCHEDULE_START_DATE
+        , SCHEDULE_END_DATE
+        , SCHEDULE_TITLE
+        , SCHEDULE_MEMO
+        , COUPLE_NO
+        FROM TB_SCHEDULE
+        WHERE SCHEDULE_NO = #{ scheduleNo }
+        AND COUPLE_NO = #{ coupleNo }
+        AND SCHEDULE_IS_DELETED = 0
+    </select>
 </mapper>

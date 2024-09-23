@@ -102,8 +102,8 @@ public class TodoCourseServiceImpl implements TodoCourseService {
     // 예정 코스 삭제
     @Override
     @Transactional
-    public void removeTodoCourse(int todoCourseNo, int todoCourseCoupleNo) {
-        TodoCourse todoCourse = todoCourseRepository.findByToDoCourseNoAndToDoCourseCoupleNo(todoCourseNo, todoCourseCoupleNo)
+    public void removeTodoCourse(int todoCourseNo, int toDoCourseCoupleNo) {
+        TodoCourse todoCourse = todoCourseRepository.findByToDoCourseNoAndToDoCourseCoupleNo(todoCourseNo, toDoCourseCoupleNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 예정코스가 존재하지 않습니다."));
 
         todoCourse.setToDoCourseIsDeleted(true);

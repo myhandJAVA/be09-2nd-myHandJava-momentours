@@ -66,14 +66,17 @@
           <if test="searchCondition == 'courseName' and keyword != null and keyword != ''">
               WHERE tc.to_do_course_title LIKE CONCAT('%', #{keyword}, '%')
                 AND to_do_course_is_deleted = 0
+                AND to_do_course_couple_no = ${ coupleNo }
           </if>
           <if test="searchCondition == 'courseMemo' and keyword != null and keyword != ''">
               WHERE tc.to_do_course_memo LIKE CONCAT('%', #{keyword}, '%')
                 AND to_do_course_is_deleted = 0
+                AND to_do_course_couple_no = ${ coupleNo }
           </if>
           <if test="searchCondition == 'courseNameAndMemo' and keyword != null and keyword != ''">
               WHERE (tc.to_do_course_title LIKE CONCAT('%'. #{keyword}, '%')
                 AND to_do_course_is_deleted = 0
+                AND to_do_course_couple_no = ${ coupleNo }
                  OR tc.to_do_cousr_memo Like CONCAT('%', #{keyword}, '%')
           </if>
     </select>
