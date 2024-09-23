@@ -48,7 +48,6 @@ public class RandomQuestionAndReplyQueryServiceImpl implements RandomQuestionAnd
     @Override
     public List<RandomQuestionDTO> findAllRandomQuestionByCoupleNo(int coupleNo) {
         List<RandomQuestion> randomQuestions = randomQuestionMapper.findAllRandomQuestionByCoupleNo(coupleNo);
-
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
                 new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
                         randomQuestion.getRandQuesContent(), randomQuestion.getRandQuesReply(),
@@ -70,7 +69,6 @@ public class RandomQuestionAndReplyQueryServiceImpl implements RandomQuestionAnd
     @Override
     public List<RandomQuestionDTO> findRandomQuestionByKeyword(Map<String, Object> map) {
         List<RandomQuestion> randomQuestions = randomQuestionMapper.findRandomQuestionByKeyword(map);
-
         List<RandomQuestionDTO> randomQuestionDTOList = randomQuestions.stream().map(randomQuestion ->
                 new RandomQuestionDTO(randomQuestion.getRandQuesNo(), randomQuestion.getRandQuesCreateDate(),
                         randomQuestion.getRandQuesContent(), randomQuestion.getRandQuesReply(),
@@ -111,20 +109,15 @@ public class RandomQuestionAndReplyQueryServiceImpl implements RandomQuestionAnd
 
     @Override
     public List<RandomQuestionAndReplyDTO> findAllRandomQuestionAndRepliesByUserNoAndCoupleNo(int coupleNo , int userNo, int partnerNo) {
-        // 회원 번호로 모든 랜덤 질문 가져오기
         List<RandomQuestionDTO> randomQuestionList = findAllRandomQuestionByCoupleNo(coupleNo);
-
-        // 질문과 답변 DTO 생성
         List<RandomQuestionAndReplyDTO> result = new ArrayList<>();
         for (RandomQuestionDTO question : randomQuestionList) {
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("userNo", userNo);
             userMap.put("randomQuestionNo", question.getRandQuesNo());
-
             Map<String, Object> partnerMap = new HashMap<>();
             partnerMap.put("userNo", partnerNo);
             partnerMap.put("randomQuestionNo", question.getRandQuesNo());
-
             RandomReplyDTO userReplyDTO = findRandomReplyByQuestionNoAndUserNo(userMap);
             RandomReplyDTO partnerReplyDTO = findRandomReplyByQuestionNoAndUserNo(partnerMap);
             //둘 다 답장을 안 했으면 볼 수 있다 "텅" "텅"

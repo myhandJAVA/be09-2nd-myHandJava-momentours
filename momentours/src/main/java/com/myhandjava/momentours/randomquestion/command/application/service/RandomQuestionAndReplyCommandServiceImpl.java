@@ -2,6 +2,7 @@ package com.myhandjava.momentours.randomquestion.command.application.service;
 
 import com.myhandjava.momentours.common.CommonException;
 import com.myhandjava.momentours.common.HttpStatusCode;
+import com.myhandjava.momentours.common.ResponseMessage;
 import com.myhandjava.momentours.couple.query.service.CoupleServiceImpl;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomQuestionDTO;
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
@@ -13,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,9 +61,11 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
 
     @Override
     @Transactional
-    public void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO replyDTO) {
+    public void modifyRandomReply(int replyNo, RandomReplyDTO replyDTO) {
+        if (replyDTO.getRandomReplyContent() == null)
+            throw new CommonException(HttpStatusCode.BAD_REQUEST_RANDOMQUESTION_REPLY);
         RandomReply randomReply =
-                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(userNo, replyNo)
+                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(replyDTO.getRandomReplyUserNo(), replyNo)
                         .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION_REPLY));
         if (randomReply != null) {
             randomReply.setRandomReplyContent(replyDTO.getRandomReplyContent());
@@ -70,7 +75,9 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
 
     @Override
     @Transactional
-    public void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) {
+    public void registRandomReply(int questionNo, RandomReplyDTO randomReplyDTO) {
+        int userNo = randomReplyDTO.getRandomReplyUserNo();
+        int coupleNo = randomReplyDTO.getRandomCoupleNo();
         RandomQuestion randomQuestion =
                 questionRepository.findRandomQuestionByRandQuesNo(questionNo).
                         orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_RANDOMQUESTION));
@@ -94,7 +101,7 @@ public class RandomQuestionAndReplyCommandServiceImpl implements RandomQuestionA
             randomQuestion.setRandQuesReply(1);
             questionRepository.save(randomQuestion);
         } else {
-            throw new IllegalStateException("이미 2개의 답변이 존재합니다.");
+            throw new CommonException(HttpStatusCode.CONFLICT_RANDOMQUESTION_REPLY);
         }
     }
 

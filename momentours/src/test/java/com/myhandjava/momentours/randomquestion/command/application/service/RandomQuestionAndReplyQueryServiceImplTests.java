@@ -36,7 +36,7 @@ class RandomQuestionAndReplyQueryServiceImplTests {
         reply.setRandomQuestionNo(8);
         reply.setRandomCoupleNo(1);
 
-        assertDoesNotThrow(() -> randomQuestionAndReplyService.registRandomReply(1, 1, 8, reply));
+        assertDoesNotThrow(() -> randomQuestionAndReplyService.registRandomReply(8, reply));
     }
 
     @DisplayName("랜덤 질문 답변 삭제(soft delete)")
@@ -64,6 +64,6 @@ class RandomQuestionAndReplyQueryServiceImplTests {
         reply.setRandomCoupleNo(1);
         reply.setRandomReplyContent("랜덤질문 답변 합니다.");
         //then
-        assertDoesNotThrow(() -> randomQuestionAndReplyService.modifyRandomReply(userNo, replyNo, reply));
+        assertDoesNotThrow(() -> randomQuestionAndReplyService.modifyRandomReply(replyNo, reply));
     }
 }
