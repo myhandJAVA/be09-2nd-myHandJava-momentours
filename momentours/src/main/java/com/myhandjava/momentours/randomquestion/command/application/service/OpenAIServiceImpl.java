@@ -1,5 +1,6 @@
 package com.myhandjava.momentours.randomquestion.command.application.service;
 
+import com.myhandjava.momentours.client.OpenAIClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -23,29 +24,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Slf4j
 public class OpenAIServiceImpl implements OpenAIService {
 
-    private final RestTemplate restTemplate;
-    private final String apiKey;
-    private final String apiUrl;
+    private final OpenAIClient openAIClient;
     private final ObjectMapper objectMapper;
 
-    public OpenAIServiceImpl(RestTemplate restTemplate,
-                             @Value("${openai.api.key}") String apiKey,
-                             @Value("${openai.api.url}") String apiUrl,
+    public OpenAIServiceImpl(OpenAIClient openAIClient,
                              ObjectMapper objectMapper) {
-        this.restTemplate = restTemplate;
-        this.apiKey = apiKey;
-        this.apiUrl = apiUrl;
+        this.openAIClient = openAIClient;
         this.objectMapper = objectMapper;
     }
 
     @Override
     public String generateQuestionForCouple(Map<String, Object> coupleInfo) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + apiKey);
-        headers.set("Content-Type", "application/json");
-
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-4o-mini");
+        requestBody.put("model", "gpt-3.5-turbo");
 
         List<Map<String, String>> messages = new ArrayList<>();
 
@@ -95,12 +86,10 @@ public class OpenAIServiceImpl implements OpenAIService {
         requestBody.put("temperature", 0.6);
         requestBody.put("top_p", 0.8);
 
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
         int retries = 3;
         while (retries > 0) {
             try {
-                ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
+                ResponseEntity<String> response = openAIClient.generateQuestion(requestBody);
                 String responseBody = response.getBody();
 
                 // JSON 응답에서 질문 내용만 추출

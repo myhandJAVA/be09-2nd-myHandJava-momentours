@@ -6,6 +6,7 @@ import com.myhandjava.momentours.couple.command.application.dto.CoupleRegisterDT
 import com.myhandjava.momentours.couple.command.application.service.CoupleService;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleRegistVO;
 import com.myhandjava.momentours.couple.command.domain.vo.CoupleUpdateVO;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -30,6 +31,7 @@ public class CoupleController {
         this.coupleService = coupleService;
     }
 
+    @Operation()
     @PostMapping("")
     public ResponseEntity<ResponseMessage> registNewCouple(@RequestBody CoupleRegisterDTO coupleRegisterDTO) {
         int userNo1 = coupleRegisterDTO.getUserNo1();

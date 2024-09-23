@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController(value = "randomQuestionCommandController")
 @RequestMapping("/randomquestion")
-@Slf4j
 public class RandomQuestionAndReplyController {
 
     private final RandomQuestionAndReplyCommandService randomQuestionService;
@@ -33,22 +32,18 @@ public class RandomQuestionAndReplyController {
     }
 
     @GetMapping("/recent")
-    public ResponseEntity<ResponseMessage> findRandomQuestion(@RequestAttribute("claims")Claims claims) {
-        int coupleNo = (Integer) claims.get("coupleNo");
+    public ResponseEntity<ResponseMessage> findRandomQuestion(@RequestBody int coupleNo) {
         RandomQuestionDTO randomQuestion = randomQuestionService.findRandomQuestion(coupleNo);
         Map<String, Object> map = new HashMap<>();
         map.put("randomQuestion", randomQuestion);
-
         return ResponseEntity.ok(
                 new ResponseMessage(200, "랜덤질문 반환 성공", map));
     }
 
     @PostMapping("/randomreply/{randomReplyNo}")
-    public ResponseEntity<ResponseMessage> removeRandomReply(@RequestAttribute("claims")Claims claims,
+    public ResponseEntity<ResponseMessage> removeRandomReply(@RequestBody int userNo,
                                                              @PathVariable int randomReplyNo) {
-        int userNo = (Integer) claims.get("userNo");
         randomQuestionService.removeRandomReply(randomReplyNo, userNo);
-
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHttpStatus(HttpStatus.OK.value());
         responseMessage.setMessage("답변이 삭제되었습니다.");
@@ -58,31 +53,26 @@ public class RandomQuestionAndReplyController {
 
     @PutMapping(value = "/{randomReplyNo}")
     public ResponseEntity<ResponseMessage> modifyRandomReply(@PathVariable int randomReplyNo,
-                                                             @RequestBody ModifyReplyVO modifyRandomReply,
-                                                             @RequestAttribute("claims") Claims claims) {
-        int userNo = (Integer) claims.get("userNo");
-        if (modifyRandomReply == null || modifyRandomReply.getRandomReplyContent() == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "잘못된 데이터 형식입니다", null));
-        RandomReplyDTO replyDTO = modelMapper.map(modifyRandomReply, RandomReplyDTO.class);
-        randomQuestionService.modifyRandomReply(userNo, randomReplyNo, replyDTO);
+                                                             @RequestBody ModifyReplyVO modifyRandomReply) {
+        RandomReplyDTO replyDTO = new RandomReplyDTO();
+        replyDTO.setRandomReplyContent(modifyRandomReply.getRandomReplyContent());
+        replyDTO.setRandomReplyUserNo(modifyRandomReply.getUserNo());
+        randomQuestionService.modifyRandomReply(randomReplyNo, replyDTO);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("modifyRandomReply", modifyRandomReply);
-        ResponseMessage responseMessage = new ResponseMessage(HttpStatus.OK.value(), "답변이 수정되었습니다.", responseMap);
-
+        ResponseMessage responseMessage =
+                new ResponseMessage(HttpStatus.OK.value(), "답변이 수정되었습니다.", responseMap);
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     @PostMapping("/{randomQuestionNo}")
-    public ResponseEntity<ResponseMessage> registRandomReply(
-            @PathVariable int randomQuestionNo,
-            @RequestBody RegistRequestReplyVO registRequestReplyVO,
-            @RequestAttribute("claims") Claims claims) throws Exception {
+    public ResponseEntity<ResponseMessage> registRandomReply(@PathVariable int randomQuestionNo,
+                                                             @RequestBody RegistRequestReplyVO registRequestReplyVO) throws Exception {
         RandomReplyDTO replyDTO = new RandomReplyDTO();
         replyDTO.setRandomReplyContent(registRequestReplyVO.getRandomReplyContent());
-        int coupleNo = (Integer) claims.get("coupleNo");
-        int userNo = (Integer) claims.get("userNo");
-        randomQuestionService.registRandomReply(coupleNo, userNo, randomQuestionNo, replyDTO);
+        replyDTO.setRandomCoupleNo(registRequestReplyVO.getCoupleNo());
+        replyDTO.setRandomReplyUserNo(registRequestReplyVO.getUserNo());
+        randomQuestionService.registRandomReply(randomQuestionNo, replyDTO);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("registRandomReply", replyDTO);
         ResponseMessage responseMessage = new ResponseMessage(HttpStatus.OK.value(), "답변이 등록되었습니다.", responseMap);

@@ -49,6 +49,8 @@ public enum HttpStatusCode {
     // 랜덤질문 관련 오류
     NOT_FOUND_RANDOMQUESTION(40407, HttpStatus.NOT_FOUND, "해당 랜덤질문이 존재하지 않습니다."),
     NOT_FOUND_RANDOMQUESTION_REPLY(404071, HttpStatus.NOT_FOUND, "질문에 대한 답변이 존재하지 않습니다."),
+    BAD_REQUEST_RANDOMQUESTION_REPLY(400071, HttpStatus.BAD_REQUEST, "답변이 작성되지 않았습니다."),
+    CONFLICT_RANDOMQUESTION_REPLY(409071, HttpStatus.CONFLICT, "이미 답변이 존재합니다."),
 
     INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 예기치 않은 오류가 발생"),
     BAD_GATEWAY(502, HttpStatus.BAD_GATEWAY, "서버가 잘못된 응답을 게이트웨이로부터 수신함"),

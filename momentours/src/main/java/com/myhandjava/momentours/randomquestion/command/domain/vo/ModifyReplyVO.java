@@ -8,5 +8,6 @@ import lombok.*;
 @Getter
 @ToString
 public class ModifyReplyVO {
+    private int userNo;
     private String randomReplyContent;
 }
