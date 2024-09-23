@@ -23,8 +23,7 @@ public class KakaoServiceImpl implements KakaoService {
         this.kakaoApiClient = kakaoApiClient;
         this.env = env;
     }
-    // 비밀번호를 현재 토큰으로 바꾸고 로그인 시도!! / 닉네임도 바꾸기
-    // 회원이 아니라면 현재토큰을 비밀번호로 넣고 나머지는 입력받아서 로그인하게 하자!
+
     @Override
     public KakaoTokenResponseDTO GetKakaoToken(String code){
         String contentType = "application/x-www-form-urlencoded";
@@ -40,7 +39,6 @@ public class KakaoServiceImpl implements KakaoService {
     @Override
     public KakaoUserInfoResponseDTO getUserInfo(KakaoTokenResponseDTO token){
         String authorization = "Bearer "+ token.getAccess_token();
-        log.info("accessToken:{}",token.getAccess_token());
         String contentType = "application/x-www-form-urlencoded;charset=utf-8";
         KakaoUserInfoResponseDTO userInfo =
                 kakaoApiClient.getUserInfo(contentType,authorization);
