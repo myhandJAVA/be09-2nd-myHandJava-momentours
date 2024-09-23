@@ -17,6 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
@@ -54,6 +56,8 @@ public class WebSecurity {
         
         http.authorizeHttpRequests((authz) ->
                 authz.requestMatchers(new AntPathRequestMatcher("/users/**", "POST")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/kakao/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                      .anyRequest().authenticated()
         )
                 .authenticationManager(authenticationManager)
@@ -68,5 +72,6 @@ public class WebSecurity {
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
         return new AuthenticationFilter(authenticationManager, userQueryService, env,userMapper);
     }
+
 
 }
