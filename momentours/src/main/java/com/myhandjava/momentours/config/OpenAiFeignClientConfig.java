@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class FeignClientConfig {
+public class OpenAiFeignClientConfig {
 
     @Value("${openai.api.key}")
     private String openaiApiKey;
 
-    @Bean
+    @Bean(name = "OpenAiFeignClientRequestInterceptor")
     public RequestInterceptor requestInterceptor() {
         return new RequestInterceptor() {
             @Override
