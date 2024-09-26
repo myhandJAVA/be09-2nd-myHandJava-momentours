@@ -111,10 +111,10 @@ class CoupleServiceImplTests {
 
     private static Stream<Arguments> dataSource3() {
         return Stream.of(
-                Arguments.of(1),
-                Arguments.of(2),
-                Arguments.of(3),
-                Arguments.of(4)
+                Arguments.of(1, 1),
+                Arguments.of(2, 3),
+                Arguments.of(3, 4),
+                Arguments.of(4, 5)
 
         );
     }
@@ -122,8 +122,8 @@ class CoupleServiceImplTests {
     @DisplayName("커플 삭제 테스트")
     @ParameterizedTest
     @MethodSource("dataSource3")
-    void deleteCoupleInfo(int coupleNo) {
+    void deleteCoupleInfo(int coupleNo, int userNo) {
 
-        assertDoesNotThrow(() -> coupleService.deleteCouple(coupleNo));
+        assertDoesNotThrow(() -> coupleService.deleteCouple(coupleNo, userNo));
     }
 }

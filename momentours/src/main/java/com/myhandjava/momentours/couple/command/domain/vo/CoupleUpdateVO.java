@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoupleUpdateVO {
-    private int coupleNo;
+    private int userNo;
     private String coupleName;
     private String couplePhoto;
     private LocalDateTime coupleStartDate;
