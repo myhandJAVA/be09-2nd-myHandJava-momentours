@@ -71,7 +71,7 @@ public class CoupleServiceImpl implements CoupleService {
 
     @Transactional
     @Override
-    public void deleteCouple(int coupleNo) {
+    public void deleteCouple(int coupleNo, int userNo) {
         Couple couple = coupleRepository.findByCoupleNo(coupleNo)
                 .orElseThrow(() -> new CommonException(HttpStatusCode.NOT_FOUND_COUPLE));
         couple.setCoupleIsDeleted(1);
