@@ -13,9 +13,6 @@ spring:
       - classpath:/bootstrap.yml
   application:
     name: gateway-server
-
-
-
   cloud:
     gateway:
       routes:
@@ -98,3 +95,4 @@ spring:
           filters:
             - RewritePath=/momentours-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
