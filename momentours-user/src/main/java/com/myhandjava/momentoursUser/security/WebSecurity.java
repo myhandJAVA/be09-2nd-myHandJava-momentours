@@ -58,6 +58,7 @@ public class WebSecurity {
                 authz.requestMatchers(new AntPathRequestMatcher("/users/**", "POST")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/kakao/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/**","OPTIONS")).permitAll()
                      .anyRequest().authenticated()
         )
                 .authenticationManager(authenticationManager)

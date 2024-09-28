@@ -49,4 +49,15 @@ public class ScheduleValidServiceImpl implements ScheduleValidService{
 
         return isValidNo;
     }
+    @Override
+    public int getTokenUserNo(String token){
+        token = token.substring(7);
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        int tokenUserNo = (int)claims.get("userNo");
+        return tokenUserNo;
+    }
 }
